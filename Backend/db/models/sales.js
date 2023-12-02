@@ -4,6 +4,10 @@ const { Sequelize, DataTypes } = require("sequelize");
 const Sales = sequelize.define(
   "Sales",
   {
+    ubication: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
     amount: {
       type: DataTypes.INTEGER,
       allowNull: false,

@@ -29,8 +29,8 @@ router.post("/new", async (req, res, next) => {
 
 router.get("/total", async (req, res, next) => {
   try {
-    const { initialDate, finalDate } = req.body;
-    const sales = await SalesController.totalSales(initialDate, finalDate);
+    const { initialDate, finalDate, ubication } = req.body;
+    const sales = await SalesController.totalSales(initialDate, finalDate, ubication);
     res.status(sales.status).json({
       status: sales.status,
       message: sales.message,
@@ -44,8 +44,8 @@ router.get("/total", async (req, res, next) => {
 
 router.get("/category", async (req, res, next) => {
   try {
-    const { initialDate, finalDate, category } = req.body;
-    const sales = await SalesController.totalSalesCategory(initialDate, finalDate, category);
+    const { initialDate, finalDate, category, ubication } = req.body;
+    const sales = await SalesController.totalSalesCategory(initialDate, finalDate, category, ubication);
     res.status(sales.status).json({
       status: sales.status,
       message: sales.message,

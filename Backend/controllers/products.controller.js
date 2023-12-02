@@ -126,25 +126,33 @@ class ProductsController {
     }
   }
 
-  static async discountStock(productsToSell) {
+  static async discountStock(productsToSell, ubication) {
     try {
       // Bucle for para validar stock del producto
       for (const product of productsToSell) {
         const productName = product.name;
         const quantitySold = product.quantity;
-        const ubication = product.ubication;
 
         const productDoesExist = await Products.findOne({
           where: { name: productName, ubication: ubication },
         });
 
+        if (productDoesExist === null) {
+          console.log("primer clg")
+          throw new Error(
+            `El producto ${productName.toUpperCase()} no existe.`
+          );
+        }
+
         if (productDoesExist.quantity === 0) {
+          console.log("segundo clg")
           throw new Error(
             `El producto ${productName.toUpperCase()} está agotado.`
           );
         }
 
         if (quantitySold > productDoesExist.quantity) {
+          console.log("tercer clg")
           throw new Error(
             `No hay suficiente cantidad de ${productName.toUpperCase()} para realizar esta venta.`
           );
@@ -154,7 +162,8 @@ class ProductsController {
       for (const product of productsToSell) {
         const productName = product.name;
         const quantitySold = product.quantity;
-        const ubication = product.ubication;
+        console.log("BUCLE FOR")
+        console.log(ubication)
 
         Products.update(
           { quantity: Sequelize.literal(`quantity - ${quantitySold}`) },
@@ -168,8 +177,9 @@ class ProductsController {
       };
     } catch (error) {
       return {
-        status: 500,
-        message: `Error al actualizar los productos: ${error.message}`,
+        status: 404,
+        message: `Error al actualizar los productos`,
+        error: error.message
       };
     }
   }
