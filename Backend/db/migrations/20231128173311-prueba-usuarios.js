@@ -22,14 +22,6 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
     });
 
     await queryInterface.createTable('categories', {
@@ -106,6 +98,16 @@ module.exports = {
         allowNull: true,
         defaultValue : 0
       },
+      canela: {
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: true,
+        defaultValue : 0
+      },
+      miel: {
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: true,
+        defaultValue : 0
+      },
       tarrina: {
         type: Sequelize.INTEGER,
         allowNull: true,
@@ -139,12 +141,42 @@ module.exports = {
       },
     });
 
+    await queryInterface.createTable('sales', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
+      amount: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      user: {
+        type: Sequelize.STRING(50),
+        allowNull: false,
+      },
+      id_user: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      date: {
+        type: Sequelize.STRING(50),
+        allowNull: false,
+      },
+      products: {
+        type: Sequelize.JSON,
+        allowNull: false,
+      },
+    });
+
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("users");
     await queryInterface.dropTable('categories');
     await queryInterface.dropTable('products');
     await queryInterface.dropTable('ingredients');
+    await queryInterface.dropTable('sales');
 
   },
 };

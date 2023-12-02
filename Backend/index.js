@@ -11,7 +11,6 @@ const {
   boomErrorHandler,
 } = require("./middlewares/error.handler");
 
-
 app.use(express.json());
 
 //! Cambiar origen

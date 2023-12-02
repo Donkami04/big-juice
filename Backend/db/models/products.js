@@ -54,6 +54,16 @@ const Products = sequelize.define(
       allowNull: true,
       defaultValue : 0
     },
+    canela: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+      defaultValue : 0
+    },
+    miel: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+      defaultValue : 0
+    },
     tarrina: {
       type: DataTypes.INTEGER,
       allowNull: true,

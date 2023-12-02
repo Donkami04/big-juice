@@ -20,10 +20,14 @@ const Users = sequelize.define(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    registration_date: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
   },
   {
     tableName: "users",
-    timestamps: true,
+    timestamps: false,
   }
 );
 

@@ -3,6 +3,7 @@ const usersRoutes = require("./users.routes");
 const productsRoutes = require("./products.routes");
 const ingredientsRoutes = require("./ingredients.routes");
 const categoriesRoutes = require("./categories.routes");
+const salesRoutes = require("./sales.routes");
 const router = express.Router();
 
 const allRoutes = (app) => {
@@ -11,6 +12,7 @@ const allRoutes = (app) => {
   router.use("/products", productsRoutes);
   router.use("/ingredients", ingredientsRoutes);
   router.use("/categories", categoriesRoutes);
+  router.use("/sales", salesRoutes);
 };
 
 module.exports = { allRoutes };

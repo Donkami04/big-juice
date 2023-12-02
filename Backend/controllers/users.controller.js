@@ -1,4 +1,5 @@
 const { Users } = require("../db/models/users");
+const { getCurrentTime } = require("../utils/currentTime")
 
 class UserController {
   static async getUsers() {
@@ -24,12 +25,15 @@ class UserController {
           message: "El Usuario ya existe en la base de datos.",
         };
       }
+      const currentDateTime = getCurrentTime();
+
       const newUser = await Users.create({
         id: data.id,
         name: data.name,
         rol: data.rol,
         password: data.password,
-        ubication: data.ubication
+        ubication: data.ubication,
+        registration_date: currentDateTime
       });
 
       const dataNewUser = { ...newUser.get({ plain: true }) };

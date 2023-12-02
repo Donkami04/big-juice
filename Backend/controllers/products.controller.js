@@ -38,6 +38,8 @@ class ProductsController {
         azucar: data.azucar,
         pulpa: data.pulpa,
         saborizante: data.saborizante,
+        canela: data.canela,
+        miel: data.miel,
         tarrina: data.tarrina,
         pitillo: data.pitillo
       });
@@ -77,6 +79,8 @@ class ProductsController {
           leche_polvo: changes.leche_polvo,
           azucar: changes.azucar,
           pulpa: changes.pulpa,
+          canela: changes.canela,
+          miel: changes.miel,
           tarrina: changes.tarrina,
           pitillo: changes.pitillo
         },
