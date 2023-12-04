@@ -1,23 +1,10 @@
 const sequelize = require("../conection");
 const { Sequelize, DataTypes } = require("sequelize");
 
-const Users = sequelize.define(
-  "Users",
+const Suppliers = sequelize.define(
+  "Suppliers",
   {
-    id: {
-      type: DataTypes.STRING(4),
-      allowNull: false,
-      primaryKey: true,
-    },
     name: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-    },
-    rol: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-    },
-    password: {
       type: DataTypes.STRING(100),
       allowNull: false,
     },
@@ -25,15 +12,27 @@ const Users = sequelize.define(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    registration_date: {
+    date: {
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    phone: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
+    email: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
+    ingredient: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
   },
   {
-    tableName: "users",
+    tableName: "suppliers",
     timestamps: false,
   }
 );
 
-module.exports = { Users };
+module.exports = { Suppliers };

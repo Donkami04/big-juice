@@ -28,7 +28,7 @@ app.use(logErrors);
 app.use(boomErrorHandler);
 app.use(ormErrorHandler);
 app.use(errorHandler);
-// require("./utils/auth")
+require("./utils/auth")
 
 app.get("/", (req, res) => {
   res.status(200).json({

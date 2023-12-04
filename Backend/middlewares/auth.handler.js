@@ -11,4 +11,15 @@ function checkRoles(...roles) {
   };
 }
 
-module.exports = { checkRoles };
+function checkUbication() {
+  return (req, res, next) => {
+    const user = req.user;
+    if (user.ubication === "all") {
+      next();
+    } else {
+      next(boom.unauthorized("Acceso no autorizado"));
+    }
+  };
+}
+
+module.exports = { checkRoles, checkUbication };

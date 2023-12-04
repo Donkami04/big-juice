@@ -44,7 +44,7 @@ class SalesController {
       console.error("Error al crear la venta:", error);
       return {
         status: 500,
-        message: `Error interno del servidor`,
+        message: `Error al intentar hacer la venta`,
         error: error.message
       };
     }
@@ -59,15 +59,13 @@ class SalesController {
           date: {
             [Op.between]: [new Date(initialDate), new Date(finalDate)],
           },
-          ubication: ubicationz
+          ubication: ubication
         },
       });
 
       sales.forEach((sale) => {
         totalSales += sale.amount;
       });
-
-      console.log(totalSales);
 
       return {
         status: 200,

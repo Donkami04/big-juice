@@ -8,13 +8,29 @@ const Bills = sequelize.define(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    supplier: {
-      type: DataTypes.STRING(100),
+    amount: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     ubication: {
       type: DataTypes.STRING(100),
       allowNull: false,
+    },
+    date: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    user: {
+      type: DataTypes.STRING(4),
+      allowNull: false,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
     },
   },
   {

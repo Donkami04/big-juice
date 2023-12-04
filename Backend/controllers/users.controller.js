@@ -1,5 +1,6 @@
 const { Users } = require("../db/models/users");
 const { getCurrentTime } = require("../utils/currentTime")
+const bcrypt = require('bcrypt');
 
 class UserController {
   static async getUsers() {
@@ -26,12 +27,12 @@ class UserController {
         };
       }
       const currentDateTime = getCurrentTime();
-
+      const hashedPassword = await bcrypt.hash(data.password, 10);
       const newUser = await Users.create({
         id: data.id,
         name: data.name,
         rol: data.rol,
-        password: data.password,
+        password: hashedPassword,
         ubication: data.ubication,
         registration_date: currentDateTime
       });
