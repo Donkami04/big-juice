@@ -1,0 +1,97 @@
+.main-shopcar-container {
+  position: absolute;
+  top: 6rem;
+  right: 0;
+  width: calc(30% - 6rem);
+  height: calc(100vh - 6rem);
+  border-left: solid 1px black;
+  background-color: white;
+}
+
+.sale-title {
+  height: 4rem;
+  display: grid;
+  place-items: center;
+}
+
+.products-in-shopcar {
+  margin-right: auto;
+  margin-left: auto;
+  width: 90%;
+  border-collapse: collapse;
+}
+
+.products-in-shopcar th,
+.products-in-shopcar td {
+  border: 1px solid #000000;
+  padding: 10px;
+  text-align: center;
+}
+
+.total-sale {
+  height: 4rem;
+  display: grid;
+  place-items: center;
+}
+
+.input-cash-container {
+  display: flex;
+  flex-direction: column;
+  height: 4rem;
+  text-align: center;
+  justify-content: center;
+}
+
+.input-cash-container input {
+  width: 75%;
+  height: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-size: 1.2rem;
+  
+
+}
+
+.shopcar-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid black;
+    color: black;
+    border-radius: 15px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    height: 4rem;
+    width: 8rem;
+}
+
+.buttons-container {
+    height: 7rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.pay-button{
+    background-color: rgb(47, 200, 255);
+
+}
+
+.cancel-button {
+    background-color: red;
+}
+
+.shopcar-button:hover {
+    border-color: #fff;
+    color: white;
+}
+
+.change-container {
+    height: 6rem;
+    display: grid;
+    place-items: center;
+    margin-top: 2rem;
+}

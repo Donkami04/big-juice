@@ -1,0 +1,11 @@
+* {
+    margin: 0;
+    text-decoration: none;
+    color: black;
+    font-family: 'Nunito', sans-serif;
+}
+
+:root {
+    --verde-viche: rgb(165, 190, 0);
+    --lila-oscuro: rgb(110, 37, 148);
+}
