@@ -24,6 +24,16 @@ const Sales = sequelize.define(
       type: DataTypes.STRING(50),
       allowNull: false,
     },
+    rappi: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue : false
+    },
+    nequi: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue : false
+    },
     products: {
       type: DataTypes.JSON,
       allowNull: false,

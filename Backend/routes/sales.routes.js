@@ -18,26 +18,21 @@ router.get(
   }
 );
 
-router.post(
-  "/new",
-  passport.authenticate("jwt", { session: false }),
-  checkRoles("admin"),
-  async (req, res, next) => {
-    try {
-      const data = req.body;
-      const response = await SalesController.newSale(data);
-      res.status(response.status).json({
-        status: response.status,
-        message: response.message,
-        error: response.error,
-        data: response.data,
-      });
-    } catch (error) {
-      console.error(error);
-      next(error);
-    }
+router.post("/new", async (req, res, next) => {
+  try {
+    const data = req.body;
+    const response = await SalesController.newSale(data);
+    res.status(response.status).json({
+      status: response.status,
+      message: response.message,
+      error: response.error,
+      data: response.data,
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
-);
+});
 
 router.get(
   "/total",

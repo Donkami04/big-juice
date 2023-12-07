@@ -1,11 +1,12 @@
 .main-shopcar-container {
   position: absolute;
-  top: 6rem;
+  top: calc(6rem);
   right: 0;
   width: calc(30% - 6rem);
-  height: calc(100vh - 6rem);
-  border-left: solid 1px black;
+  height: calc(100vh - 6rem - 2px);
   background-color: white;
+  border-left: solid 2px black;
+  border-top: solid black 2px;
 }
 
 .sale-title {
@@ -14,11 +15,17 @@
   place-items: center;
 }
 
+.products-in-shopcar-container {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
 .products-in-shopcar {
   margin-right: auto;
   margin-left: auto;
   width: 90%;
   border-collapse: collapse;
+
 }
 
 .products-in-shopcar th,
@@ -32,6 +39,18 @@
   height: 4rem;
   display: grid;
   place-items: center;
+}
+
+.checkbox-container {
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+.checkbox-container label {
+  width: 25%;
+  display: flex;
+  justify-content: space-around;
 }
 
 .input-cash-container {
@@ -90,8 +109,13 @@
 }
 
 .change-container {
+  width: 100%;
     height: 6rem;
-    display: grid;
-    place-items: center;
-    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    /* margin-top: 2rem; */
+}
+.change-container h2 {
+  margin-top: 1rem;
 }

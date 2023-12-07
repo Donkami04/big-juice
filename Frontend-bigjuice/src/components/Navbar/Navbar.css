@@ -1,8 +1,10 @@
 .main-navbar-container {
     display: flex;
-    width: 100%;
+    width: calc(100% - 2px);
     height: 6rem;
     background-color: greenyellow;
+    border-right: solid 2px black;
+    border-bottom: solid 2px black;
     /* background-color: var(--verde-viche); */
 }
 
@@ -17,7 +19,7 @@
 
 .links-container {
     font-size: 1.2rem;
-    width: 80%;
+    width: 70%;
     display: flex;
     align-items: center;
     justify-content: space-around;

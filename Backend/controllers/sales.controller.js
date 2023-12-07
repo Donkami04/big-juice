@@ -34,6 +34,8 @@ class SalesController {
         id_user: data.id_user,
         date: currentDateTime,
         products: data.products,
+        rappi: data.rappi,
+        nequi: data.nequi
       });
 
       return {

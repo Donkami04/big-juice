@@ -8,9 +8,9 @@ export const Navbar = () => {
         </div>
         <div className="links-container">
             <p><Link to="/vender">VENDER</Link></p>
+            <p><Link to="/ventas">VENTAS</Link></p>
             <p><Link to="/produccion">PRODUCCIÓN</Link></p>
             <p><Link to="/compras">COMPRAS</Link></p>
-            <p><Link to="/ventas">VENTAS</Link></p>
             <p><Link to="/proveedores">PROVEEDORES</Link></p>
             <p><Link to="/inventario">INVENTARIO</Link></p>
             <p><Link to="/usuarios">USUARIOS</Link></p>

@@ -1,7 +1,8 @@
 .main-categories-container {
     background-color: var(--lila-oscuro);;
     width: 7rem;
-    height: calc(100vh - 6rem)
+    height: calc(100vh - 6rem - 2px);
+    border-right: solid 2px black;
 }
 
 .categories-container {

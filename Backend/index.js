@@ -16,7 +16,7 @@ app.use(express.json());
 //! Cambiar origen
 app.use(
   cors({
-    origin: ["*"],
+    origin: ["http://localhost:8000"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })

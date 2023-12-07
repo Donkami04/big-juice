@@ -27,6 +27,16 @@ module.exports = {
         type: Sequelize.STRING(50),
         allowNull: false,
       },
+      rappi: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue : false
+      },
+      nequi: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue : false
+      },
       products: {
         type: Sequelize.JSON,
         allowNull: false,
