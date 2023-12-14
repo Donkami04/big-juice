@@ -1,6 +1,6 @@
 const { Products } = require("../db/models/products");
 const { Sequelize } = require("sequelize");
-const { IngredientsController } = require("./ingredients.controller")
+const { IngredientsController } = require("./ingredients.controller");
 
 class ProductsController {
   static async getProducts() {
@@ -18,7 +18,7 @@ class ProductsController {
   static async createProduct(data) {
     try {
       const productDoesExist = await Products.findOne({
-        where: { name: data.name },
+        where: { name: data.name, ubication: data.ubication },
       });
       if (productDoesExist) {
         return {
@@ -41,7 +41,7 @@ class ProductsController {
         canela: data.canela,
         miel: data.miel,
         tarrina: data.tarrina,
-        pitillo: data.pitillo
+        pitillo: data.pitillo,
       });
 
       return {
@@ -82,7 +82,7 @@ class ProductsController {
           canela: changes.canela,
           miel: changes.miel,
           tarrina: changes.tarrina,
-          pitillo: changes.pitillo
+          pitillo: changes.pitillo,
         },
         { where: { id: id } }
       );
@@ -138,21 +138,21 @@ class ProductsController {
         });
 
         if (productDoesExist === null) {
-          console.log("PRODUCTO NO EXISTE")
+          console.log("PRODUCTO NO EXISTE");
           throw new Error(
             `El producto ${productName.toUpperCase()} no existe.`
           );
         }
 
         if (productDoesExist.quantity === 0) {
-          console.log("PRODUCTO ES 0")
+          console.log("PRODUCTO ES 0");
           throw new Error(
             `El producto ${productName.toUpperCase()} está agotado.`
           );
         }
 
         if (quantitySold > productDoesExist.quantity) {
-          console.log("LA VENTA SUPERA EL STOCK")
+          console.log("LA VENTA SUPERA EL STOCK");
           throw new Error(
             `No hay suficiente cantidad de ${productName.toUpperCase()} para realizar esta venta.`
           );
@@ -177,7 +177,7 @@ class ProductsController {
       return {
         status: 404,
         message: `Error al actualizar los productos`,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -197,7 +197,11 @@ class ProductsController {
           where: { name: productName, ubication: ubication },
         });
 
-        await IngredientsController.discountIngredientsStock(dataProduct, quantityProduced, ubication);
+        await IngredientsController.discountIngredientsStock(
+          dataProduct,
+          quantityProduced,
+          ubication
+        );
 
         return {
           status: 200,
@@ -205,7 +209,7 @@ class ProductsController {
         };
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
       return {
         status: 500,
         message: `Error al actualizar los productos e ingredientes: ${error.message}`,

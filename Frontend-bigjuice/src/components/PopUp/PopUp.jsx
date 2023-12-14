@@ -1,11 +1,12 @@
 import "./PopUp.css";
 
-export function PopUp({ message, closeMessage }) {
+export function PopUp({ message, value, closeMessage }) {
+
   return (
     <div className="main-popup-container">
       <div className="popup-container">
         <p className="close-button" onClick={closeMessage}>X</p>
-        {message}
+        <p>{message}</p>
       </div>
     </div>
   );

@@ -15,9 +15,11 @@
     position: relative;
     display: grid;
     place-content: center;
-    font-size: 2rem;
+    font-size: 3rem;
     border: solid 2px black;
     border-radius: 15px;
+    padding: 15px;
+    text-align: center;
 }
 
 .close-button {

@@ -12,8 +12,8 @@ export const ShopCar = ({
 }) => {
   const [pagaConMoneyFormat, setPagaConMoneyFormat] = useState("");
   const [integerPagaCon, setIntegerPagaCon] = useState(0);
-  const [change, setChange] = useState(0);
-  const [changeMoneyFormat, setChangeMoneyFormat] = useState("$");
+  const [change, setChange] = useState("");
+  const [shopCarMessage, SetShopCarMessage] = useState("");
   const [nequiChecked, setNequiChecked] = useState(false);
   const [rappiChecked, setRappiChecked] = useState(false);
   const token = localStorage.getItem("jwtToken");
@@ -49,6 +49,7 @@ export const ShopCar = ({
     obj.amount = obj.quantity * obj.sale_price;
   });
 
+  // Lista de productos que seran vendidos
   const products = [];
   shopcar.forEach((product) => {
     const item = {
@@ -59,44 +60,50 @@ export const ShopCar = ({
     };
     products.push(item);
   });
-
   // Calculo del total del Shop Car
   let total = 0;
   shopcar.forEach((product) => {
     total += product.amount;
   });
 
+  const handleNequiChange = () => {
+    setNequiChecked(true);
+    setRappiChecked(false);
+  };
+
+  const handleRappiChange = () => {
+    setRappiChecked(true);
+    setNequiChecked(false);
+  };
+
   // Cambia el formato del dinero "Paga con" ($ 9.999) a un integer
   const changeMoney = () => {
-    const intPagaCon = parseInt(pagaConMoneyFormat.replace(/[^\d]/g, ""), 10);
+    let intPagaCon = 0;
+    if (pagaConMoneyFormat.length <= 5) {
+      intPagaCon = parseInt(pagaConMoneyFormat.replace(/\D/g, ""));
+    }
+
+    if (pagaConMoneyFormat.length > 5) {
+      intPagaCon = parseInt(pagaConMoneyFormat.replace(/[^\d]/g, ""), 10);
+    }
     setIntegerPagaCon(intPagaCon);
-    setChangeMoneyFormat(useColMoney(integerPagaCon - total));
-    pagaConMoneyFormat === ""
-      ? setChangeMoneyFormat("Dinero insuficiente")
-      : setChange(useColMoney(integerPagaCon - total));
-    integerPagaCon < total
-      ? setChangeMoneyFormat("Dinero insuficiente")
-      : setChange(useColMoney(integerPagaCon - total));
-    // if (integerPagaCon < total) {
-    //   setChangeMoneyFormat("Dinero insuficiente");
-    //   throw Error
-    // } else {
-    //   setChange(useColMoney(integerPagaCon - total));
-    // }
   };
 
   // Se utiliza para enviar la peticion POST
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (products.length === 0) {
-      setChangeMoneyFormat("No se puede hacer una venta sin productos");
-      throw Error;
-    }
-    if (integerPagaCon < total) {
-      setChangeMoneyFormat("Dinero insuficiente");
-      throw Error;
-    }
+
     try {
+      if (products.length === 0) {
+        SetShopCarMessage("No se puede hacer una venta sin productos");
+        throw new Error();
+      }
+
+      if (integerPagaCon < total) {
+        SetShopCarMessage("Dinero insuficiente");
+        throw new Error();
+      }
+
       const response = await axios.post(
         `${BASE_API_URL}/sales/new`,
         {
@@ -112,16 +119,31 @@ export const ShopCar = ({
           },
         }
       );
-      // Vaciar datos del front
-      setPagaConMoneyFormat("");
-      setChange(0);
-      // setChangeMoneyFormat("$");
-      setNequiChecked("false");
-      setRappiChecked("false");
-      cleanShopCar();
-      saleSuccesMessage("Venta Realizada");
-      console.log(response.data.message);
-    } catch (error) {}
+      if (response.data.status === 201) {
+        const calculatedChangeMoneyFormat = useColMoney(integerPagaCon - total);
+        setChange(calculatedChangeMoneyFormat);
+        // Esperar a que se complete la actualización del estado antes de llamar a saleSuccesMessage
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        saleSuccesMessage(`Devuelta ${calculatedChangeMoneyFormat}`);
+        setPagaConMoneyFormat("");
+        SetShopCarMessage("");
+        setNequiChecked(false);
+        setRappiChecked(false);
+        cleanShopCar();
+      }
+    } catch (error) {
+      const message = error.response.data.message;
+      saleSuccesMessage(message);
+    }
+  };
+
+  const cancelButton = () => {
+    setPagaConMoneyFormat("");
+    SetShopCarMessage("");
+    setNequiChecked(false);
+    setRappiChecked(false);
+    cleanShopCar();
   };
 
   return (
@@ -153,30 +175,32 @@ export const ShopCar = ({
         <h1>TOTAL: {useColMoney(total)}</h1>
       </div>
       <div className="checkbox-container">
-        <label htmlFor="nequiCheckbox">
+        <label htmlFor="nequi">
           Nequi
           <input
+            className="platform-checkbox"
             type="checkbox"
             id="nequi"
             value="nequi"
-            onChange={() => setNequiChecked(!nequiChecked)}
+            onChange={() => handleNequiChange()}
+            checked={nequiChecked}
           />
         </label>
-        <label htmlFor="nequiCheckbox">
+        <label htmlFor="rappi">
           Rappi
           <input
+            className="platform-checkbox"
             type="checkbox"
             id="rappi"
             value="rappi"
-            onChange={() => setRappiChecked(!rappiChecked)}
+            onChange={() => handleRappiChange()}
+            checked={rappiChecked}
           />
         </label>
       </div>
       <div className="input-cash-container">
         <p>PAGA CON:</p>
         <input
-          type="text"
-          placeholder="$"
           value={pagaConMoneyFormat}
           onChange={handleInputChange}
           required
@@ -187,15 +211,15 @@ export const ShopCar = ({
           type="submit"
           className="shopcar-button pay-button"
           onClick={() => changeMoney()}
-          // onSubmit={handleSubmit}
         >
           PAGAR
         </button>
-        <button className="shopcar-button cancel-button">CANCELAR</button>
+        <div className="shopcar-button cancel-button" onClick={cancelButton}>
+          CANCELAR
+        </div>
       </div>
       <div className="change-container">
-        <h1>DEVUELTA</h1>
-        <h2>{changeMoneyFormat}</h2>
+        <h2>{shopCarMessage}</h2>
       </div>
     </form>
   );

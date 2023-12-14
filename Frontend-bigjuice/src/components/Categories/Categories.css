@@ -16,4 +16,5 @@
 
 .categories-container p {
     color: white;
+    cursor: pointer;
 }

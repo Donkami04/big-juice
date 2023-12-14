@@ -25,7 +25,10 @@ class SalesController {
 
       const response = await ProductsController.discountStock(soldProducts, ubication);
       if (response.status === 404) {
-        throw new Error(response.error);
+        return {
+          status: 404,
+          message: response.error,
+        };
       }
 
       await Sales.create({

@@ -13,24 +13,20 @@ export const ProductCard = ({ data, addToShopcar, removeFromShopcar }) => {
 
   return (
     <div className="product-card">
-
       <div className="name-product-container">
         <p>{name}</p>
       </div>
-      
       <div className="product-image-container">
         <img src="" alt="" />
       </div>
-
-        <p className="add-product product-button" 
-        onClick={() => addToShopcar(data)}>
+      <div className="add-remove-buttons-container">
+        <p className="add-product-button" onClick={() => addToShopcar(data)}>
           <FaPlus />
         </p>
-        <p className="remove-product product-button" 
-        onClick={() => removeFromShopcar(data)}>
+        <p className="remove-product-button" onClick={() => removeFromShopcar(data)}>
           <FaMinus />
         </p>
-
+      </div>
       <div className="price-product-container">
         <p>{value}</p>
       </div>
