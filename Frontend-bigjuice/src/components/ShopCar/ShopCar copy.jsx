@@ -4,20 +4,15 @@ import { useColMoney } from "../../hooks/useColMoney";
 import axios from "axios";
 import "./ShopCar.css";
 
-export const ShopCar = ({
-  dataShopcar,
-  cleanShopCar,
-  saleSuccesMessage,
-  closeMessage,
-}) => {
+export const ShopCar = ({ dataShopcar }) => {
   const [pagaConMoneyFormat, setPagaConMoneyFormat] = useState("");
-  const [integerPagaCon, setIntegerPagaCon] = useState(0);
   const [change, setChange] = useState(0);
   const [changeMoneyFormat, setChangeMoneyFormat] = useState("$");
   const [nequiChecked, setNequiChecked] = useState(false);
   const [rappiChecked, setRappiChecked] = useState(false);
-  const token = localStorage.getItem("jwtToken");
-  const ubication = localStorage.getItem("ubication");
+  const token = localStorage.getItem('jwtToken');
+  const ubication = localStorage.getItem('ubication');
+
 
   // Cambia el formato ingresado en el input "Paga Con" a formato de dinero
   const handleInputChange = (e) => {
@@ -43,8 +38,7 @@ export const ShopCar = ({
 
   // Calcula el valor de la venta solo por un producto dependiendo del numero de
   // veces que se encuentre en el Shop Car
-  let shopcar = Object.values(uniqueObjects);
-
+  const shopcar = Object.values(uniqueObjects);
   shopcar.forEach((obj) => {
     obj.amount = obj.quantity * obj.sale_price;
   });
@@ -55,10 +49,10 @@ export const ShopCar = ({
       name: product.name,
       amount: product.amount,
       category: product.category,
-      quantity: product.quantity,
+      quantity: product.quantity
     };
     products.push(item);
-  });
+  })
 
   // Calculo del total del Shop Car
   let total = 0;
@@ -68,8 +62,10 @@ export const ShopCar = ({
 
   // Cambia el formato del dinero "Paga con" ($ 9.999) a un integer
   const changeMoney = () => {
-    const intPagaCon = parseInt(pagaConMoneyFormat.replace(/[^\d]/g, ""), 10);
-    setIntegerPagaCon(intPagaCon);
+    const integerPagaCon = parseInt(
+      pagaConMoneyFormat.replace(/[^\d]/g, ""),
+      10
+    );
     setChangeMoneyFormat(useColMoney(integerPagaCon - total));
     pagaConMoneyFormat === ""
       ? setChangeMoneyFormat("Dinero insuficiente")
@@ -77,25 +73,11 @@ export const ShopCar = ({
     integerPagaCon < total
       ? setChangeMoneyFormat("Dinero insuficiente")
       : setChange(useColMoney(integerPagaCon - total));
-    // if (integerPagaCon < total) {
-    //   setChangeMoneyFormat("Dinero insuficiente");
-    //   throw Error
-    // } else {
-    //   setChange(useColMoney(integerPagaCon - total));
-    // }
   };
 
   // Se utiliza para enviar la peticion POST
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (products.length === 0) {
-      setChangeMoneyFormat("No se puede hacer una venta sin productos");
-      throw Error;
-    }
-    if (integerPagaCon < total) {
-      setChangeMoneyFormat("Dinero insuficiente");
-      throw Error;
-    }
     try {
       const response = await axios.post(
         `${BASE_API_URL}/sales/new`,
@@ -113,13 +95,7 @@ export const ShopCar = ({
         }
       );
       // Vaciar datos del front
-      setPagaConMoneyFormat("");
-      setChange(0);
-      // setChangeMoneyFormat("$");
-      setNequiChecked("false");
-      setRappiChecked("false");
-      cleanShopCar();
-      saleSuccesMessage("Venta Realizada");
+
       console.log(response.data.message);
     } catch (error) {}
   };

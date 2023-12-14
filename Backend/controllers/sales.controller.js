@@ -17,6 +17,7 @@ class SalesController {
   }
 
   static async newSale(data) {
+    console.log(data)
     try {
       const currentDateTime = getCurrentTime();
       const soldProducts = data.products;

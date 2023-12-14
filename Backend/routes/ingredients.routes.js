@@ -6,14 +6,19 @@ const {
   IngredientsController,
 } = require("../controllers/ingredients.controller");
 
-router.get("/", checkRoles("admin"), async (req, res, next) => {
-  try {
-    const ingredients = await IngredientsController.getIngredients();
-    res.json(ingredients);
-  } catch (error) {
-    next(error);
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  checkRoles("admin"),
+  async (req, res, next) => {
+    try {
+      const ingredients = await IngredientsController.getIngredients();
+      res.json(ingredients);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.put(
   "/edit/:id",

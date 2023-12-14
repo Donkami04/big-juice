@@ -2,7 +2,7 @@ import { FaPlus } from "react-icons/fa6";
 import { FaMinus } from "react-icons/fa";
 import "./ProductCard.css";
 
-export const ProductCard = ({ data, addToShopcar }) => {
+export const ProductCard = ({ data, addToShopcar, removeFromShopcar }) => {
   const name = data.name.toUpperCase();
   const value = data.sale_price.toLocaleString('es-CO', {
     style: 'currency',
@@ -23,7 +23,7 @@ export const ProductCard = ({ data, addToShopcar }) => {
         <p className="add-product-button" onClick={() => addToShopcar(data)}>
           <FaPlus />
         </p>
-        <p className="remove-product-button">
+        <p className="remove-product-button" onClick={() => removeFromShopcar(data)}>
           <FaMinus />
         </p>
       </div>

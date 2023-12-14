@@ -1,1 +1,2 @@
-const a = 
+const a = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2wiOiJ2ZW5kZWRvciIsInViaWNhdGlvbiI6InZpbGxhIGNvbG9tYmlhIiwidXNlciI6IlVuIHZlbmRlZG9yIiwidXNlcl9pZCI6IjA0MDUiLCJpYXQiOjE3MDI1MDc1ODV9.bs4Vg6862PWkypppWgE-3fAuB6D64ZRab-UIA7Ff_UY"
+console.log(a.length)

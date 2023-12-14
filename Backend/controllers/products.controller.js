@@ -138,21 +138,21 @@ class ProductsController {
         });
 
         if (productDoesExist === null) {
-          console.log("primer clg")
+          console.log("PRODUCTO NO EXISTE")
           throw new Error(
             `El producto ${productName.toUpperCase()} no existe.`
           );
         }
 
         if (productDoesExist.quantity === 0) {
-          console.log("segundo clg")
+          console.log("PRODUCTO ES 0")
           throw new Error(
             `El producto ${productName.toUpperCase()} está agotado.`
           );
         }
 
         if (quantitySold > productDoesExist.quantity) {
-          console.log("tercer clg")
+          console.log("LA VENTA SUPERA EL STOCK")
           throw new Error(
             `No hay suficiente cantidad de ${productName.toUpperCase()} para realizar esta venta.`
           );
@@ -162,8 +162,6 @@ class ProductsController {
       for (const product of productsToSell) {
         const productName = product.name;
         const quantitySold = product.quantity;
-        console.log("BUCLE FOR")
-        console.log(ubication)
 
         Products.update(
           { quantity: Sequelize.literal(`quantity - ${quantitySold}`) },
