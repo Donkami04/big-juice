@@ -68,13 +68,6 @@ export const Vender = () => {
   };
 
   const handleCategory = (categorySelected) => {
-    console.log(categorySelected);
-    // setCategory(categorySelected);
-    // const productsSelected = products.filter(
-    //   (product) =>
-    //     product.category === category
-    // );
-    // setProducts(productsSelected);
     setProducts(categorySelected);
   };
 

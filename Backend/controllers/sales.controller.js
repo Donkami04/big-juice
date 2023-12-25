@@ -17,13 +17,16 @@ class SalesController {
   }
 
   static async newSale(data) {
-    console.log(data)
+    console.log(data);
     try {
       const currentDateTime = getCurrentTime();
       const soldProducts = data.products;
       const ubication = data.ubication;
 
-      const response = await ProductsController.discountStock(soldProducts, ubication);
+      const response = await ProductsController.discountStock(
+        soldProducts,
+        ubication
+      );
       if (response.status === 404) {
         return {
           status: 404,
@@ -39,7 +42,7 @@ class SalesController {
         date: currentDateTime,
         products: data.products,
         rappi: data.rappi,
-        nequi: data.nequi
+        nequi: data.nequi,
       });
 
       return {
@@ -51,11 +54,10 @@ class SalesController {
       return {
         status: 500,
         message: `Error al intentar hacer la venta`,
-        error: error.message
+        error: error.message,
       };
     }
   }
-
 
   static async totalSales(initialDate, finalDate, ubication) {
     let totalSales = 0;
@@ -63,9 +65,10 @@ class SalesController {
       const sales = await Sales.findAll({
         where: {
           date: {
-            [Op.between]: [new Date(initialDate), new Date(finalDate)],
+            // [Op.between]: [new Date(initialDate), new Date(finalDate)],
+            [Op.between]: [new Date(`${initialDate} 00:00`), new Date(`${finalDate} 23:59`)],
           },
-          ubication: ubication
+          ubication: ubication,
         },
       });
 
@@ -75,7 +78,7 @@ class SalesController {
 
       return {
         status: 200,
-        data: totalSales,
+        data: { totalSales: totalSales, sales: sales },
       };
     } catch (error) {
       return {
@@ -92,9 +95,9 @@ class SalesController {
       const sales = await Sales.findAll({
         where: {
           date: {
-            [Op.between]: [new Date(initialDate), new Date(finalDate)],
+            [Op.between]: [new Date(`${initialDate} 00:00`), new Date(`${finalDate} 23:59`)],
           },
-          ubication: ubication
+          ubication: ubication,
         },
       });
 

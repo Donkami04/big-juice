@@ -21,3 +21,12 @@ export const getProducts = async () => {
       throw new Error(`Error desde la API - PRODUCTS: ${error}`);
     });
 };
+
+export const getSales= async () => {
+  return axios
+    .get(`${BASE_API_URL}/sales`)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw new Error(`Error desde la API - SALES: ${error}`);
+    });
+};

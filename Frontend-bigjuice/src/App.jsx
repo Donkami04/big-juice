@@ -6,6 +6,8 @@ import { Helmet } from "react-helmet";
 import { Vender } from "./components/Vender/Vender";
 import { Login } from "./components/Login/Login";
 import { UbicationSelector } from "./components/UbicationSelector/UbicationSelector";
+import { Sales } from "./components/Sales/Sales";
+
 
 // Hooks
 import { useTabsName } from "./hooks/useTabsName";
@@ -46,6 +48,7 @@ function App() {
           element={<PrivateRoute element={<UbicationSelector />} />}
         />
         <Route path="/vender" element={<PrivateRoute element={<Vender />} />} />
+        <Route path="/ventas" element={<PrivateRoute element={<Sales />} />} />
       </Routes>
     </>
   );

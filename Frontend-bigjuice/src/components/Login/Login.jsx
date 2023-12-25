@@ -16,24 +16,22 @@ export const Login = () => {
         id: id,
         password: password,
       });
-      console.log("Respuesta del servidor:", response.data);
 
       if (response.status === 200) {
         const token = response.data.data.token;
         localStorage.setItem("jwtToken", token);
       }
-      
+
       const userRol = response.data.data.response.rol;
       const ubication = response.data.data.response.ubication;
       if (userRol === "admin") {
-        navigate("admin-ubication")
-      };
+        navigate("admin-ubication");
+      }
       if (userRol !== "admin") {
         navigate("/vender");
         localStorage.setItem("ubication", ubication);
-      };
+      }
       localStorage.setItem("rol", userRol);
-
     } catch (error) {
       if (error.response) {
         console.error(
@@ -41,7 +39,7 @@ export const Login = () => {
           error.response.data
         );
         setErrorMessage(
-          "Error en la autenticación. Por favor, verifica tus credenciales."
+          "Id o Password incorrectos."
         );
       } else if (error.request) {
         // La solicitud fue realizada pero no se recibió respuesta
@@ -65,30 +63,39 @@ export const Login = () => {
   return (
     <div className="main-login-container">
       <div className="login-container">
-        <h2>Login</h2>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <div className="loggin-title-container">
+          <h1>Iniciar Sesión</h1>
+        </div>
+        <div className="login-logo-container">
+          <img src="logo.png" alt="logo-big-juice" />
+        </div>
         <form>
-          <label>
-            Id:
-            <input
-              type="text"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-            />
-          </label>
-          <br />
-          <label>
-            Password:
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </label>
-          <br />
-          <button type="button" onClick={handleLogin}>
-            Iniciar sesión
-          </button>
+          <div className="block-form">
+            <label>
+              Id:
+              <input
+                type="text"
+                value={id}
+                onChange={(e) => setId(e.target.value)}
+              />
+            </label>
+          </div>
+          <div className="block-form">
+            <label>
+              Password:
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </label>
+          </div>
+          {errorMessage && <p className="error-message-login">{errorMessage}</p>}
+          <div className="button-form-container">
+            <button type="button" onClick={handleLogin}>
+              Iniciar sesión
+            </button>
+          </div>
         </form>
       </div>
     </div>

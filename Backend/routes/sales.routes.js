@@ -44,7 +44,7 @@ router.post(
   }
 );
 
-router.get(
+router.post(
   "/total",
   passport.authenticate("jwt", { session: false }),
   checkRoles("admin"),
@@ -68,7 +68,7 @@ router.get(
   }
 );
 
-router.get(
+router.post(
   "/category",
   passport.authenticate("jwt", { session: false }),
   checkRoles("admin"),

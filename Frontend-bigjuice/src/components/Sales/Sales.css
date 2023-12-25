@@ -1,0 +1,55 @@
+.sales-dates-container {
+
+}
+
+.form-sales-dates {
+    margin: auto;
+    width: 50%;
+    display: flex;
+    justify-content: space-evenly;
+    height: 4rem;
+    margin-top: 20px;
+}
+
+.form-sales-dates div {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.button-sales-find, .button-sales-find button{
+    display: grid;
+    place-content: center;
+}
+
+.totals-sales-messages {
+   font-size: 1.2rem;
+}
+
+.totals-sales-messages div {
+    display: flex;
+    justify-content: space-around;
+    height: 3rem;
+    align-items: center;
+}
+
+.sales-table {
+    border-collapse: collapse;
+    width: 90%;
+    margin: auto;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.sales-table th, .sales-table td{
+    border:  solid 1px black;
+
+}
+
+.sales-table th {
+    height: 2rem;
+    background-color: var(--lila-oscuro);
+    font-size: 1.3rem;
+    color: white;
+    
+}
