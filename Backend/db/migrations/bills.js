@@ -27,10 +27,6 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      user_id: {
-        type: Sequelize.STRING(4),
-        allowNull: false,
-      },
       description: {
         type: Sequelize.STRING(100),
         allowNull: true,

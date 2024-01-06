@@ -7,25 +7,44 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import "./Sales.css";
 
 export function Sales() {
-  const [sdate, setSdate] = useState("");
   const [sales, setSales] = useState([]);
-  const [salesNequi, setSalesNequi] = useState("");
-  const [salesRappi, setSalesRappi] = useState("");
+  const [salesNequi, setSalesNequi] = useState("$ 0");
+  const [salesRappi, setSalesRappi] = useState("$ 0");
+  const [total, setTotal] = useState("$ 0");
+  const [totalJugos, setTotalJugos] = useState("$ 0");
+  const [totalOthers, setTotalOthers] = useState("$ 0");
+  const [sdate, setSdate] = useState("");
   const [edate, setEdate] = useState("");
-  const [total, setTotal] = useState("$");
-  const [totalJugos, setTotalJugos] = useState("$");
-  const [totalOthers, setTotalOthers] = useState("$");
-  const ubication = localStorage.getItem("ubication");
+  const [ubication, setUbication] = useState("");
+  const userUbication = localStorage.getItem("ubication");
   const jwtToken = localStorage.getItem("jwtToken");
+  const rol = localStorage.getItem("rol");
+  const [showSalesTable, setShowSalesTable] = useState("false");
+  const [showUbicationSelector, setShowUbicationSelector] = useState("false");
+  const [showSalesMessage, setShowSalesMessage] = useState("false");
+  const [salesMessage, setSalesMessage] = useState("");
+
+  useEffect(() => {
+    rol !== "admin"
+      ? setShowUbicationSelector("false")
+      : setShowUbicationSelector("");
+
+      setUbication(userUbication)
+  }, []);
 
   const handleSubmit = async () => {
+    if (!sdate || !edate) {
+      setShowSalesMessage("")
+      setSalesMessage("Por favor, selecciona ambas fechas.");
+      return;
+    }
     try {
       const dataTotal = await axios.post(
         `${BASE_API_URL}/sales/total`,
         {
           initialDate: sdate,
           finalDate: edate,
-          ubication: ubication,
+          ubication: ubication || userUbication,
         },
         {
           headers: {
@@ -40,7 +59,7 @@ export function Sales() {
           initialDate: sdate,
           finalDate: edate,
           category: "jugos",
-          ubication: ubication,
+          ubication: ubication || userUbication,
         },
         {
           headers: {
@@ -55,7 +74,7 @@ export function Sales() {
           initialDate: sdate,
           finalDate: edate,
           category: "otros",
-          ubication: ubication,
+          ubication: ubication || userUbication,
         },
         {
           headers: {
@@ -68,7 +87,13 @@ export function Sales() {
       setTotal(useColMoney(dataTotal.data.data.totalSales));
       setTotalJugos(useColMoney(dataTotalJugos.data.data));
       setTotalOthers(useColMoney(dataTotalOthers.data.data));
+      setShowSalesTable("");
+      setShowSalesMessage("false");
+      
     } catch (error) {
+      setShowSalesTable("false");
+      setShowSalesMessage("");
+      setSalesMessage(error.response.data.message);
       console.error(error);
     }
   };
@@ -104,7 +129,7 @@ export function Sales() {
           <div>
             <label>Fecha Inicial</label>
             <input
-              id="sdate"
+              className="date-selector-sales"
               value={sdate}
               type="date"
               onChange={(e) => setSdate(e.target.value)}
@@ -113,47 +138,85 @@ export function Sales() {
           <div>
             <label>Fecha Final</label>
             <input
+              className="date-selector-sales"
               value={edate}
               type="date"
               onChange={(e) => setEdate(e.target.value)}
             ></input>
           </div>
+          <div>
+            <label className={`display-${showUbicationSelector}`}>
+              Ubicación
+            </label>
+            <select
+              id="ubication"
+              value={ubication}
+              onChange={(e) => setUbication(e.target.value)}
+              className={`display-${showUbicationSelector} ubication-selector-sales`}
+            >
+              <option value="" disabled>
+                Selecciona...
+              </option>
+              <option value="villa colombia">Villa Colombia</option>
+              <option value="unico">Único</option>
+            </select>
+          </div>
           <div className="button-sales-find">
             <button type="button" onClick={handleSubmit}>
-            <FaMagnifyingGlass />
+              <FaMagnifyingGlass />
             </button>
           </div>
         </form>
+        <p className={`sales-message display-${showSalesMessage}`}>{salesMessage}</p>
 
-        <section className="totals-sales-messages">
-          <div>
-            <p>Total ventas: {total}</p>
-            <p>Total ventas Jugos: {totalJugos}</p>
-            <p>Total ventas Otros: {totalOthers}</p>
-            <p>Total ventas Nequi: {salesNequi}</p>
-            <p>Total ventas Rappi: {salesRappi}</p>
-          </div>
+        <section className={`totals-sales-messages display-${showSalesTable}`}>
+          <table>
+            <tbody>
+              <tr>
+                <td>Total</td>
+                <td>{total}</td>
+              </tr>
+              <tr>
+                <td>Jugos</td>
+                <td>{totalJugos}</td>
+              </tr>
+              <tr>
+                <td>Otros</td>
+                <td>{totalOthers}</td>
+              </tr>
+              <tr>
+                <td>Nequi</td>
+                <td>{salesNequi}</td>
+              </tr>
+              <tr>
+                <td>Rappi</td>
+                <td>{salesRappi}</td>
+              </tr>
+            </tbody>
+          </table>
         </section>
 
-        <main>
+        <main className={`sales-table-container display-${showSalesTable}`}>
           <table className="sales-table">
             <thead>
               <tr>
-                <th>Usuario</th>
+                <th>Id Venta</th>
+                <th>Fecha</th>
                 <th>Total</th>
                 <th>Rappi</th>
                 <th>Nequi</th>
-                <th>Fecha</th>
+                <th>Usuario</th>
               </tr>
             </thead>
             <tbody>
               {sales.map((sale) => (
                 <tr key={sale.id}>
-                  <td>{sale.user}</td>
-                  <td>{sale.amount}</td>
+                  <td>{sale.id}</td>
+                  <td>{sale.date}</td>
+                  <td>{useColMoney(sale.amount)}</td>
                   <td>{sale.rappi === true ? "Si" : "No"}</td>
                   <td>{sale.nequi === true ? "Si" : "No"}</td>
-                  <td>{sale.date}</td>
+                  <td>{sale.user}</td>
                 </tr>
               ))}
             </tbody>

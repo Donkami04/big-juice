@@ -4,13 +4,14 @@ const passport = require("passport");
 const router = express.Router();
 const { BillsController } = require("../controllers/bills.controller");
 
-router.get(
+router.post(
   "/",
-  checkRoles("admin"),
   passport.authenticate("jwt", { session: false }),
+  checkRoles("admin"),
   async (req, res, next) => {
     try {
-      const bills = await BillsController.getBills();
+      const { initialDate, finalDate, ubication } = req.body;
+      const bills = await BillsController.getBills(initialDate, finalDate, ubication);
       res.json(bills);
     } catch (error) {
       next(error);
@@ -20,12 +21,13 @@ router.get(
 
 router.post(
   "/new",
-  checkRoles("admin"),
+  // checkRoles("admin"),
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
       const data = req.body;
-      const newBill = await BillsController.createBill(data);
+      const { user } = req.user;
+      const newBill = await BillsController.createBill(data, user);
       res.status(newBill.status).json({
         status: newBill.status,
         message: newBill.message,
@@ -39,10 +41,10 @@ router.post(
   }
 );
 
-router.get(
+router.post(
   "/total",
-  checkRoles("admin"),
   passport.authenticate("jwt", { session: false }),
+  checkRoles("admin"),
   async (req, res, next) => {
     try {
       const { initialDate, finalDate, ubication } = req.body;

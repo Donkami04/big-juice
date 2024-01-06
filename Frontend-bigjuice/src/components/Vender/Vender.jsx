@@ -11,12 +11,11 @@ export const Vender = () => {
   const [products, setProducts] = useState([]);
   const [jugos, setJugos] = useState([]);
   const [otros, setOtros] = useState([]);
-  const [filtredProducts, setFiltredProducts] = useState([]);
   const [dataShopcar, setDataShopcar] = useState([]);
   const [message, setMessage] = useState("");
   const [showMessage, setShowMessage] = useState(false);
-  const [category, setCategory] = useState("jugos");
   const userUbication = localStorage.getItem("ubication");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -70,6 +69,7 @@ export const Vender = () => {
   const handleCategory = (categorySelected) => {
     setProducts(categorySelected);
   };
+
 
   return (
     <div className="main-vender-container">

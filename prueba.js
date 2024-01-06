@@ -1,19 +1,10 @@
-// Función para formatear un número como un valor en dólares sin decimales
-function formatoDolar(numero) {
-  // Crear una instancia de Intl.NumberFormat con el formato de moneda en dólares
-  const formatoDolar = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0, // Establecer el número mínimo de decimales a 0
-    maximumFractionDigits: 0, // Establecer el número máximo de decimales a 0
-  });
+import { Resend } from 'resend';
 
-  // Devolver el número formateado
-  return formatoDolar.format(numero);
-}
+const resend = new Resend('re_5YsW1XHK_2CUTGvcUvWxboPYGngs9K2u2');
 
-// Ejemplo de uso
-const numero = 12345;
-const numeroFormateado = formatoDolar(numero);
-
-console.log(numeroFormateado); // Mostrará "$1,234,567"
+resend.emails.send({
+  from: 'onboarding@resend.dev',
+  to: 'camilo.munerac@gmail.com',
+  subject: 'Hello World',
+  html: '<p>Congrats on sending your <strong>first email</strong>!</p>'
+});

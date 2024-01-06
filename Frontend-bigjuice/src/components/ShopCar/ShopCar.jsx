@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BASE_API_URL } from "../../utils/api/bigjuice";
 import { useColMoney } from "../../hooks/useColMoney";
+import { ConfirmationMessage } from "../ConfirmationMessage/ConfirmationMessage";
 import axios from "axios";
 import "./ShopCar.css";
 
@@ -12,10 +13,13 @@ export const ShopCar = ({
 }) => {
   const [pagaConMoneyFormat, setPagaConMoneyFormat] = useState("");
   const [integerPagaCon, setIntegerPagaCon] = useState(0);
-  const [change, setChange] = useState("");
+  // const [change, setChange] = useState("");
   const [shopCarMessage, SetShopCarMessage] = useState("");
   const [nequiChecked, setNequiChecked] = useState(false);
   const [rappiChecked, setRappiChecked] = useState(false);
+  const [showZeroSale, setShowZeroSale] = useState(false);
+  const [user, setUser] = useState("");
+  const [customer, setCustomer] = useState("");
   const token = localStorage.getItem("jwtToken");
   const ubication = localStorage.getItem("ubication");
 
@@ -121,7 +125,7 @@ export const ShopCar = ({
       );
       if (response.data.status === 201) {
         const calculatedChangeMoneyFormat = useColMoney(integerPagaCon - total);
-        setChange(calculatedChangeMoneyFormat);
+        // setChange(calculatedChangeMoneyFormat);
         // Esperar a que se complete la actualización del estado antes de llamar a saleSuccesMessage
         await new Promise((resolve) => setTimeout(resolve, 0));
 
@@ -133,6 +137,9 @@ export const ShopCar = ({
         cleanShopCar();
       }
     } catch (error) {
+      // saleSuccesMessage(error);
+
+      console.error(error);
       const message = error.response.data.message;
       saleSuccesMessage(message);
     }
@@ -146,81 +153,173 @@ export const ShopCar = ({
     cleanShopCar();
   };
 
+  const zeroSaleForm = () => {
+    setShowZeroSale(true);
+  };
+
+  const hiddeZeroSaleForm = () => {
+    setShowZeroSale(false);
+  };
+
+  const confirmZeroSale = async (event) => {
+    event.preventDefault()
+    try {
+      const response = await axios.post(
+        `${BASE_API_URL}/sales/new`,
+        {
+          amount: 0,
+          nequi: false,
+          rappi: false,
+          products: products,
+          ubication: ubication,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setShowZeroSale(false);
+      saleSuccesMessage(response.data.message);
+      if (response.data.status === 201) {
+        const sendNotification = await axios.post(
+          `${BASE_API_URL}/email/zero-sale`,
+          {
+            customer: customer,
+            ubication: ubication,
+            user: user
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setCustomer("")
+        setPagaConMoneyFormat("");
+        SetShopCarMessage("");
+        setNequiChecked(false);
+        setRappiChecked(false);
+        cleanShopCar();
+      }
+    } catch (error) {
+      setShowZeroSale(false);
+      const message = error.response.data.message;
+      saleSuccesMessage(message);
+    }
+  };
+
   return (
-    <form className="main-shopcar-container" onSubmit={handleSubmit}>
-      <div className="sale-title">
-        <h1>VENTA</h1>
-      </div>
-      <div className="products-in-shopcar-container">
-        <table className="products-in-shopcar">
-          <thead>
-            <tr>
-              <th>PRODUCTO</th>
-              <th>Und</th>
-              <th>VALOR</th>
-            </tr>
-          </thead>
-          <tbody>
-            {shopcar.map((product, index) => (
-              <tr key={index}>
-                <td>{product.name.toUpperCase()}</td>
-                <td>{product.quantity}</td>
-                <td>{useColMoney(product.sale_price * product.quantity)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="total-sale">
-        <h1>TOTAL: {useColMoney(total)}</h1>
-      </div>
-      <div className="checkbox-container">
-        <label htmlFor="nequi">
-          Nequi
-          <input
-            className="platform-checkbox"
-            type="checkbox"
-            id="nequi"
-            value="nequi"
-            onChange={() => handleNequiChange()}
-            checked={nequiChecked}
-          />
-        </label>
-        <label htmlFor="rappi">
-          Rappi
-          <input
-            className="platform-checkbox"
-            type="checkbox"
-            id="rappi"
-            value="rappi"
-            onChange={() => handleRappiChange()}
-            checked={rappiChecked}
-          />
-        </label>
-      </div>
-      <div className="input-cash-container">
-        <p>PAGA CON:</p>
-        <input
-          value={pagaConMoneyFormat}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
-      <div className="buttons-container">
-        <button
-          type="submit"
-          className="shopcar-button pay-button"
-          onClick={() => changeMoney()}
-        >
-          PAGAR
-        </button>
-        <div className="shopcar-button cancel-button" onClick={cancelButton}>
-          CANCELAR
+    <div>
+      {showZeroSale && (
+        <div className="zero-sale-container">
+          <div>
+            <h2>Advertencia ⚠️</h2>
+            <p>
+              Crear una venta en $0 generará notificaciones a los
+              administradores, ¿Está seguro de hacerlo?
+            </p>
+            <form>
+              <label>Nombre del Cliente</label>
+              <input
+                value={customer}
+                required
+                onChange={(e) => setCustomer(e.target.value)}
+              />
+              <section className="buttons-container-zero-sale">
+                <button onClick={(event) => confirmZeroSale(event)}>Enviar</button>
+                <button
+                  style={{ backgroundColor: "blue" }}
+                  onClick={hiddeZeroSaleForm}
+                >
+                  Cancelar
+                </button>
+              </section>
+            </form>
+          </div>
         </div>
-      </div>
-      <div className="change-container">
-        <h2>{shopCarMessage}</h2>
-      </div>
-    </form>
+      )}
+      <form className="main-shopcar-container" onSubmit={handleSubmit}>
+        <div className="sale-title">
+          <h1>VENTA</h1>
+        </div>
+        <div className="products-in-shopcar-container">
+          <table className="products-in-shopcar">
+            <thead>
+              <tr>
+                <th>PRODUCTO</th>
+                <th>Und</th>
+                <th>VALOR</th>
+              </tr>
+            </thead>
+            <tbody>
+              {shopcar.map((product, index) => (
+                <tr key={index}>
+                  <td>{product.name.toUpperCase()}</td>
+                  <td>{product.quantity}</td>
+                  <td>{useColMoney(product.sale_price * product.quantity)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="total-sale">
+          <h1>TOTAL: {useColMoney(total)}</h1>
+        </div>
+        <div className="checkbox-container">
+          <label htmlFor="nequi">
+            Nequi
+            <input
+              className="platform-checkbox"
+              type="checkbox"
+              id="nequi"
+              value="nequi"
+              onChange={() => handleNequiChange()}
+              checked={nequiChecked}
+            />
+          </label>
+          <label htmlFor="rappi">
+            Rappi
+            <input
+              className="platform-checkbox"
+              type="checkbox"
+              id="rappi"
+              value="rappi"
+              onChange={() => handleRappiChange()}
+              checked={rappiChecked}
+            />
+          </label>
+        </div>
+        <div className="input-cash-container">
+          <p>PAGA CON:</p>
+          <input
+            value={pagaConMoneyFormat}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className="buttons-container">
+          <button
+            type="submit"
+            className="shopcar-button pay-button"
+            onClick={() => changeMoney()}
+          >
+            PAGAR
+          </button>
+          <div className="shopcar-button cancel-button" onClick={cancelButton}>
+            CANCELAR
+          </div>
+        </div>
+        <div className="change-container">
+          <h2>{shopCarMessage}</h2>
+        </div>
+        {products.length === 0 ? null : (
+          <p onClick={zeroSaleForm} className="zero-sale">
+            $0
+          </p>
+        )}
+      </form>
+    </div>
   );
 };

@@ -93,20 +93,24 @@ router.post("/discount-stock", async (req, res, next) => {
   }
 });
 
-router.post("/produce", async (req, res, next) => {
-  try {
-    const data = req.body;
-    const response = await ProductsController.increaseStockProduct(data);
-    res.status(response.status).json({
-      status: response.status,
-      message: response.message,
-      error: response.error,
-      data: response.data,
-    });
-  } catch (error) {
-    console.error(error);
-    next(error);
+router.post(
+  "/produce",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res, next) => {
+    try {
+      const data = req.body.listProducts;
+      const response = await ProductsController.increaseStockProduct(data);
+      res.status(response.status).json({
+        status: response.status,
+        message: response.message,
+        error: response.error,
+        data: response.data,
+      });
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
   }
-});
+);
 
 module.exports = router;

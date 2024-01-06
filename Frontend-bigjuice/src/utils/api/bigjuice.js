@@ -22,11 +22,33 @@ export const getProducts = async () => {
     });
 };
 
-export const getSales= async () => {
+export const getSales = async () => {
   return axios
     .get(`${BASE_API_URL}/sales`)
     .then((response) => response.data)
     .catch((error) => {
       throw new Error(`Error desde la API - SALES: ${error}`);
+    });
+};
+
+export const getSuppliers = async () => {
+  return axios
+    .get(`${BASE_API_URL}/suppliers`)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw new Error(`Error desde la API - SUPPLIERS: ${error}`);
+    });
+};
+
+export const getInventory = async (jwtToken) => {
+  return axios
+    .get(`${BASE_API_URL}/ingredients`, {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+    .then((response) => response.data)
+    .catch((error) => {
+      throw new Error(`Error desde la API - INGREDIENTES: ${error}`);
     });
 };

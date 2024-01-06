@@ -1,0 +1,88 @@
+.newbill-main-container {
+    background-color:  rgba(0, 0, 0, 0.375);
+    height: calc(100vh - 6rem - 2px);
+    position: absolute;
+    width: 100vw;
+    display: grid;
+    place-content: center;
+    top: calc(6rem + 2px);
+    z-index: 9999;
+}
+
+.new-bill {
+    position: absolute;
+    left: 10px;
+    top: calc(6rem + 10px);
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    border: solid 2px black;
+    width: 10rem;
+}
+
+.newbill-main-container form {
+    background-color: white;
+    width: 30rem;
+    height: 30rem;
+    border: 2px solid black;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.newbill-main-container form h2{
+    margin: auto;
+}
+
+.newbill-main-container form div {
+    display: grid;
+    place-content: center;
+    width: 70%;
+    margin: auto;
+
+}
+
+.newbill-main-container form div input {
+    width: 20rem;
+}
+
+.newbill-main-container form div textarea {
+    width: 20rem;
+    height: 4rem;
+    resize: none;
+}
+
+.newbill-main-container form button {
+    background-color: greenyellow;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    border: solid 2px black;
+    color: rgb(110, 37, 148);
+    width: 15rem;
+}
+
+.newbill-main-container form button:hover {
+    background-color: rgb(110, 37, 148);
+    color: greenyellow;
+}
+
+.close-button-container-newbill {
+    position: relative;
+    width: 100%;
+    display: flex;
+    font-size: 1.6rem;
+}
+
+.newbill-message {
+    margin: auto;
+    margin-bottom: 10px;
+    color: rgb(110, 37, 148);
+}

@@ -3,6 +3,7 @@ const passport = require("passport");
 const router = express.Router();
 const { checkRoles } = require("../middlewares/auth.handler");
 const { SalesController } = require("../controllers/sales.controller");
+const moment = require("moment");
 
 router.get(
   "/",
@@ -47,15 +48,33 @@ router.post(
 router.post(
   "/total",
   passport.authenticate("jwt", { session: false }),
-  checkRoles("admin"),
+  // checkRoles("admin"),
   async (req, res, next) => {
     try {
+      const { rol } = req.user;
       const { initialDate, finalDate, ubication } = req.body;
+
+      // Verificar si el rol es diferente de "admin"
+      if (rol !== "admin") {
+        // Verificar si la diferencia de fechas es más de 3 días
+        const currentDate = moment();
+        const providedInitialDate = moment(initialDate);
+        const daysDifference = currentDate.diff(providedInitialDate, "days");
+
+        if (daysDifference > 3) {
+          return res.status(403).json({
+            status: 403,
+            message: "No tienes permiso para acceder a fechas mayores a 3 días atras.",
+          });
+        }
+      }
+
       const sales = await SalesController.totalSales(
         initialDate,
         finalDate,
         ubication
       );
+      
       res.status(sales.status).json({
         status: sales.status,
         message: sales.message,
@@ -71,10 +90,26 @@ router.post(
 router.post(
   "/category",
   passport.authenticate("jwt", { session: false }),
-  checkRoles("admin"),
+  // checkRoles("admin"),
   async (req, res, next) => {
     try {
+      const { rol } = req.user;
       const { initialDate, finalDate, category, ubication } = req.body;
+      
+      // Verificar si el rol es diferente de "admin"
+      if (rol !== "admin") {
+        // Verificar si la diferencia de fechas es más de 3 días
+        const currentDate = moment();
+        const providedInitialDate = moment(initialDate);
+        const daysDifference = currentDate.diff(providedInitialDate, "days");
+
+        if (daysDifference > 3) {
+          return res.status(403).json({
+            status: 403,
+            message: "No tienes permiso para acceder a fechas mayores a 3 días atras.",
+          });
+        }
+      }
       const sales = await SalesController.totalSalesCategory(
         initialDate,
         finalDate,

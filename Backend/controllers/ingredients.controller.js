@@ -18,7 +18,7 @@ class IngredientsController {
   static async createIngredient(data) {
     try {
       const ingredientDoesExist = await Ingredients.findOne({
-        where: { name: data.name },
+        where: { name: data.name, ubication: data.ubication },
       });
       if (ingredientDoesExist) {
         return {

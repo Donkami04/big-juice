@@ -1,7 +1,7 @@
 import "./PopUp.css";
 
-export function PopUp({ message, value, closeMessage }) {
-
+export function PopUp({ message, closeMessage }) {
+  console.log(message)
   return (
     <div className="main-popup-container">
       <div className="popup-container">

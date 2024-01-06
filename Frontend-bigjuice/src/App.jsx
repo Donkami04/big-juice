@@ -7,6 +7,10 @@ import { Vender } from "./components/Vender/Vender";
 import { Login } from "./components/Login/Login";
 import { UbicationSelector } from "./components/UbicationSelector/UbicationSelector";
 import { Sales } from "./components/Sales/Sales";
+import { Production } from "./components/Production/Production";
+import { Bills } from "./components/Bills/Bills";
+import { Suppliers } from "./components/Suppliers/Suppliers";
+import { Inventory } from "./components/Inventory/Inventory";
 
 
 // Hooks
@@ -49,6 +53,10 @@ function App() {
         />
         <Route path="/vender" element={<PrivateRoute element={<Vender />} />} />
         <Route path="/ventas" element={<PrivateRoute element={<Sales />} />} />
+        <Route path="/produccion" element={<PrivateRoute element={<Production />} />} />
+        <Route path="/compras" element={<PrivateRoute element={<Bills />} />} />
+        <Route path="/proveedores" element={<PrivateRoute element={<Suppliers />} />} />
+        <Route path="/inventario" element={<PrivateRoute element={<Inventory />} />} />
       </Routes>
     </>
   );

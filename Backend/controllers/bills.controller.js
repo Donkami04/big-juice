@@ -4,9 +4,23 @@ const { Op } = require("sequelize");
 const { getCurrentTime } = require("../utils/currentTime");
 
 class BillsController {
-  static async getBills() {
+  static async getBills(initialDate, finalDate, ubication) {
     try {
-      const bills = await Bills.findAll();
+      const bills = await Bills.findAll({
+        where: {
+          date: {
+            [Op.between]: [
+              `${initialDate} 00:00`,
+              `${finalDate} 23:59`,
+            ],
+            // [Op.between]: [
+            //   new Date(`${initialDate} 00:00`),
+            //   new Date(`${finalDate} 23:59`),
+            // ],
+          },
+          ubication: ubication,
+        },
+      });
       return bills;
     } catch (error) {
       return {
@@ -17,7 +31,7 @@ class BillsController {
     }
   }
 
-  static async createBill(data) {
+  static async createBill(data, user) {
     try {
       const currentDateTime = getCurrentTime();
       const newBill = await Bills.create({
@@ -25,17 +39,17 @@ class BillsController {
         amount: data.amount,
         ubication: data.ubication,
         date: currentDateTime,
-        user: data.user,
-        user_id: data.user_id,
+        user: user,
         description: data.description,
       });
 
       return {
         status: 201,
-        message: "El Gasto ha sido creado.",
+        message: "La compra ha sido creado.",
         data: newBill,
       };
     } catch (error) {
+      console.error(error);
       return {
         status: 500,
         message: "Error con el creación de el gasto",
@@ -50,7 +64,7 @@ class BillsController {
       if (!bill) {
         return {
           status: 404,
-          message: "El Gasto no existe.",
+          message: "La compra no existe.",
         };
       }
       await Bills.update(
@@ -67,12 +81,12 @@ class BillsController {
       );
       return {
         status: 200,
-        message: "El Gasto ha sido modificado.",
+        message: "La compra ha sido modificado.",
       };
     } catch (error) {
       return {
         status: 500,
-        message: "Error del servidor al editar el gasto",
+        message: "Error del servidor al editar la compra",
         error: error.message,
       };
     }
@@ -86,7 +100,7 @@ class BillsController {
       if (!bill) {
         return {
           status: 404,
-          message: "El Gasto no existe",
+          message: "La compra no existe",
         };
       }
 
@@ -95,7 +109,7 @@ class BillsController {
       if (checkBillIsDeleted === null) {
         return {
           status: 200,
-          message: "El Gasto ha sido eliminado exitosamente"
+          message: "La compra ha sido eliminado exitosamente",
         };
       } else {
         throw error;
@@ -103,7 +117,7 @@ class BillsController {
     } catch (error) {
       return {
         status: 500,
-        message: "Error en el servidor al eliminar el Gasto",
+        message: "Error en el servidor al eliminar la compra",
         error: error.message,
       };
     }
@@ -112,16 +126,19 @@ class BillsController {
   static async totalBills(initialDate, finalDate, ubication) {
     let totalBills = 0;
     try {
-      const sales = await Bills.findAll({
+      const bills = await Bills.findAll({
         where: {
           date: {
-            [Op.between]: [new Date(initialDate), new Date(finalDate)],
+            [Op.between]: [
+              new Date(`${initialDate} 00:00`),
+              new Date(`${finalDate} 23:59`),
+            ],
           },
-          ubication: ubication
+          ubication: ubication,
         },
       });
 
-      sales.forEach((sale) => {
+      bills.forEach((sale) => {
         totalBills += sale.amount;
       });
 

@@ -7,6 +7,7 @@ const salesRoutes = require("./sales.routes");
 const billsRoutes = require("./bills.routes");
 const suppliersRoutes = require("./suppliers.routes");
 const loginRoutes = require("./login.routes");
+const emailRoutes = require("./email.routes");
 const router = express.Router();
 
 const allRoutes = (app) => {
@@ -19,6 +20,7 @@ const allRoutes = (app) => {
   router.use("/bills", billsRoutes);
   router.use("/suppliers", suppliersRoutes);
   router.use("/login", loginRoutes);
+  router.use("/email", emailRoutes);
 };
 
 module.exports = { allRoutes };
