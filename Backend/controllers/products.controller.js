@@ -17,6 +17,7 @@ class ProductsController {
 
   static async createProduct(data) {
     try {
+      console.log(data)
       const productDoesExist = await Products.findOne({
         where: { name: data.name, ubication: data.ubication },
       });
@@ -27,7 +28,7 @@ class ProductsController {
         };
       }
       const newProduct = await Products.create({
-        name: data.name,
+        name: data.name.toLowerCase(),
         quantity: data.quantity,
         sale_price: data.sale_price,
         category: data.category,
@@ -69,7 +70,7 @@ class ProductsController {
       }
       await Products.update(
         {
-          name: changes.name,
+          name: changes.name.toLowerCase(),
           quantity: changes.quantity,
           sale_price: changes.sale_price,
           category: changes.category,

@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable("users", {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -28,7 +28,7 @@ module.exports = {
       },
     });
 
-    await queryInterface.createTable('categories', {
+    await queryInterface.createTable("categories", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -44,8 +44,8 @@ module.exports = {
         allowNull: false,
       },
     });
-    
-    await queryInterface.createTable('products', {
+
+    await queryInterface.createTable("products", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -73,58 +73,58 @@ module.exports = {
         allowNull: false,
       },
       hielo: {
-        type: Sequelize.DECIMAL(10, 2),
+        type: Sequelize.FLOAT(10, 2),
         allowNull: true,
-        defaultValue : 0
+        defaultValue: 0,
       },
       leche: {
-        type: Sequelize.DECIMAL(10, 2),
+        type: Sequelize.FLOAT(10, 2),
         allowNull: true,
-        defaultValue : 0
+        defaultValue: 0,
       },
       leche_polvo: {
-        type: Sequelize.DECIMAL(10, 2),
+        type: Sequelize.FLOAT(10, 2),
         allowNull: true,
-        defaultValue : 0
+        defaultValue: 0,
       },
       azucar: {
-        type: Sequelize.DECIMAL(10, 2),
+        type: Sequelize.FLOAT(10, 2),
         allowNull: true,
-        defaultValue : 0
+        defaultValue: 0,
       },
       pulpa: {
-        type: Sequelize.DECIMAL(10, 2),
+        type: Sequelize.FLOAT(10, 2),
         allowNull: true,
-        defaultValue : 0
+        defaultValue: 0,
       },
       saborizante: {
-        type: Sequelize.DECIMAL(10, 2),
+        type: Sequelize.FLOAT(10, 2),
         allowNull: true,
-        defaultValue : 0
+        defaultValue: 0,
       },
       canela: {
-        type: Sequelize.DECIMAL(10, 2),
+        type: Sequelize.FLOAT(10, 2),
         allowNull: true,
-        defaultValue : 0
+        defaultValue: 0,
       },
       miel: {
-        type: Sequelize.DECIMAL(10, 2),
+        type: Sequelize.FLOAT(10, 2),
         allowNull: true,
-        defaultValue : 0
+        defaultValue: 0,
       },
       tarrina: {
         type: Sequelize.INTEGER,
         allowNull: true,
-        defaultValue : 0
+        defaultValue: 0,
       },
       pitillo: {
         type: Sequelize.INTEGER,
         allowNull: true,
-        defaultValue : 0
+        defaultValue: 0,
       },
     });
 
-    await queryInterface.createTable('ingredients', {
+    await queryInterface.createTable("ingredients", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -136,7 +136,11 @@ module.exports = {
         allowNull: false,
       },
       quantity: {
-        type: Sequelize.DECIMAL(10, 2),
+        type: Sequelize.FLOAT(10, 2),
+        allowNull: false,
+      },
+      category: {
+        type: ubication.STRING(100),
         allowNull: false,
       },
       ubication: {
@@ -145,7 +149,7 @@ module.exports = {
       },
     });
 
-    await queryInterface.createTable('sales', {
+    await queryInterface.createTable("sales", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -173,14 +177,12 @@ module.exports = {
         allowNull: false,
       },
     });
-
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("users");
-    await queryInterface.dropTable('categories');
-    await queryInterface.dropTable('products');
-    await queryInterface.dropTable('ingredients');
-    await queryInterface.dropTable('sales');
-
+    await queryInterface.dropTable("categories");
+    await queryInterface.dropTable("products");
+    await queryInterface.dropTable("ingredients");
+    await queryInterface.dropTable("sales");
   },
 };

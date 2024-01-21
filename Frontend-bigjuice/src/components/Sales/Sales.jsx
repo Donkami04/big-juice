@@ -4,6 +4,8 @@ import { useColMoney } from "../../hooks/useColMoney";
 import axios from "axios";
 import { BASE_API_URL } from "../../utils/api/bigjuice";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { ConfirmationMessage } from "../ConfirmationMessage/ConfirmationMessage";
 import "./Sales.css";
 
 export function Sales() {
@@ -23,18 +25,23 @@ export function Sales() {
   const [showUbicationSelector, setShowUbicationSelector] = useState("false");
   const [showSalesMessage, setShowSalesMessage] = useState("false");
   const [salesMessage, setSalesMessage] = useState("");
+  const [showDeleteSale, setShowDeleteSale] = useState(false);
+  const [showDeleteMessage, setShowDeleteMessage] = useState(false);
+  const [saleId, setSaleId] = useState("");
 
   useEffect(() => {
     rol !== "admin"
       ? setShowUbicationSelector("false")
       : setShowUbicationSelector("");
 
-      setUbication(userUbication)
+    rol !== "admin" ? setShowDeleteSale(false) : setShowDeleteSale(true);
+
+    setUbication(userUbication);
   }, []);
 
   const handleSubmit = async () => {
     if (!sdate || !edate) {
-      setShowSalesMessage("")
+      setShowSalesMessage("");
       setSalesMessage("Por favor, selecciona ambas fechas.");
       return;
     }
@@ -89,7 +96,6 @@ export function Sales() {
       setTotalOthers(useColMoney(dataTotalOthers.data.data));
       setShowSalesTable("");
       setShowSalesMessage("false");
-      
     } catch (error) {
       setShowSalesTable("false");
       setShowSalesMessage("");
@@ -120,9 +126,50 @@ export function Sales() {
     setSalesRappi(rappiSalesMoneyFormat);
   };
 
+  const openConfirmationDeleteSale = (saleId) => {
+    setSaleId(saleId);
+    setShowDeleteMessage(true);
+  };
+
+  const deleteSale = async (saleId) => {
+    try {
+      const deleteRequest = await axios.delete(
+        `${BASE_API_URL}/sales/remove/${saleId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+
+      setShowDeleteMessage(false);
+      setSaleId("");
+      handleSubmit();
+
+    } catch (error) {
+      console.error(error);
+      setSalesMessage(error.response.data.message);
+    }
+  };
+
+  const closeConfirmationDeleteSale = () => {
+    setShowDeleteMessage(false)
+  }
+
   return (
     <div>
       <Navbar />
+      {showDeleteMessage && (
+        <ConfirmationMessage>
+          <div className="container-deletesale-message">
+            <p className="message-confirm-delete-supplier">Esta seguro que desea eliminar la venta con ID <span style={{color: "red"}}>{saleId}</span></p>
+            <div className="buttons-delete-supplier-container">
+            <button className="confirm-delete-supplier" onClick={() => deleteSale(saleId)}>Confirmar</button>
+            <button className="confirm-cancel-supplier" onClick={closeConfirmationDeleteSale}>Cancelar</button>
+            </div>
+          </div>
+        </ConfirmationMessage>
+      )}
 
       <div className="sales-dates-container">
         <form className="form-sales-dates">
@@ -167,7 +214,9 @@ export function Sales() {
             </button>
           </div>
         </form>
-        <p className={`sales-message display-${showSalesMessage}`}>{salesMessage}</p>
+        <p className={`sales-message display-${showSalesMessage}`}>
+          {salesMessage}
+        </p>
 
         <section className={`totals-sales-messages display-${showSalesTable}`}>
           <table>
@@ -211,7 +260,15 @@ export function Sales() {
             <tbody>
               {sales.map((sale) => (
                 <tr key={sale.id}>
-                  <td>{sale.id}</td>
+                  <td>
+                    {showDeleteSale && (
+                      <FaRegTrashAlt
+                        className="delete-sale-button"
+                        onClick={() => openConfirmationDeleteSale(sale.id)}
+                      />
+                    )}
+                    {sale.id}
+                  </td>
                   <td>{sale.date}</td>
                   <td>{useColMoney(sale.amount)}</td>
                   <td>{sale.rappi === true ? "Si" : "No"}</td>

@@ -1,0 +1,38 @@
+.user-table-container {
+    height: calc(100vh - 6rem - 2px);
+    position: relative;
+    display: flex;
+    /* background-color: gray; */
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-table-container table {
+    width: 75%;
+    /* height: 40rem; */
+    border-collapse: collapse;
+
+    position: absolute;
+    top: 5rem;
+    margin: auto;
+    /* background-color: blue; */
+    
+}
+
+.user-table-container table th {
+    height: 3rem;
+    background-color: var(--lila-oscuro);
+    color: greenyellow;
+    font-size: 2rem;
+}
+
+.user-table-container table td {
+    height: 10px;
+    font-size: 1.2rem;
+}
+
+.user-table-container table th, .user-table-container table td {
+    border: solid 1px black;
+
+}

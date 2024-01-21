@@ -18,6 +18,8 @@ export const ShopCar = ({
   const [nequiChecked, setNequiChecked] = useState(false);
   const [rappiChecked, setRappiChecked] = useState(false);
   const [showZeroSale, setShowZeroSale] = useState(false);
+  const [showZeroMessage, setShowZeroMessage] = useState(false);
+  const [zeroMessage, setZeroMessage] = useState("");
   const [user, setUser] = useState("");
   const [customer, setCustomer] = useState("");
   const token = localStorage.getItem("jwtToken");
@@ -162,7 +164,18 @@ export const ShopCar = ({
   };
 
   const confirmZeroSale = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
+
+    if (customer === "") {
+      setShowZeroMessage(true);
+      setZeroMessage("El cliente debe tener un nombre valido");
+      return;
+    }
+    if (customer.trim().length === 0) {
+      setShowZeroMessage(true);
+      setZeroMessage("El cliente debe tener un nombre valido");
+      return;
+    }
     try {
       const response = await axios.post(
         `${BASE_API_URL}/sales/new`,
@@ -188,7 +201,7 @@ export const ShopCar = ({
           {
             customer: customer,
             ubication: ubication,
-            user: user
+            user: user,
           },
           {
             headers: {
@@ -196,11 +209,13 @@ export const ShopCar = ({
             },
           }
         );
-        setCustomer("")
+        setCustomer("");
         setPagaConMoneyFormat("");
         SetShopCarMessage("");
         setNequiChecked(false);
         setRappiChecked(false);
+        setShowZeroMessage(false);
+        setZeroMessage("");
         cleanShopCar();
       }
     } catch (error) {
@@ -222,13 +237,16 @@ export const ShopCar = ({
             </p>
             <form>
               <label>Nombre del Cliente</label>
+              {showZeroMessage && <p style={{color: "red"}}>{zeroMessage}</p>}
               <input
                 value={customer}
                 required
                 onChange={(e) => setCustomer(e.target.value)}
               />
               <section className="buttons-container-zero-sale">
-                <button onClick={(event) => confirmZeroSale(event)}>Enviar</button>
+                <button onClick={(event) => confirmZeroSale(event)}>
+                  Enviar
+                </button>
                 <button
                   style={{ backgroundColor: "blue" }}
                   onClick={hiddeZeroSaleForm}

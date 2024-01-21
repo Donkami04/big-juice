@@ -9,7 +9,11 @@ const Ingredients = sequelize.define(
       allowNull: false,
     },
     quantity: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.FLOAT(10, 2),
+      allowNull: false,
+    },
+    category: {
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
     ubication: {

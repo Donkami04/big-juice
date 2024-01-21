@@ -10,8 +10,6 @@ router.post(
     try {
       const { user } = req.user;
       const { customer, ubication } = req.body;
-      console.log(user)
-      console.log(ubication)
       const emailRequest = await zeroSaleEmail(user, customer, ubication);
       res.status(emailRequest.status).json({
         status: emailRequest.status,

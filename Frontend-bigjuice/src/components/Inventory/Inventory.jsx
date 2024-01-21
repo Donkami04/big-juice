@@ -5,6 +5,9 @@ import {
   getInventory,
   getProducts,
 } from "../../utils/api/bigjuice";
+import { ConfirmationMessage } from "../ConfirmationMessage/ConfirmationMessage";
+import { NewProduct } from "./NewProduct";
+import { AdminProduct } from "./AdminProduct";
 import axios from "axios";
 import "./Inventory.css";
 
@@ -13,34 +16,74 @@ export function Inventory() {
   const [products, setProducts] = useState([]);
   const [productsUbication, setProductsUbication] = useState([]);
   const [inventoryUbication, setInventoryUbication] = useState([]);
+  const [othersUbication, setOthersUbication] = useState([]);
   const [ubication, setUbication] = useState("");
+  const [showTableInventory, setShowTableInventory] = useState(false);
+  const [showInventoryMessage, setShowInventoryMessage] = useState(false);
+  const [showNewProduct, setShowNewProduct] = useState(false); //!
+  const [inventoryMessage, setInventoryMessage] = useState("");
+  const [category, setCategory] = useState("");
+  const [showJugosForm, setShowJugosForm] = useState(false);
+  const [showOtrosForm, setShowOtrosForm] = useState(false);
+  const [showEditDeleteButton, setShowEditDeleteButton] = useState(false);
+  const [heightForm, setHeightForm] = useState("");
+  const [dataElement, setDataElement] = useState({});
   const userUbication = localStorage.getItem("ubication");
   const jwtToken = localStorage.getItem("jwtToken");
   const rol = localStorage.getItem("rol");
+  const [productForm, setProductForm] = useState({
+    name: "",
+    quantity: "",
+    sale_price: "",
+    category: "",
+    ubication: "",
+    hielo: "",
+    leche: "",
+    leche_polvo: "",
+    azucar: "",
+    pulpa: "",
+    saborizante: "",
+    canela: "",
+    miel: "",
+    tarrina: 0,
+    pitillo: 0,
+  });
+
+  const getData = async () => {
+    setUbication(userUbication);
+    try {
+      if (rol !== "admin") {
+        setShowTableInventory(false);
+        setShowInventoryMessage(true);
+        setInventoryMessage("Inicia Sesión con una cuenta autorizada.");
+      } else {
+        setShowTableInventory(true);
+      }
+      const dataInventory = await getInventory(jwtToken);
+      const dataProducts = await getProducts();
+      setInventory(dataInventory);
+      setProducts(dataProducts);
+
+      const dataInventoryFiltered = dataInventory.filter(
+        (e) => e.ubication === userUbication && e.category === "ingredient"
+      );
+      const dataOthersFiltered = dataInventory.filter(
+        (e) => e.ubication === userUbication && e.category === "others"
+      );
+      const dataProductsFiltered = dataProducts.filter(
+        (e) => e.ubication === userUbication
+      );
+      setInventoryUbication(dataInventoryFiltered);
+      setOthersUbication(dataOthersFiltered);
+      setProductsUbication(dataProductsFiltered);
+    } catch (error) {
+      // setShowInventoryMessage(true);
+      // setInventoryMessage("Inicia Sesión con una cuenta autorizada")
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setUbication(userUbication);
-        const dataInventory = await getInventory(jwtToken);
-        const dataProducts = await getProducts();
-        setInventory(dataInventory);
-        setProducts(dataProducts);
-
-        const dataInventoryFiltered = dataInventory.filter(
-          (e) => e.ubication === userUbication
-        );
-        const dataProductsFiltered = dataProducts.filter(
-          (e) => e.ubication === userUbication
-        );
-        setInventoryUbication(dataInventoryFiltered);
-        setProductsUbication(dataProductsFiltered);
-
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
+    getData();
   }, []);
 
   const changeInventoryUbication = (event) => {
@@ -48,18 +91,46 @@ export function Inventory() {
     const selectedUbication = event.target.value;
     setUbication(selectedUbication);
 
-    const filteredProducts = products.filter((e) => e.ubication === selectedUbication);
-    const filteredInventory = inventory.filter((e) => e.ubication === selectedUbication);
-    setProductsUbication(filteredProducts);
+    const filteredProducts = products.filter(
+      (e) => e.ubication === selectedUbication
+    );
+    const filteredInventory = inventory.filter(
+      (e) => e.ubication === selectedUbication && e.category === "ingredient"
+    );
+    const filteredInventoryOthers = inventory.filter(
+      (e) => e.ubication === selectedUbication && e.category === "others"
+    );
+
     setInventoryUbication(filteredInventory);
+    setOthersUbication(filteredInventoryOthers);
+    setProductsUbication(filteredProducts);
   };
-  
+
+  const showForms = (element) => {
+    setShowEditDeleteButton(true);
+    setDataElement(element);
+    console.log(element)
+  };
+
+  const changeShowNewProduct = () => {
+    setShowNewProduct(true)
+  }
+
   return (
     <div>
       <Navbar />
+      {showNewProduct && (
+        <NewProduct setShowNewProduct={setShowNewProduct} getData={getData} />
+      )}
+      {showEditDeleteButton && (<AdminProduct element={dataElement} getData={getData} setShowEditDeleteButton={setShowEditDeleteButton}/>)}
+
       <div className="select-ubication-inventory-container">
         <form>
-          <select className="select-ubication-inventory" value={ubication} onChange={changeInventoryUbication}>
+          <select
+            className="select-ubication-inventory"
+            value={ubication}
+            onChange={changeInventoryUbication}
+          >
             <option value="" disabled>
               Selecciona
             </option>
@@ -67,63 +138,96 @@ export function Inventory() {
             <option value="unico">Unico</option>
           </select>
         </form>
+        {showTableInventory && (
+          <div className="inventory-buttons-container">
+            <button className="button-new-product" onClick={changeShowNewProduct}>
+              Nuevo Producto
+            </button>
+          </div>
+        )}
+        {/* {showTableInventory && <button className="button-new-ingredient">Nuevo Producto</button>} */}
       </div>
-      <div className="tables-inventory-container">
-        <div>
-          <table className="inventory-table">
-            <thead>
-              <tr>
-                <th>PRODUCTO</th>
-                <th>CANTIDAD (Und)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {productsUbication &&
-                productsUbication.map((element) => (
-                  <tr key={element.id + element.name}>
-                    <td>
-                      {element.category === "jugos"
-                        ? `JUGO DE ${element.name.toUpperCase()}`
-                        : element.name.toUpperCase()}
-                    </td>
-                    <td
-                      className={
-                        element.quantity >= 7 && element.quantity <= 10
-                          ? "yellow-color"
-                          : element.quantity < 7
-                          ? "red-color"
-                          : "green-color"
-                      }
-                    >
-                      {element.quantity}
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+      {showInventoryMessage && (
+        <p className="inventory-message">{inventoryMessage}</p>
+      )}
+      {showTableInventory && (
+        <div className="tables-inventory-container">
+          <div className="table-container">
+            <table className="inventory-table">
+              <thead>
+                <tr>
+                  <th>PRODUCTO</th>
+                  <th>CANTIDAD</th>
+                </tr>
+              </thead>
+              <tbody>
+                {productsUbication &&
+                  productsUbication.map((element) => (
+                    <tr key={element.id + element.name}>
+                      
+                      <td onClick={() => showForms(element)}>
+                        {element.category === "jugos"
+                          ? `${element.name.toUpperCase()}`
+                          : element.name.toUpperCase()}
+                      </td>
+                      <td
+                        className={
+                          element.quantity >= 7 && element.quantity <= 10
+                            ? "yellow-color"
+                            : element.quantity < 7
+                            ? "red-color"
+                            : "green-color"
+                        }
+                      >
+                        {element.quantity}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="table-container">
+            <table className="inventory-table">
+              <thead>
+                <tr>
+                  <th>INGREDIENTE</th>
+                  <th>GRAMOS</th>
+                  <th>KILOS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {inventoryUbication &&
+                  inventoryUbication.map((element) => (
+                    <tr key={element.id + element.name}>
+                      <td onClick={() => showForms(element)}>{element.name.toUpperCase()}</td>
+                      <td>{element.quantity}</td>
+                      <td>{(element.quantity / 1000).toFixed(1)}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="table-container">
+            <table className="inventory-table">
+              <thead>
+                <tr>
+                  <th>OTROS</th>
+                  <th>UNIDADES</th>
+                </tr>
+              </thead>
+              <tbody>
+                {othersUbication &&
+                  othersUbication.map((element) => (
+                    <tr key={element.id + element.name}>
+                      <td onClick={() => showForms(element)}>{element.name.toUpperCase()}</td>
+                      <td>{Math.floor(element.quantity)}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div>
-          <table className="inventory-table">
-            <thead>
-              <tr>
-                <th>COMPONENTE</th>
-                <th>CANTIDAD (gr)</th>
-                <th>CANTIDAD (kg)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {inventoryUbication &&
-                inventoryUbication.map((element) => (
-                  <tr key={element.id + element.name}>
-                    <td>{element.name.toUpperCase()}</td>
-                    <td>{Math.floor(element.quantity)}</td>
-                    <td>{(element.quantity / 1000).toFixed(1)}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

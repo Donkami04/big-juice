@@ -1,27 +1,44 @@
 .tables-inventory-container {
     display: flex;
-    height: calc(100vh - 6rem - 1px);
+    /* height: calc(100vh - 12rem - 1px); */
     text-align: center;
     justify-content: center;
-}
-
-.inventory-table {
-    width: 30rem;
-    font-size: 1.2rem;
-    border-collapse: collapse;
-    margin-left: 15px;
-    margin-right: 15px;
     margin-top: 30px;
 }
 
-.inventory-table th, td {
+.table-container {
+    max-height: calc(100vh - 6rem - 2px - 3rem - 2px - 30px - 2px - 30px);
+    overflow-y: auto;
+}
+
+.inventory-table {
+    width: 23rem;
+    font-size: 1rem;
+    border-collapse: collapse;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-bottom: 1px solid black;
+}
+
+.inventory-table th, .inventory-table td {
     border: 1px solid black;
-    height: 2rem;
+    padding: 3px;
+    height: 1rem;
+    font-size: 1rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.inventory-table td {
+    border-bottom: none;
 }
 
 .inventory-table th {
-    background-color: var(--lila-oscuro);
-    color: greenyellow;
+    /* background-color: var(--lila-oscuro); */
+    /* color: greenyellow; */
+    background-color: rgba(0, 0, 0, 0.712);
+    color: white;
+    font-size: 1.2rem;
+    height: 2rem;
 }
 
 .yellow-color {
@@ -43,6 +60,7 @@
     display: grid;
     place-content: center;
     margin-top: 15px;
+    position: relative;
 }
 
 .select-ubication-inventory {
@@ -54,3 +72,60 @@
     border: 2px solid black;
     text-align: center;
 }
+
+.inventory-message {
+    text-align: center;
+    color: red;
+    font-size: 1.3rem;
+    margin-top: 30px;
+}
+
+.inventory-buttons-container {
+    position: absolute;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.button-new-product, .button-new-ingredient {
+    background-color: rgb(11, 170, 255);
+    border-radius: 4px;
+    cursor: pointer;
+    border: solid 2px black;
+    color: white;
+    margin-bottom: 10px;
+
+}
+
+.new-jugo-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.new-product-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-delete-product-buttons {
+    height: 100%;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: space-around;
+}
+
+@media screen and (max-width: 1200px) {
+    .inventory-table {
+        width: 20rem;
+    }
+
+    .inventory-table th {
+        font-size: 1rem;
+    }
+
+    .inventory-table td {
+        font-size: 0.9rem;
+    }
+  }

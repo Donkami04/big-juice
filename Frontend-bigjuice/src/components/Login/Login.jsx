@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BASE_API_URL } from "../../utils/api/bigjuice";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -9,6 +9,13 @@ export const Login = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const jwtToken = localStorage.getItem("jwtToken");
+
+  useEffect(() => {
+    if (jwtToken) {
+      navigate("/vender")
+    }
+  }, [])
 
   const handleLogin = async () => {
     try {
@@ -60,6 +67,13 @@ export const Login = () => {
     }
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault(); // Evitar el envío predeterminado del formulario
+      handleLogin();
+    }
+  };
+
   return (
     <div className="main-login-container">
       <div className="login-container">
@@ -69,7 +83,7 @@ export const Login = () => {
         <div className="login-logo-container">
           <img src="logo.png" alt="logo-big-juice" />
         </div>
-        <form>
+        <form onKeyDown={handleKeyPress}>
           <div className="block-form">
             <label>
               Id:

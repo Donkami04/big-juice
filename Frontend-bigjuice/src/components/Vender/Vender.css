@@ -12,9 +12,7 @@
   padding: 15px;
   display: grid;
   gap: 20px;
-  /* grid-template-columns: repeat(auto-fill, 20rem); */
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-template-rows: repeat(3, 30%);
-  /* grid-template-rows: repeat(3, 280px); */
+  grid-auto-rows: minmax(200px, 250px); /* Establece la altura mínima a 100px y la máxima a 200px (ajústala según tus necesidades) */
   overflow-y: auto;
 }

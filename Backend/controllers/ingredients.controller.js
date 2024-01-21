@@ -27,8 +27,9 @@ class IngredientsController {
         };
       }
       const newIngredient = await Ingredients.create({
-        name: data.name,
+        name: data.name.toLowerCase(),
         quantity: data.quantity,
+        category: data.category,
         ubication: data.ubication,
       });
 
@@ -56,8 +57,9 @@ class IngredientsController {
       }
       await Ingredients.update(
         {
-          name: changes.name,
+          name: changes.name.toLowerCase(),
           quantity: changes.quantity,
+          category: changes.category,
           ubication: changes.ubication,
         },
         { where: { id: id } }

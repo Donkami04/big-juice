@@ -25,42 +25,42 @@ const Products = sequelize.define(
       allowNull: false,
     },
     hielo: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.FLOAT(10, 2),
       allowNull: true,
       defaultValue : 0
     },
     leche: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.FLOAT(10, 2),
       allowNull: true,
       defaultValue : 0
     },
     leche_polvo: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.FLOAT(10, 2),
       allowNull: true,
       defaultValue : 0
     },
     azucar: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.FLOAT(10, 2),
       allowNull: true,
       defaultValue : 0
     },
     pulpa: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.FLOAT(10, 2),
       allowNull: true,
       defaultValue : 0
     },
     saborizante: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.FLOAT(10, 2),
       allowNull: true,
       defaultValue : 0
     },
     canela: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.FLOAT(10, 2),
       allowNull: true,
       defaultValue : 0
     },
     miel: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.FLOAT(10, 2),
       allowNull: true,
       defaultValue : 0
     },

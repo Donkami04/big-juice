@@ -1,9 +1,10 @@
 import "./ConfirmationMessage.css"
 
-export function ConfirmationMessage({children}) {
+export function ConfirmationMessage({children, height}) {
+  const heightDiv = height || "300px"
   return (
-    <div className="confirmation-message-component">
-      <div className="confirmation-message">
+    <div  className="confirmation-message-component">
+      <div style={{height: height}} className="confirmation-message">
         {children}
       </div>
     </div>

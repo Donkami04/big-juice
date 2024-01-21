@@ -11,6 +11,7 @@ import { Production } from "./components/Production/Production";
 import { Bills } from "./components/Bills/Bills";
 import { Suppliers } from "./components/Suppliers/Suppliers";
 import { Inventory } from "./components/Inventory/Inventory";
+import { Users } from "./components/Users/Users";
 
 
 // Hooks
@@ -57,6 +58,7 @@ function App() {
         <Route path="/compras" element={<PrivateRoute element={<Bills />} />} />
         <Route path="/proveedores" element={<PrivateRoute element={<Suppliers />} />} />
         <Route path="/inventario" element={<PrivateRoute element={<Inventory />} />} />
+        <Route path="/usuarios" element={<PrivateRoute element={<Users />} />} />
       </Routes>
     </>
   );

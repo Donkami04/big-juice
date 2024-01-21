@@ -12,12 +12,11 @@ import "./Suppliers.css";
 export function Suppliers() {
   const [suppliers, setSuppliers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const jwtToken = localStorage.getItem("jwtToken");
   const [adminButtonsSuppliers, setAdminButtonsSuppliers] = useState(false);
   const [showNewSupplierForm, setShowNewSupplierForm] = useState(false);
   const [showEditSupplierForm, setShowEditSupplierForm] = useState(false);
   const [showDeleteMessage, setShowDeleteMessage] = useState(false);
-
+  
   const [supplierName, setSupplierName] = useState("");
   const [supplierUbication, setSupplierUbication] = useState("");
   const [date, setDate] = useState("");
@@ -25,6 +24,7 @@ export function Suppliers() {
   const [email, setEmail] = useState("");
   const [ingredient, setIngredient] = useState("");
   const [supplierId, setSupplierId] = useState("");
+  const jwtToken = localStorage.getItem("jwtToken");
   const rol = localStorage.getItem("rol");
 
   useEffect(() => {

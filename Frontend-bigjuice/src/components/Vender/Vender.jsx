@@ -70,6 +70,19 @@ export const Vender = () => {
     setProducts(categorySelected);
   };
 
+  const handleEscapeKey = (event) => {
+    if (event.key === "Escape") {
+      closeMessage();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleEscapeKey);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, []);
 
   return (
     <div className="main-vender-container">
