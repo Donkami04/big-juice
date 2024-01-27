@@ -60,19 +60,32 @@ class UserController {
           message: "El Usuario no existe en la base de datos.",
         };
       }
+  
+      let hashedPassword;
+  
+      // Verificar si el atributo password está presente en changes
+      if (changes.password) {
+        hashedPassword = await bcrypt.hash(changes.password, 10);
+      } else {
+        // Si no está presente, conserva el valor actual
+        hashedPassword = user.password;
+      }
+  
       await Users.update(
         {
           id: changes.id,
           name: changes.name,
           rol: changes.rol,
-          password: changes.password,
+          password: hashedPassword,
           ubication: changes.ubication
         },
         { where: { id: id } }
       );
+  
       let userUpdated = await Users.findByPk(changes.id);
       userUpdated = { ...userUpdated.get({ plain: true }) };
       delete userUpdated.password;
+  
       return {
         status: 200,
         message: "El Usuario ha sido modificado exitosamente.",
@@ -83,6 +96,7 @@ class UserController {
       throw error;
     }
   }
+  
 
   static async deleteUser(id) {
     try {

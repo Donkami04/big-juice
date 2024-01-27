@@ -13,10 +13,6 @@ class BillsController {
               `${initialDate} 00:00`,
               `${finalDate} 23:59`,
             ],
-            // [Op.between]: [
-            //   new Date(`${initialDate} 00:00`),
-            //   new Date(`${finalDate} 23:59`),
-            // ],
           },
           ubication: ubication,
         },
@@ -42,6 +38,10 @@ class BillsController {
         user: user,
         description: data.description,
       });
+
+      if (data.dataBill) {
+        
+      }
 
       return {
         status: 201,

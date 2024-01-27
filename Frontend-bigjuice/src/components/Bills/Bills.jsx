@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navbar } from "../Navbar/Navbar";
 import { useColMoney } from "../../hooks/useColMoney";
 import axios from "axios";
-import { BASE_API_URL } from "../../utils/api/bigjuice";
+import { BASE_API_URL, getProducts, getInventory } from "../../utils/api/bigjuice";
 import { NewBill } from "./NewBill/NewBill";
 import "./Bills.css";
 
@@ -12,17 +12,32 @@ export function Bills() {
   const [edate, setEdate] = useState("");
   const [total, setTotal] = useState("");
   const [ubication, setUbication] = useState("");
-  const userUbication = localStorage.getItem("ubication");
-  const jwtToken = localStorage.getItem("jwtToken");
-  const rol = localStorage.getItem("rol");
   const [showBillsMessage, setShowBillsMessage] = useState("false");
   const [showBillsTotals, setShowBillsTotals] = useState("false");
   const [showBillsTable, setShowBillsTable] = useState("false");
   const [billsMessage, setbillsMessage] = useState("");
-  const [createBill, setCreateBill] = useState(false);
+  const [createBill, setCreateBill] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
+  const [ingredientsAndProducts, setIngredientsAndProducts] = useState([]);
+  const userUbication = localStorage.getItem("ubication");
+  const jwtToken = localStorage.getItem("jwtToken");
+  const rol = localStorage.getItem("rol");
+
+  const getData = async () => {
+    const ingredientsList = await getInventory(jwtToken);
+    const productsList = await getProducts();
+    const ingredientsUbication = ingredientsList.filter((ingredient) => ingredient.ubication === userUbication);
+    const productsUbication = productsList.filter((product) => product.ubication === userUbication);
+    const data = [ ...ingredientsUbication, ...productsUbication ]
+    setIngredients(ingredientsUbication);
+    setProducts(productsUbication);
+    setIngredientsAndProducts(data);
+  }
 
   useEffect(() => {
     setUbication(userUbication);
+    getData();
   }, []);
 
   useEffect(() => {
@@ -84,6 +99,16 @@ export function Bills() {
   return (
     <>
       <Navbar />
+      {createBill && (
+        <NewBill
+          ubication={ubication}
+          jwtToken={jwtToken}
+          closeNewBillForm={closeNewBillForm}
+          products={products}
+          ingredients={ingredients}
+          ingredientsAndProducts={ingredientsAndProducts}
+        />
+      )}
       <div className="form-bills-container">
         <form className="form-sales-dates">
           <button onClick={showNewBillForm} type="button" className="new-bill">
@@ -171,13 +196,7 @@ export function Bills() {
           </tbody>
         </table>
       </main>
-      {createBill && (
-        <NewBill
-          ubication={ubication}
-          jwtToken={jwtToken}
-          closeNewBillForm={closeNewBillForm}
-        />
-      )}
+
     </>
   );
 }

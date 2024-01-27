@@ -26,6 +26,7 @@ router.post(
   async (req, res, next) => {
     try {
       const data = req.body;
+      console.log(data) //! Eliminar
       const { user } = req.user;
       const newBill = await BillsController.createBill(data, user);
       res.status(newBill.status).json({

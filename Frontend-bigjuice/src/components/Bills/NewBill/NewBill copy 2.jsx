@@ -22,9 +22,8 @@ export function NewBill({
   const [amountMoneyFormat, setAmountMoneyFormat] = useState("");
   const [selectedData, setSelectedData] = useState([]);
   const [unityMesure, setUnityMesure] = useState("");
-  const [showButtonCreate, setShowButtonCreate] = useState(true);
-  const [showButtonConfirmate, setShowButtonConfirmate] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([{}]);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -72,17 +71,16 @@ export function NewBill({
 
   const handleSendData = () => {
     const filteredOptions = selectedOptions.filter(
-      (option) =>
-        option.name && option.category && option.quantity && option.unityMesure
+      (option) => option.name && option.category && option.quantity && option.unityMesure
     );
 
     const newData = filteredOptions.map((option) => ({
       name: option.name,
       category: option.category,
-      quantity:
-        option.unityMesure === "kg" ? option.quantity * 1000 : option.quantity,
+      quantity: option.unityMesure === "kg" ? option.quantity * 1000 : option.quantity,
       unityMesure: option.unityMesure,
     }));
+    
 
     setSelectedData(newData);
   };
@@ -92,6 +90,8 @@ export function NewBill({
     { id: 2, category: "Ingredientes", values: "ingredient" },
     { id: 3, category: "Otros", values: "others" },
   ];
+
+
 
   const handleInputChange = (e) => {
     let inputValue = e.target.value;
@@ -114,13 +114,6 @@ export function NewBill({
     setAmount(intPagaCon);
   };
 
-  const changeMessageButton = () => {
-    changeMoney();
-    handleSendData();
-    setShowButtonCreate(false);
-    setShowButtonConfirmate(true);
-  };
-
   return (
     <div>
       <ConfirmationMessage height={"35rem"} width={"35rem"}>
@@ -132,7 +125,7 @@ export function NewBill({
       </div> */}
         <h2>Crear Compra</h2>
         <div className="form-newbill-container">
-          <form>
+          <form onSubmit={handleSubmit}>
             <label>Compra</label>
             <input
               className="date-selector-bills"
@@ -187,9 +180,7 @@ export function NewBill({
                     name="mesure"
                     type="text"
                     value={option.unityMesure || ""}
-                    onChange={(e) =>
-                      handleSelectChange(index, "unityMesure", e.target.value)
-                    }
+                    onChange={(e) => handleSelectChange(index, "unityMesure", e.target.value)}
                   >
                     <option value="" disabled>
                       Selecciona
@@ -198,7 +189,7 @@ export function NewBill({
                     <option value="kg">Kilogramos</option>
                     <option value="gr">Gramos</option>
                   </select>
-                  {/* 
+{/* 
                   <select
                     name="mesure"
                     type="text"
@@ -235,10 +226,9 @@ export function NewBill({
             ></textarea>
             <div className="button-bills-find">
               <p className="newbill-message">{newBillMessage}</p>
-              {showButtonCreate && <button onClick={changeMessageButton}>Crear</button>}
-              {showButtonConfirmate && (
-                <button onClick={handleSubmit}>Confirmar</button>
-              )}
+              <button type="submit" onClick={changeMoney}>
+                Crear
+              </button>
             </div>
           </form>
         </div>

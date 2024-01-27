@@ -109,7 +109,6 @@ export function Inventory() {
   const showForms = (element) => {
     setShowEditDeleteButton(true);
     setDataElement(element);
-    console.log(element)
   };
 
   const changeShowNewProduct = () => {

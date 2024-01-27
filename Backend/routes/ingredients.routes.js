@@ -6,10 +6,11 @@ const {
   IngredientsController,
 } = require("../controllers/ingredients.controller");
 
+
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  checkRoles("admin"),
+  // checkRoles("admin"),
   async (req, res, next) => {
     try {
       const ingredients = await IngredientsController.getIngredients();
@@ -88,37 +89,5 @@ router.delete(
     }
   }
 );
-
-// router.post("/discount-stock", async (req, res, next) => {
-//   try {
-//     const data = req.body;
-//     const response = await IngredientsController.discountStock(data);
-//     res.status(response.status).json({
-//       status: response.status,
-//       message: response.message,
-//       error: response.error,
-//       data: response.data,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     next(error);
-//   }
-// });
-
-// router.post("/produce", async (req, res, next) => {
-//   try {
-//     const data = req.body;
-//     const response = await IngredientsController.increaseStockIngredient(data);
-//     res.status(response.status).json({
-//       status: response.status,
-//       message: response.message,
-//       error: response.error,
-//       data: response.data,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     next(error);
-//   }
-// });
 
 module.exports = router;

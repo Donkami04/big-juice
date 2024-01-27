@@ -15,6 +15,24 @@ class IngredientsController {
     }
   }
 
+  // static async getIngredients(ubication) {
+  //   try {
+  //     if (ubication) {
+  //       const ingredients = await Ingredients.findAll({
+  //         where: { ubication: ubication },
+  //       });
+  //       return ingredients;
+  //     }
+  //     const ingredients = await Ingredients.findAll();
+  //     return ingredients;
+  //   } catch (error) {
+  //     return {
+  //       status: 500,
+  //       message: `Error al obtener los ingredientes: ${error.message}.`,
+  //     };
+  //   }
+  // }
+
   static async createIngredient(data) {
     try {
       const ingredientDoesExist = await Ingredients.findOne({

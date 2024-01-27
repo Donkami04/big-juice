@@ -1,131 +1,132 @@
 .tables-inventory-container {
-    display: flex;
-    /* height: calc(100vh - 12rem - 1px); */
-    text-align: center;
-    justify-content: center;
-    margin-top: 30px;
+  display: flex;
+  /* height: calc(100vh - 12rem - 1px); */
+  text-align: center;
+  justify-content: center;
+  margin-top: 30px;
 }
 
 .table-container {
-    max-height: calc(100vh - 6rem - 2px - 3rem - 2px - 30px - 2px - 30px);
-    overflow-y: auto;
+  max-height: calc(100vh - 6rem - 2px - 3rem - 2px - 30px - 2px - 30px);
+  overflow-y: auto;
 }
 
 .inventory-table {
-    width: 23rem;
-    font-size: 1rem;
-    border-collapse: collapse;
-    margin-left: 10px;
-    margin-right: 10px;
-    border-bottom: 1px solid black;
+  width: 23rem;
+  font-size: 1rem;
+  border-collapse: collapse;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-bottom: 1px solid black;
 }
 
-.inventory-table th, .inventory-table td {
-    border: 1px solid black;
-    padding: 3px;
-    height: 1rem;
-    font-size: 1rem;
-    font-family: Arial, Helvetica, sans-serif;
+.inventory-table th,
+.inventory-table td {
+  border: 1px solid black;
+  padding: 3px;
+  height: 1rem;
+  font-size: 1rem;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .inventory-table td {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .inventory-table th {
-    /* background-color: var(--lila-oscuro); */
-    /* color: greenyellow; */
-    background-color: rgba(0, 0, 0, 0.712);
-    color: white;
-    font-size: 1.2rem;
-    height: 2rem;
+  /* background-color: var(--lila-oscuro); */
+  /* color: greenyellow; */
+  background-color: rgba(0, 0, 0, 0.712);
+  color: white;
+  font-size: 1.2rem;
+  height: 2rem;
 }
 
 .yellow-color {
-    background-color: rgba(255, 255, 0, 0.449);
-    color: rgb(224, 169, 4);
+  background-color: rgba(255, 255, 0, 0.449);
+  color: rgb(224, 169, 4);
 }
 
 .red-color {
-    color: rgb(182, 1, 1);
-    background-color: rgba(255, 0, 0, 0.429);
+  color: rgb(182, 1, 1);
+  background-color: rgba(255, 0, 0, 0.429);
 }
 
 .green-color {
-    background-color: rgba(25, 233, 25, 0.32);
-    color: green;
+  background-color: rgba(25, 233, 25, 0.32);
+  color: green;
 }
 
 .select-ubication-inventory-container {
-    display: grid;
-    place-content: center;
-    margin-top: 15px;
-    position: relative;
+  display: grid;
+  place-content: center;
+  margin-top: 15px;
+  position: relative;
 }
 
 .select-ubication-inventory {
-    height: 3rem;
-    width: 20rem;
-    font-size: 2rem;
-    background-color: var(--lila-oscuro);
-    color: greenyellow;
-    border: 2px solid black;
-    text-align: center;
+  height: 3rem;
+  width: 20rem;
+  font-size: 2rem;
+  background-color: var(--lila-oscuro);
+  color: greenyellow;
+  border: 2px solid black;
+  text-align: center;
 }
 
 .inventory-message {
-    text-align: center;
-    color: red;
-    font-size: 1.3rem;
-    margin-top: 30px;
+  text-align: center;
+  color: red;
+  font-size: 1.3rem;
+  margin-top: 30px;
 }
 
 .inventory-buttons-container {
-    position: absolute;
-    left: 10px;
-    display: flex;
-    flex-direction: column;
+  position: absolute;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
-.button-new-product, .button-new-ingredient {
-    background-color: rgb(11, 170, 255);
-    border-radius: 4px;
-    cursor: pointer;
-    border: solid 2px black;
-    color: white;
-    margin-bottom: 10px;
-
+.button-new-product,
+.button-new-ingredient {
+  background-color: rgb(11, 170, 255);
+  border-radius: 4px;
+  cursor: pointer;
+  border: solid 2px black;
+  color: white;
+  margin-bottom: 10px;
 }
 
 .new-jugo-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 .new-product-form {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .edit-delete-product-buttons {
-    height: 100%;
-    display: flex;
-    text-align: center;
-    align-items: center;
-    justify-content: space-around;
+  height: 100%;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: space-around;
 }
 
 @media screen and (max-width: 1200px) {
-    .inventory-table {
-        width: 20rem;
-    }
-
-    .inventory-table th {
-        font-size: 1rem;
-    }
-
-    .inventory-table td {
-        font-size: 0.9rem;
-    }
+  .inventory-table {
+    width: 20rem;
   }
+
+  .inventory-table th {
+    font-size: 1rem;
+  }
+
+  .inventory-table td {
+    font-size: 0.9rem;
+  }
+}

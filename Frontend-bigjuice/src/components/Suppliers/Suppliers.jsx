@@ -14,9 +14,10 @@ export function Suppliers() {
   const [searchTerm, setSearchTerm] = useState("");
   const [adminButtonsSuppliers, setAdminButtonsSuppliers] = useState(false);
   const [showNewSupplierForm, setShowNewSupplierForm] = useState(false);
+  const [showNewSupplierButton, setShowNewSupplierButton] = useState(true);
   const [showEditSupplierForm, setShowEditSupplierForm] = useState(false);
   const [showDeleteMessage, setShowDeleteMessage] = useState(false);
-  
+
   const [supplierName, setSupplierName] = useState("");
   const [supplierUbication, setSupplierUbication] = useState("");
   const [date, setDate] = useState("");
@@ -29,9 +30,17 @@ export function Suppliers() {
 
   useEffect(() => {
     const fetchData = async () => {
-      rol !== "admin"
-        ? setAdminButtonsSuppliers(false)
-        : setAdminButtonsSuppliers(true);
+      // rol !== "admin"
+      //   ? setAdminButtonsSuppliers(false)
+      //   : setAdminButtonsSuppliers(true);
+      //   setShowNewSupplierButton(false);
+      if (rol !== "admin") {
+        setAdminButtonsSuppliers(false);
+        setShowNewSupplierButton(false);
+      } else {
+        setAdminButtonsSuppliers(true);
+        setShowNewSupplierButton(true);
+      }
       try {
         const response = await axios.get(`${BASE_API_URL}/suppliers`, {
           headers: {
@@ -294,7 +303,7 @@ export function Suppliers() {
               className="button-edit-supplier"
               onClick={newSupplier}
             >
-              Editar
+              Registrar
             </button>
           </form>
         </ConfirmationMessage>
@@ -309,9 +318,11 @@ export function Suppliers() {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      <button className="new-supplier-button" onClick={openFormNewSupp}>
-        Registrar proveedor
-      </button>
+      {showNewSupplierButton && (
+        <button className="new-supplier-button" onClick={openFormNewSupp}>
+          Registrar proveedor
+        </button>
+      )}
       <div className="suppliers">
         {filteredSuppliers.map((supplier) => (
           <section key={supplier.id}>
