@@ -2,6 +2,8 @@ const { Bills } = require("../db/models/bills");
 const { Sequelize } = require("sequelize");
 const { Op } = require("sequelize");
 const { getCurrentTime } = require("../utils/currentTime");
+const { IngredientsController } = require("./ingredients.controller");
+const { ProductsController } = require("./products.controller");
 
 class BillsController {
   static async getBills(initialDate, finalDate, ubication) {
@@ -9,10 +11,7 @@ class BillsController {
       const bills = await Bills.findAll({
         where: {
           date: {
-            [Op.between]: [
-              `${initialDate} 00:00`,
-              `${finalDate} 23:59`,
-            ],
+            [Op.between]: [`${initialDate} 00:00`, `${finalDate} 23:59`],
           },
           ubication: ubication,
         },
@@ -40,19 +39,22 @@ class BillsController {
       });
 
       if (data.dataBill) {
-        
+        await Promise.all([
+          IngredientsController.increaseInventoryIngredient(data),
+          ProductsController.increaseInventoryProduct(data),
+        ]);
       }
 
       return {
         status: 201,
-        message: "La compra ha sido creado.",
+        message: "La compra ha sido creada.",
         data: newBill,
       };
     } catch (error) {
       console.error(error);
       return {
         status: 500,
-        message: "Error con el creación de el gasto",
+        message: "Error con la creación de la compra",
         error: error.message,
       };
     }

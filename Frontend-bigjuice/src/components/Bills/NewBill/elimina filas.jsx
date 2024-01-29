@@ -4,10 +4,7 @@ import { BASE_API_URL } from "../../../utils/api/bigjuice";
 import { OptionsBill } from "./OptionsBill";
 import { ConfirmationMessage } from "../../ConfirmationMessage/ConfirmationMessage";
 import axios from "axios";
-import { FaTrashCan } from "react-icons/fa6";
-import { CiCirclePlus } from "react-icons/ci";
-import { FaCirclePlus } from "react-icons/fa6";
-
+import { IoMdClose } from "react-icons/io";
 import "./NewBill.css";
 
 export function NewBill({
@@ -27,8 +24,6 @@ export function NewBill({
   const [unityMesure, setUnityMesure] = useState("");
   const [showButtonCreate, setShowButtonCreate] = useState(true);
   const [showButtonConfirmate, setShowButtonConfirmate] = useState(false);
-  const [showButtonAdd, setShowButtonAdd] = useState(true);
-  const [showButtonNew, setShowButtonNew] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([{}]);
 
   const handleSubmit = async (event) => {
@@ -36,7 +31,7 @@ export function NewBill({
     handleSendData();
     console.log(selectedData);
     try {
-      const request = await axios.post(
+      const data = await axios.post(
         `${BASE_API_URL}/bills/new`,
         {
           name: name,
@@ -56,10 +51,9 @@ export function NewBill({
       setAmount("");
       setDescription("");
       setAmountMoneyFormat("");
-      setNewBillMessage(request.data.message);
+      setNewBillMessage(data.data.message);
     } catch (error) {
-      console.error(error.response.data.message);
-      setNewBillMessage(error.response.data.message);
+      console.error(error);
     }
   };
 
@@ -71,9 +65,9 @@ export function NewBill({
     };
     setSelectedOptions(newSelectedOptions);
 
-    // if (value && index === newSelectedOptions.length - 1) {
-    //   setSelectedOptions([...newSelectedOptions, {}]);
-    // }
+    if (value && index === newSelectedOptions.length - 1) {
+      setSelectedOptions([...newSelectedOptions, {}]);
+    }
   };
 
   const handleSendData = () => {
@@ -94,9 +88,9 @@ export function NewBill({
   };
 
   const categoriesArray = [
-    { id: 1, category: "Productos", value: "otros" },
-    { id: 2, category: "Ingredientes", value: "ingredient" },
-    { id: 3, category: "Otros", value: "others" },
+    { id: 1, category: "Productos", values: "otros" },
+    { id: 2, category: "Ingredientes", values: "ingredient" },
+    { id: 3, category: "Otros", values: "others" },
   ];
 
   const handleInputChange = (e) => {
@@ -125,33 +119,28 @@ export function NewBill({
     handleSendData();
     setShowButtonCreate(false);
     setShowButtonConfirmate(true);
-    setShowButtonAdd(false);
   };
+
 
   const handleDeleteOption = (index) => {
     const newSelectedOptions = [...selectedOptions];
     newSelectedOptions.splice(index, 1);
     setSelectedOptions(newSelectedOptions);
   };
-
-  const handleAddOption = () => {
-    setSelectedOptions([...selectedOptions, {}]);
-  };
-
+  
   return (
     <div>
-      <ConfirmationMessage height={"38rem"} width={"35rem"}>
+      <ConfirmationMessage height={"35rem"} width={"35rem"}>
         {/* <div className="close-button-container-newbill">
         <IoMdClose
           onClick={closeNewBillForm}
           style={{ position: "absolute", right: "5px", cursor: "pointer" }}
         />
       </div> */}
-      <p title="Cerrar" className="close-button-newbill" onClick={closeNewBillForm}>x</p>
-        <h2>Crear Compra / Registrar Gasto</h2>
+        <h2>Crear Compra</h2>
         <div className="form-newbill-container">
           <form>
-            <label>Nombre</label>
+            <label>Compra</label>
             <input
               className="date-selector-bills"
               value={name}
@@ -225,22 +214,11 @@ export function NewBill({
                     }
                     placeholder="Cantidad"
                   />
-                  <p onClick={() => handleDeleteOption(index)}>
-                    <FaTrashCan
-                      title="Eliminar elemento de la compra"
-                      style={{ color: "red", cursor: "pointer" }}
-                    />
-                  </p>
+                  <button onClick={() => handleDeleteOption(index)}>
+                    <IoMdClose />
+                  </button>
                 </main>
               ))}
-              {showButtonAdd && (
-                <p onClick={handleAddOption}>
-                  <FaCirclePlus
-                    title="Agregar más elementos a la compra"
-                    className="more-elements-button-newbill"
-                  />
-                </p>
-              )}
             </section>
             <label>Observación</label>
             <textarea
@@ -250,25 +228,15 @@ export function NewBill({
               type="text"
               onChange={(e) => setDescription(e.target.value)}
             ></textarea>
-            <div className="button-send-newbill-container">
+            <div className="button-bills-find">
+              <p className="newbill-message">{newBillMessage}</p>
               {showButtonCreate && (
-                <button
-                  className="send-newbill-button"
-                  onClick={changeMessageButton}
-                >
-                  Registrar compra
-                </button>
+                <button onClick={changeMessageButton}>Crear</button>
               )}
               {showButtonConfirmate && (
-                <button
-                  className="confirmate-newbill-button"
-                  onClick={handleSubmit}
-                >
-                  ⚠️ Confirmar ⚠️
-                </button>
+                <button onClick={handleSubmit}>Confirmar</button>
               )}
             </div>
-            <p className="newbill-message">{newBillMessage}</p>
           </form>
         </div>
       </ConfirmationMessage>

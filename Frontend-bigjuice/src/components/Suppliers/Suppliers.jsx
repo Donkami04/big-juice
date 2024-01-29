@@ -331,7 +331,7 @@ export function Suppliers() {
                 onClick={() => deleteSupplier(supplier)}
                 className="suppliers-buttons-close"
               >
-                <RiDeleteBin6Line />
+                <RiDeleteBin6Line color="greenyellow"/>
               </span>
             )}
             {adminButtonsSuppliers && (
@@ -339,7 +339,7 @@ export function Suppliers() {
                 onClick={() => fillForm(supplier)}
                 className="suppliers-buttons-edit"
               >
-                <MdEdit color="yellow" />
+                <MdEdit color="greenyellow" />
               </span>
             )}
             <h2>{supplier.name}</h2>

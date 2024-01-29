@@ -183,6 +183,7 @@ class ProductsController {
     }
   }
 
+  // Esta se usa cuando se registra la produccion de jugos
   static async increaseStockProduct(productsToIncrease) {
     try {
       for (const product of productsToIncrease) {
@@ -214,6 +215,35 @@ class ProductsController {
       return {
         status: 500,
         message: `Error al actualizar los productos e ingredientes: ${error.message}`,
+      };
+    }
+  }
+
+  // Esta se usa cuando se registra una nueva compra
+  static async increaseInventoryProduct(data) {
+    try {
+      const productsList = data.dataBill;
+      const ubication = data.ubication;
+
+      productsList.forEach(async (e) => {
+        if (e.category === "otros") {
+          await Products.update(
+            {
+              quantity: Sequelize.literal(`quantity + ${e.quantity}`),
+            },
+            { where: { name: e.name, ubication: ubication } }
+          );
+        }
+      });
+
+      return {
+        status: 200,
+        message: "El inventario de Productos ha sido modificado.",
+      };
+    } catch (error) {
+      return {
+        status: 500,
+        message: `Error del servidor al modificar el inventario - Productos ${error.message}.`,
       };
     }
   }

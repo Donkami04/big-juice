@@ -2,7 +2,6 @@ const { Ingredients } = require("../db/models/ingredients");
 const { Sequelize } = require("sequelize");
 
 class IngredientsController {
-
   static async getIngredients() {
     try {
       const ingredients = await Ingredients.findAll();
@@ -94,6 +93,34 @@ class IngredientsController {
     }
   }
 
+  static async increaseInventoryIngredient(data) {
+    try {
+      const ingredientsList = data.dataBill;
+      const ubication = data.ubication;
+
+      ingredientsList.forEach(async (e) => {
+        if (e.category === "ingredient" || e.category === "others") {
+          await Ingredients.update(
+            {
+              quantity: Sequelize.literal(`quantity + ${e.quantity}`),
+            },
+            { where: { name: e.name, ubication: ubication } }
+          );
+        }
+      });
+
+      return {
+        status: 200,
+        message: "El inventario de ingredientes ha sido modificado.",
+      };
+    } catch (error) {
+      return {
+        status: 500,
+        message: `Error del servidor al modificar el inventario - Ingredientes ${error.message}.`,
+      };
+    }
+  }
+
   static async deleteIngredient(id) {
     try {
       const ingredient = await Ingredients.findOne({ where: { id: id } });
@@ -122,15 +149,25 @@ class IngredientsController {
     }
   }
 
-  static async discountIngredientsStock(dataProduct, quantityProduced, ubication) {
+  static async discountIngredientsStock(
+    dataProduct,
+    quantityProduced,
+    ubication
+  ) {
     try {
       const ingredientUpdates = [
         { name: "hielo", quantity: dataProduct.hielo * quantityProduced },
         { name: "azucar", quantity: dataProduct.azucar * quantityProduced },
         { name: "leche", quantity: dataProduct.leche * quantityProduced },
-        { name: "leche polvo", quantity: dataProduct.leche_polvo * quantityProduced },
+        {
+          name: "leche polvo",
+          quantity: dataProduct.leche_polvo * quantityProduced,
+        },
         { name: "pulpa", quantity: dataProduct.pulpa * quantityProduced },
-        { name: "saborizante", quantity: dataProduct.saborizante * quantityProduced },
+        {
+          name: "saborizante",
+          quantity: dataProduct.saborizante * quantityProduced,
+        },
         { name: "tarrina", quantity: dataProduct.tarrina * quantityProduced },
         { name: "pitillo", quantity: dataProduct.pitillo * quantityProduced },
       ];
@@ -141,7 +178,6 @@ class IngredientsController {
           { where: { name: e.name, ubication: ubication } }
         );
       });
-      
     } catch (error) {
       return {
         status: 500,
@@ -149,58 +185,6 @@ class IngredientsController {
       };
     }
   }
-
-  // static async discountIngredientsStock(dataProduct, quantityProduced, ubication) {
-  //   try {
-  //     const hieloQuantity = dataProduct.hielo * quantityProduced;
-  //     const azucarQuantity = dataProduct.azucar * quantityProduced;
-  //     const lecheQuantity = dataProduct.leche * quantityProduced;
-  //     const leche_polvoQuantity = dataProduct.leche_polvo * quantityProduced;
-  //     const pulpaQuantity = dataProduct.pulpa * quantityProduced;
-  //     const saborizanteQuantity = dataProduct.saborizante * quantityProduced;
-  //     const tarrinaQuantity = dataProduct.tarrina * quantityProduced;
-  //     const pitilloQuantity = dataProduct.pitillo * quantityProduced;
-
-  //     Ingredients.update(
-  //       { quantity: Sequelize.literal(`quantity - ${hieloQuantity}`) },
-  //       { where: { name: "hielo", ubication: ubication } }
-  //     );
-  //     Ingredients.update(
-  //       { quantity: Sequelize.literal(`quantity - ${azucarQuantity}`) },
-  //       { where: { name: "azucar", ubication: ubication } }
-  //     );
-  //     Ingredients.update(
-  //       { quantity: Sequelize.literal(`quantity - ${lecheQuantity}`) },
-  //       { where: { name: "leche", ubication: ubication } }
-  //     );
-  //     Ingredients.update(
-  //       { quantity: Sequelize.literal(`quantity - ${leche_polvoQuantity}`) },
-  //       { where: { name: "leche polvo", ubication: ubication } }
-  //     );
-  //     Ingredients.update(
-  //       { quantity: Sequelize.literal(`quantity - ${pulpaQuantity}`) },
-  //       { where: { name: "pulpa", ubication: ubication } }
-  //     );
-  //     Ingredients.update(
-  //       { quantity: Sequelize.literal(`quantity - ${saborizanteQuantity}`) },
-  //       { where: { name: "saborizante", ubication: ubication } }
-  //     );
-  //     Ingredients.update(
-  //       { quantity: Sequelize.literal(`quantity - ${tarrinaQuantity}`) },
-  //       { where: { name: "tarrina", ubication: ubication } }
-  //     );
-  //     Ingredients.update(
-  //       { quantity: Sequelize.literal(`quantity - ${pitilloQuantity}`) },
-  //       { where: { name: "pitillo", ubication: ubication } }
-  //     );
-  //   } catch (error) {
-  //     console.error(error);
-  //     return {
-  //       status: 500,
-  //       message: error.message,
-  //     };
-  //   }
-  // }
 }
 
 module.exports = { IngredientsController };

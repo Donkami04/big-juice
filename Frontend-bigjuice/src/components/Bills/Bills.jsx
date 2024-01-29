@@ -16,7 +16,7 @@ export function Bills() {
   const [showBillsTotals, setShowBillsTotals] = useState("false");
   const [showBillsTable, setShowBillsTable] = useState("false");
   const [billsMessage, setbillsMessage] = useState("");
-  const [createBill, setCreateBill] = useState(true);
+  const [createBill, setCreateBill] = useState(false);
   const [products, setProducts] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [ingredientsAndProducts, setIngredientsAndProducts] = useState([]);

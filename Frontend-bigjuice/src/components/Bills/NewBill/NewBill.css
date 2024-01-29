@@ -104,10 +104,75 @@
 .option-group {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .option-group select,
 .option-group input {
   width: 120px;
   margin-bottom: 10px;
+}
+
+.option-group input {
+  height: 1.7rem;
+}
+
+.more-elements-button-newbill {
+  font-size: 1.7rem;
+  color: green;
+  cursor: pointer;
+}
+
+.more-elements-button-newbill:hover {
+  color: var(--lila-oscuro);
+}
+
+.send-newbill-button {
+  background-color: red;
+  color: #fff;
+  padding: 3px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  border: solid 2px black;
+  color: white;
+  margin-left: auto;
+  margin-right: auto;
+  width: 10rem;
+}
+
+.confirmate-newbill-button {
+  background-color: rgb(0, 92, 239);
+  color: #fff;
+  padding: 3px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  border: solid 2px black;
+  color: white;
+  margin-left: auto;
+  margin-right: auto;
+  width: 10rem;
+
+}
+
+.button-send-newbill-container {
+  display: grid;
+  place-content: center;
+  height: 4rem;
+}
+
+.close-button-newbill {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  font-size: 1.4rem;
+  color: red;
+  cursor: pointer;
+}
+
+.close-button-newbill:hover {
+  color: black;
 }
