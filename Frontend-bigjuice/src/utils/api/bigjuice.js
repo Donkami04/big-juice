@@ -13,9 +13,13 @@ if (ENVIRONMENT === "local") {
 
 export const BASE_API_URL = `http://${envi}:3000/api/bigjuice`;
 
-export const getProducts = async () => {
+export const getProducts = async (jwtToken) => {
   return axios
-    .get(`${BASE_API_URL}/products`)
+    .get(`${BASE_API_URL}/products`, {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
     .then((response) => response.data)
     .catch((error) => {
       throw new Error(`Error desde la API - PRODUCTS: ${error}`);

@@ -173,7 +173,6 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
           },
         }
       );
-      console.log(request);
       getData();
       setShowEditDeleteButton(false);
     } catch (error) {
@@ -219,11 +218,13 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
   return (
     <div>
       <ConfirmationMessage height={height}>
+        <p title="Cerrar" className="close-confirmationmessage-inventory" onClick={() => setShowEditDeleteButton(false)}>x</p>
+        {/* <h2 style={{textAlign: "center"}} >Elija que desea hacer</h2> */}
         {showAdminButtons && (
           <div className="edit-delete-product-buttons">
-            <button onClick={deleteElement}>Eliminar</button>
+            <button className="button-delete-inventory" onClick={deleteElement}>Eliminar</button>
             {/* <button onClick={() => deleteElement()}>Eliminar</button> */}
-            <button onClick={() => editElement()}>Editar</button>
+            <button className="button-edit-inventory" onClick={() => editElement()}>Editar</button>
           </div>
         )}
         {deleteConfirmation && (
@@ -233,8 +234,8 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
               {element.name.toUpperCase()} ?
             </h2>
             <div className="edit-delete-product-buttons">
-              <button onClick={deleteRequest}>Confirmar</button>
-              <button onClick={cancelDeleteForm}>Cancelar</button>
+              <button className="button-delete-inventory" onClick={deleteRequest}>Confirmar</button>
+              <button className="button-edit-inventory" onClick={cancelDeleteForm}>Cancelar</button>
             </div>
           </>
         )}
@@ -405,10 +406,14 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
                 </select>
               </div>
             )}
-            <button onClick={(e) => selectRequest(e)}>Editar</button>
+            <div className="edit-inventory-button-container">
+
+            <button className="edit-inventory-button" onClick={(e) => selectRequest(e)}>Editar</button>
+            </div>
           </form>
         )}
       </ConfirmationMessage>
     </div>
   );
 }
+ 

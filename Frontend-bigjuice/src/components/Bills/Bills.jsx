@@ -2,8 +2,14 @@ import { useEffect, useState } from "react";
 import { Navbar } from "../Navbar/Navbar";
 import { useColMoney } from "../../hooks/useColMoney";
 import axios from "axios";
-import { BASE_API_URL, getProducts, getInventory } from "../../utils/api/bigjuice";
+import {
+  BASE_API_URL,
+  getProducts,
+  getInventory,
+} from "../../utils/api/bigjuice";
 import { NewBill } from "./NewBill/NewBill";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { ConfirmationMessage } from "../ConfirmationMessage/ConfirmationMessage";
 import "./Bills.css";
 
 export function Bills() {
@@ -20,24 +26,44 @@ export function Bills() {
   const [products, setProducts] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const [ingredientsAndProducts, setIngredientsAndProducts] = useState([]);
+  const [showDeleteBill, setShowDeleteBill] = useState(true);
+  const [showDeleteMessage, setShowDeleteMessage] = useState(false);
+  const [billName, setBillName] = useState("");
+  const [billId, setBillId] = useState("");
+
   const userUbication = localStorage.getItem("ubication");
   const jwtToken = localStorage.getItem("jwtToken");
   const rol = localStorage.getItem("rol");
 
   const getData = async () => {
     const ingredientsList = await getInventory(jwtToken);
-    const productsList = await getProducts();
-    const ingredientsUbication = ingredientsList.filter((ingredient) => ingredient.ubication === userUbication);
-    const productsUbication = productsList.filter((product) => product.ubication === userUbication);
-    const data = [ ...ingredientsUbication, ...productsUbication ]
+    const productsList = await getProducts(jwtToken);
+    const ingredientsUbication = ingredientsList.filter(
+      (ingredient) => ingredient.ubication === userUbication
+    );
+    const productsUbication = productsList.filter(
+      (product) => product.ubication === userUbication
+    );
+    const data = [...ingredientsUbication, ...productsUbication];
     setIngredients(ingredientsUbication);
     setProducts(productsUbication);
     setIngredientsAndProducts(data);
-  }
+  };
 
   useEffect(() => {
+    if (rol !== "admin") {
+      setShowDeleteBill(false);
+    }
     setUbication(userUbication);
     getData();
+    
+    const fechaActual = new Date();
+    const dia = fechaActual.getDate();
+    const mes = fechaActual.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por lo que sumamos 1
+    const ano = fechaActual.getFullYear();
+    const fechaFormateada = `${ano}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia}`;
+    setSdate(fechaFormateada);
+    setEdate(fechaFormateada);
   }, []);
 
   useEffect(() => {
@@ -50,6 +76,7 @@ export function Bills() {
       setShowBillsMessage("");
       return;
     }
+    console.log(sdate)
 
     try {
       const dataBills = await axios.post(
@@ -89,11 +116,39 @@ export function Bills() {
     }
   };
 
+  const deleteBill = async () => {
+    try {
+      const deleteRequest = await axios.delete(
+        `${BASE_API_URL}/bills/remove/${billId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+      console.log(deleteRequest);
+
+      setShowDeleteMessage(false);
+      setBillId("");
+      setBillName("");
+      handleSubmit();
+    } catch (error) {
+      console.error(error);
+      // setSalesMessage(error.response.data.message);
+    }
+  };
+
   const showNewBillForm = () => {
     setCreateBill(true);
   };
   const closeNewBillForm = () => {
     setCreateBill(false);
+  };
+
+  const openConfirmationDeleteBill = (bill) => {
+    setBillId(bill.id);
+    setShowDeleteMessage(true);
+    setBillName(bill.name);
   };
 
   return (
@@ -108,6 +163,27 @@ export function Bills() {
           ingredients={ingredients}
           ingredientsAndProducts={ingredientsAndProducts}
         />
+      )}
+      {showDeleteMessage && (
+        <ConfirmationMessage>
+          <div className="container-deletesale-message">
+            <p className="message-confirm-delete-supplier">
+              Esta seguro que desea eliminar la compra{" "}
+              <span style={{ color: "red" }}>{billName.toUpperCase()}</span>
+            </p>
+            <div className="buttons-delete-supplier-container">
+              <button className="confirm-delete-supplier" onClick={deleteBill}>
+                Confirmar
+              </button>
+              <button
+                className="confirm-cancel-supplier"
+                onClick={() => setShowDeleteMessage(false)}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </ConfirmationMessage>
       )}
       <div className="form-bills-container">
         <form className="form-sales-dates">
@@ -176,27 +252,37 @@ export function Bills() {
               <th>Gasto</th>
               <th>Total</th>
               <th>Fecha</th>
-              <th>Observación</th>
               <th>Usuario</th>
               <th>Ubicación</th>
+              <th>Observación</th>
             </tr>
           </thead>
           <tbody>
             {bills &&
               bills.map((bill) => (
                 <tr key={bill.id}>
-                  <td>{bill.name}</td>
+                  <td>
+                    <div className="td-delete-container">
+                      {showDeleteBill && (
+                        <FaRegTrashAlt
+                          onClick={() => openConfirmationDeleteBill(bill)}
+                          style={{ position: "absolute", left: "5px" }}
+                        />
+                      )}
+                      {bill.name}
+                    </div>
+                  </td>
                   <td>{useColMoney(bill.amount)}</td>
                   <td>{bill.date}</td>
-                  <td>{bill.description}</td>
                   <td>{bill.user}</td>
                   <td>{bill.ubication}</td>
+                  <td>{bill.description}</td>
                 </tr>
               ))}
           </tbody>
         </table>
+        
       </main>
-
     </>
   );
 }

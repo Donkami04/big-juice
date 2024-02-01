@@ -190,6 +190,7 @@ class ProductsController {
         const productName = product.name;
         const quantityProduced = product.quantity;
         const ubication = product.ubication;
+        console.log(productName, quantityProduced, ubication)
         Products.update(
           { quantity: Sequelize.literal(`quantity + ${quantityProduced}`) },
           { where: { name: productName, ubication: ubication } }

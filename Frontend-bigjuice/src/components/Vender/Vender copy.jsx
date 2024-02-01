@@ -19,7 +19,7 @@ export const Vender = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const dataProducts = await getProducts();
+        const dataProducts = await getProducts(jwtToken);
         const productsUbiJugos = dataProducts.filter(
           (product) =>
             product.ubication === userUbication && product.category === "jugos"

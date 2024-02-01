@@ -7,7 +7,7 @@ import axios from "axios";
 import { FaTrashCan } from "react-icons/fa6";
 import { CiCirclePlus } from "react-icons/ci";
 import { FaCirclePlus } from "react-icons/fa6";
-
+import BarLoader   from "react-spinners/BarLoader";	
 import "./NewBill.css";
 
 export function NewBill({
@@ -30,6 +30,7 @@ export function NewBill({
   const [showButtonAdd, setShowButtonAdd] = useState(true);
   const [showButtonNew, setShowButtonNew] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([{}]);
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -52,11 +53,14 @@ export function NewBill({
         }
       );
 
+      closeNewBillForm();
       setName("");
       setAmount("");
       setDescription("");
       setAmountMoneyFormat("");
-      setNewBillMessage(request.data.message);
+      setShowButtonConfirmate(false);
+      setShowButtonCreate(true);
+      setNewBillMessage("");
     } catch (error) {
       console.error(error.response.data.message);
       setNewBillMessage(error.response.data.message);
@@ -124,8 +128,13 @@ export function NewBill({
     changeMoney();
     handleSendData();
     setShowButtonCreate(false);
-    setShowButtonConfirmate(true);
+    // setShowButtonConfirmate(true);
     setShowButtonAdd(false);
+    setShowSpinner(true)
+    setTimeout(() => {
+      setShowSpinner(false);
+      setShowButtonConfirmate(true);
+    }, 3000);
   };
 
   const handleDeleteOption = (index) => {
@@ -259,6 +268,7 @@ export function NewBill({
                   Registrar compra
                 </button>
               )}
+              {showSpinner && (<BarLoader   color="red" />)}
               {showButtonConfirmate && (
                 <button
                   className="confirmate-newbill-button"

@@ -165,18 +165,18 @@ export const ShopCar = ({
 
   const confirmZeroSale = async (event) => {
     event.preventDefault();
-
-    if (customer === "") {
-      setShowZeroMessage(true);
-      setZeroMessage("El cliente debe tener un nombre valido");
-      return;
-    }
-    if (customer.trim().length === 0) {
-      setShowZeroMessage(true);
-      setZeroMessage("El cliente debe tener un nombre valido");
-      return;
-    }
     try {
+      if (customer === "") {
+        setShowZeroMessage(true);
+        setZeroMessage("El cliente debe tener un nombre valido");
+        return;
+      }
+      if (customer.trim().length === 0) {
+        setShowZeroMessage(true);
+        setZeroMessage("El cliente debe tener un nombre valido");
+        return;
+      }
+
       const response = await axios.post(
         `${BASE_API_URL}/sales/new`,
         {
@@ -237,7 +237,7 @@ export const ShopCar = ({
             </p>
             <form>
               <label>Nombre del Cliente</label>
-              {showZeroMessage && <p style={{color: "red"}}>{zeroMessage}</p>}
+              {showZeroMessage && <p style={{ color: "red" }}>{zeroMessage}</p>}
               <input
                 value={customer}
                 required
@@ -325,9 +325,12 @@ export const ShopCar = ({
           >
             PAGAR
           </button>
-          <div className="shopcar-button cancel-button" onClick={cancelButton}>
+          <button
+            className="shopcar-button cancel-pay-button"
+            onClick={cancelButton}
+          >
             CANCELAR
-          </div>
+          </button>
         </div>
         <div className="change-container">
           <h2>{shopCarMessage}</h2>

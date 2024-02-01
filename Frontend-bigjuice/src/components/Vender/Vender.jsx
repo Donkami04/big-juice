@@ -15,11 +15,12 @@ export const Vender = () => {
   const [message, setMessage] = useState("");
   const [showMessage, setShowMessage] = useState(false);
   const userUbication = localStorage.getItem("ubication");
+  const jwtToken = localStorage.getItem("jwtToken");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const dataProducts = await getProducts();
+        const dataProducts = await getProducts(jwtToken);
         const productsUbiJugos = dataProducts.filter(
           (product) =>
             product.ubication === userUbication && product.category === "jugos"
@@ -28,6 +29,7 @@ export const Vender = () => {
           (product) =>
             product.ubication === userUbication && product.category === "otros"
         );
+        
         setProducts(productsUbiJugos);
         setJugos(productsUbiJugos);
         setOtros(productsUbiOtros);

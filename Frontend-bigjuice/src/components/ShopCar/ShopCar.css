@@ -71,7 +71,8 @@
 }
 
 .shopcar-button {
-  display: inline-block;
+  display: grid;
+  place-content: center;
   padding: 5px;
   font-size: 1rem;
   font-weight: bold;
@@ -93,20 +94,20 @@
 }
 
 .pay-button {
-  background-color: rgb(47, 200, 255);
+  background-color: rgb(66, 255, 8);
 }
 
-.cancel-button {
-  background-color: rgb(234, 0, 255);
-  padding: 0;
+.cancel-pay-button {
+  background-color: red;
+  /* background-color: rgb(234, 0, 255); */
+  /* padding: 0;
   display: grid;
-  place-content: center;
+  place-content: center; */
 }
 
-.shopcar-button:hover {
-  border-color: #fff;
-  color: white;
-}
+/* .shopcar-button:hover {
+  background-color: rgba(4, 163, 255, 0.681);
+} */
 
 .change-container {
   width: 100%;

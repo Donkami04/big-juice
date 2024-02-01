@@ -60,7 +60,7 @@ export function Inventory() {
         setShowTableInventory(true);
       }
       const dataInventory = await getInventory(jwtToken);
-      const dataProducts = await getProducts();
+      const dataProducts = await getProducts(jwtToken);
       setInventory(dataInventory);
       setProducts(dataProducts);
 
@@ -112,8 +112,8 @@ export function Inventory() {
   };
 
   const changeShowNewProduct = () => {
-    setShowNewProduct(true)
-  }
+    setShowNewProduct(true);
+  };
 
   return (
     <div>
@@ -121,7 +121,13 @@ export function Inventory() {
       {showNewProduct && (
         <NewProduct setShowNewProduct={setShowNewProduct} getData={getData} />
       )}
-      {showEditDeleteButton && (<AdminProduct element={dataElement} getData={getData} setShowEditDeleteButton={setShowEditDeleteButton}/>)}
+      {showEditDeleteButton && (
+        <AdminProduct
+          element={dataElement}
+          getData={getData}
+          setShowEditDeleteButton={setShowEditDeleteButton}
+        />
+      )}
 
       <div className="select-ubication-inventory-container">
         <form>
@@ -139,7 +145,10 @@ export function Inventory() {
         </form>
         {showTableInventory && (
           <div className="inventory-buttons-container">
-            <button className="button-new-product" onClick={changeShowNewProduct}>
+            <button
+              className="button-new-product"
+              onClick={changeShowNewProduct}
+            >
               Nuevo Producto
             </button>
           </div>
@@ -163,8 +172,10 @@ export function Inventory() {
                 {productsUbication &&
                   productsUbication.map((element) => (
                     <tr key={element.id + element.name}>
-                      
-                      <td onClick={() => showForms(element)}>
+                      <td
+                        className="name-inventory"
+                        onClick={() => showForms(element)}
+                      >
                         {element.category === "jugos"
                           ? `${element.name.toUpperCase()}`
                           : element.name.toUpperCase()}
@@ -198,7 +209,12 @@ export function Inventory() {
                 {inventoryUbication &&
                   inventoryUbication.map((element) => (
                     <tr key={element.id + element.name}>
-                      <td onClick={() => showForms(element)}>{element.name.toUpperCase()}</td>
+                      <td
+                        className="name-inventory"
+                        onClick={() => showForms(element)}
+                      >
+                        {element.name.toUpperCase()}
+                      </td>
                       <td>{element.quantity}</td>
                       <td>{(element.quantity / 1000).toFixed(1)}</td>
                     </tr>
@@ -218,7 +234,12 @@ export function Inventory() {
                 {othersUbication &&
                   othersUbication.map((element) => (
                     <tr key={element.id + element.name}>
-                      <td onClick={() => showForms(element)}>{element.name.toUpperCase()}</td>
+                      <td
+                        className="name-inventory"
+                        onClick={() => showForms(element)}
+                      >
+                        {element.name.toUpperCase()}
+                      </td>
                       <td>{Math.floor(element.quantity)}</td>
                     </tr>
                   ))}

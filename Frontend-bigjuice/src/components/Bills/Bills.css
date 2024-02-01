@@ -55,3 +55,10 @@
 .date-selector-bills {
   font-size: 1.2rem;
 }
+
+.td-delete-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

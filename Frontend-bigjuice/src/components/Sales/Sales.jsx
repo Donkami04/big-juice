@@ -37,6 +37,13 @@ export function Sales() {
     rol !== "admin" ? setShowDeleteSale(false) : setShowDeleteSale(true);
 
     setUbication(userUbication);
+    const fechaActual = new Date();
+    const dia = fechaActual.getDate();
+    const mes = fechaActual.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por lo que sumamos 1
+    const ano = fechaActual.getFullYear();
+    const fechaFormateada = `${ano}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia}`;
+    setSdate(fechaFormateada);
+    setEdate(fechaFormateada);
   }, []);
 
   const handleSubmit = async () => {
@@ -145,7 +152,6 @@ export function Sales() {
       setShowDeleteMessage(false);
       setSaleId("");
       handleSubmit();
-
     } catch (error) {
       console.error(error);
       setSalesMessage(error.response.data.message);
@@ -153,8 +159,8 @@ export function Sales() {
   };
 
   const closeConfirmationDeleteSale = () => {
-    setShowDeleteMessage(false)
-  }
+    setShowDeleteMessage(false);
+  };
 
   return (
     <div>
@@ -162,10 +168,23 @@ export function Sales() {
       {showDeleteMessage && (
         <ConfirmationMessage>
           <div className="container-deletesale-message">
-            <p className="message-confirm-delete-supplier">Esta seguro que desea eliminar la venta con ID <span style={{color: "red"}}>{saleId}</span></p>
+            <p className="message-confirm-delete-supplier">
+              Esta seguro que desea eliminar la venta con ID{" "}
+              <span style={{ color: "red" }}>{saleId}</span>
+            </p>
             <div className="buttons-delete-supplier-container">
-            <button className="confirm-delete-supplier" onClick={() => deleteSale(saleId)}>Confirmar</button>
-            <button className="confirm-cancel-supplier" onClick={closeConfirmationDeleteSale}>Cancelar</button>
+              <button
+                className="confirm-delete-supplier"
+                onClick={() => deleteSale(saleId)}
+              >
+                Confirmar
+              </button>
+              <button
+                className="confirm-cancel-supplier"
+                onClick={closeConfirmationDeleteSale}
+              >
+                Cancelar
+              </button>
             </div>
           </div>
         </ConfirmationMessage>
@@ -209,9 +228,7 @@ export function Sales() {
             </select>
           </div>
           <div className="button-sales-find">
-            <button type="button" onClick={handleSubmit}>
-              <FaMagnifyingGlass />
-            </button>
+            <FaMagnifyingGlass style={{fontSize: "1.3rem", cursor: "pointer"}} onClick={handleSubmit} />
           </div>
         </form>
         <p className={`sales-message display-${showSalesMessage}`}>
@@ -261,13 +278,15 @@ export function Sales() {
               {sales.map((sale) => (
                 <tr key={sale.id}>
                   <td>
-                    {showDeleteSale && (
-                      <FaRegTrashAlt
-                        className="delete-sale-button"
-                        onClick={() => openConfirmationDeleteSale(sale.id)}
-                      />
-                    )}
-                    {sale.id}
+                    <div className="td-delete-container">
+                      {showDeleteSale && (
+                        <FaRegTrashAlt style={{position: "absolute", left: "5px"}}
+                          className="delete-sale-button"
+                          onClick={() => openConfirmationDeleteSale(sale.id)}
+                        />
+                      )}
+                      {sale.id}
+                    </div>
                   </td>
                   <td>{sale.date}</td>
                   <td>{useColMoney(sale.amount)}</td>

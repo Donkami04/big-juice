@@ -4,15 +4,22 @@
   text-align: center;
   justify-content: center;
   margin-top: 30px;
+  width: 100vw;
+
 }
 
 .table-container {
-  max-height: calc(100vh - 6rem - 2px - 3rem - 2px - 30px - 2px - 30px);
+  max-height: calc(100vh - 9rem - 66px);
   overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  display: flex;
+
+  justify-content: center;
 }
 
 .inventory-table {
-  width: 23rem;
+  width: 90%;
   font-size: 1rem;
   border-collapse: collapse;
   margin-left: 10px;
@@ -40,6 +47,10 @@
   color: white;
   font-size: 1.2rem;
   height: 2rem;
+}
+
+.inventory-table tr:hover {
+  background-color: #c6c6c690;
 }
 
 .yellow-color {
@@ -114,11 +125,74 @@
   display: flex;
   text-align: center;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-evenly;
+}
+
+.name-inventory {
+  cursor: pointer;
+}
+
+.name-inventory:hover {
+  color: blue;
+}
+
+.button-delete-inventory {
+  background-color: red;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  border: solid 2px black;
+  width: 7rem;
+  color: white;
+}
+
+.button-edit-inventory,
+.edit-inventory-button,
+.button-new-inventory {
+  background-color: greenyellow;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  border: solid 2px black;
+  color: rgb(110, 37, 148);
+  width: 7rem;
+}
+
+.edit-inventory-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.close-confirmationmessage-inventory {
+  position: absolute;
+  right: 10px;
+  top: 0;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.close-confirmationmessage-inventory:hover {
+  color: red;
+}
+
+.button-new-inventory-container {
+  margin-top: 20px;
+  display: grid;
+  place-content: center;
 }
 
 @media screen and (max-width: 1200px) {
   .inventory-table {
+    width: 20rem;
+    
+  }
+
+  .table-container {
     width: 20rem;
   }
 

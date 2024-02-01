@@ -8,15 +8,14 @@ import {
 import axios from "axios";
 import "./Inventory.css";
 
-export function NewProduct({setShowNewProduct, getData}) {
-
+export function NewProduct({ setShowNewProduct, getData }) {
   const [category, setCategory] = useState("");
   const [showJugosForm, setShowJugosForm] = useState(false);
   const [showOtrosForm, setShowOtrosForm] = useState(false);
   const [showIngredientForm, setShowIngredientForm] = useState(false);
   const [heightForm, setHeightForm] = useState("");
   const jwtToken = localStorage.getItem("jwtToken");
-  const [showUnityMesuer, setShowUnityMesuer] = useState(false)
+  const [showUnityMesuer, setShowUnityMesuer] = useState(false);
   const [unityMesure, setUnityMesure] = useState("");
   const [productForm, setProductForm] = useState({
     name: "",
@@ -57,7 +56,7 @@ export function NewProduct({setShowNewProduct, getData}) {
       setProductForm(initialForm);
       setShowJugosForm(true);
       setShowOtrosForm(false);
-      setShowIngredientForm(false)
+      setShowIngredientForm(false);
       setHeightForm("30rem");
     }
     if (categorySelected === "otros") {
@@ -80,12 +79,12 @@ export function NewProduct({setShowNewProduct, getData}) {
   const selectRequest = (event) => {
     event.preventDefault();
     if (category === "jugos" || category === "otros") {
-      newProductRequest(event)
+      newProductRequest(event);
     }
     if (category === "ingredient" || category === "others") {
-      newIngredientRequest(event)
+      newIngredientRequest(event);
     }
-  }
+  };
 
   const newProductRequest = async (event) => {
     event.preventDefault();
@@ -97,7 +96,7 @@ export function NewProduct({setShowNewProduct, getData}) {
         }
       }
     }
-    console.log(finalData)
+    console.log(finalData);
     try {
       const request = await axios.post(
         `${BASE_API_URL}/products/new`,
@@ -111,8 +110,8 @@ export function NewProduct({setShowNewProduct, getData}) {
         }
       );
       console.log(request);
-      getData()
-      setShowNewProduct(false)
+      getData();
+      setShowNewProduct(false);
     } catch (error) {
       console.error(error);
     }
@@ -123,7 +122,7 @@ export function NewProduct({setShowNewProduct, getData}) {
     const dataForm = { ...ingredientForm };
 
     if (unityMesure === "kg") {
-      dataForm.quantity = ( dataForm.quantity * 1000)
+      dataForm.quantity = dataForm.quantity * 1000;
     }
 
     try {
@@ -139,8 +138,8 @@ export function NewProduct({setShowNewProduct, getData}) {
         }
       );
       console.log(request);
-      getData()
-      setShowNewProduct(false)
+      getData();
+      setShowNewProduct(false);
     } catch (error) {
       console.error(error);
     }
@@ -153,17 +152,17 @@ export function NewProduct({setShowNewProduct, getData}) {
     // Redondear a dos decimales si es un número
     if (!isNaN(value)) {
       value = parseFloat(value.toFixed(2));
-      console.log(parseFloat(value))
+      console.log(parseFloat(value));
       newProductForm[e.target.name] = value;
       newProductForm["category"] = category;
       setProductForm(newProductForm);
-      return
+      return;
     }
     newProductForm[e.target.name] = e.target.value;
     newProductForm["category"] = category;
     setProductForm(newProductForm);
   };
-  
+
   const fillFormNewIngredient = (e) => {
     const newIngredientForm = { ...ingredientForm };
     // Convertir a número si es un campo numérico
@@ -171,11 +170,11 @@ export function NewProduct({setShowNewProduct, getData}) {
     // Redondear a dos decimales si es un número
     if (!isNaN(value)) {
       value = parseFloat(value.toFixed(2));
-      console.log(parseFloat(value))
+      console.log(parseFloat(value));
       newIngredientForm[e.target.name] = value;
       newIngredientForm["category"] = category;
       setIngredientForm(newIngredientForm);
-      return
+      return;
     }
     newIngredientForm[e.target.name] = e.target.value;
     newIngredientForm["category"] = category;
@@ -185,6 +184,13 @@ export function NewProduct({setShowNewProduct, getData}) {
   return (
     <div>
       <ConfirmationMessage height={heightForm}>
+        <p
+          title="Cerrar"
+          className="close-confirmationmessage-inventory"
+          onClick={() => setShowNewProduct(false)}
+        >
+          x
+        </p>
         <h2>Registrar Producto / Elemento</h2>
         <p>Categoria:</p>
         <form>
@@ -372,7 +378,14 @@ export function NewProduct({setShowNewProduct, getData}) {
               </select>
             </div>
           )}
-          <button onClick={(e) => selectRequest(e)}>Crear</button>
+          <div className="button-new-inventory-container">
+            <button
+              className="button-new-inventory"
+              onClick={(e) => selectRequest(e)}
+            >
+              Crear
+            </button>
+          </div>
         </form>
       </ConfirmationMessage>
     </div>

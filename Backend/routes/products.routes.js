@@ -4,14 +4,19 @@ const passport = require("passport");
 const { checkRoles } = require("../middlewares/auth.handler");
 const { ProductsController } = require("../controllers/products.controller");
 
-router.get("/", async (req, res, next) => {
-  try {
-    const products = await ProductsController.getProducts();
-    res.json(products);
-  } catch (error) {
-    next(error);
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res, next) => {
+    try {
+      console.log(req.user)
+      const products = await ProductsController.getProducts();
+      res.json(products);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.put(
   "/edit/:id",

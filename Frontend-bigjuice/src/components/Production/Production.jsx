@@ -2,18 +2,39 @@ import { useEffect, useState } from "react";
 import { BASE_API_URL } from "../../utils/api/bigjuice";
 import { Navbar } from "../Navbar/Navbar";
 import { PopUp } from "../PopUp/PopUp";
+import { getProducts } from "../../utils/api/bigjuice";
+
 import axios from "axios";
 import "./Production.css";
 
 export function Production() {
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("");
-  const userUbication = localStorage.getItem("ubication");
-  const jwtToken = localStorage.getItem("jwtToken");
   const [productionMessage, setProductionMessage] = useState("");
   const [showProductionMessage, setShowProductionMessage] = useState("false");
   const [message, setMessage] = useState("");
+  const [jugos, setJugos] = useState([]);
   const [showMessage, setShowMessage] = useState(false);
+  const jwtToken = localStorage.getItem("jwtToken");
+  const userUbication = localStorage.getItem("ubication");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const dataProducts = await getProducts(jwtToken);
+        const productsUbiJugos = dataProducts.filter(
+          (product) =>
+            product.ubication === userUbication && product.category === "jugos"
+        );
+ 
+        setJugos(productsUbiJugos);
+      } catch (error) {
+        console.error(error);
+        return error;
+      }
+    };
+    fetchData();
+  }, []);
 
   const openConfirmationMessage = () => {
     setShowMessage(true);
@@ -96,10 +117,12 @@ export function Production() {
               <option value="" disabled>
                 Selecciona...
               </option>
-              <option value="mora">Mora</option>
-              <option value="lulo">Lulo</option>
-              <option value="maracuya">Maracuyá</option>
-              <option value="mango">Mango</option>
+              {/* Usamos .map() para generar las opciones dinámicamente */}
+              {jugos.map((product) => (
+                <option key={product.name+product.id} value={product.name}>
+                  {product.name.toUpperCase()}
+                </option>
+              ))}
             </select>
           </div>
 

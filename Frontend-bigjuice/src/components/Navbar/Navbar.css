@@ -43,7 +43,28 @@
     cursor: pointer;
 }
 
-.links-container .selected {
-    color: red;
-    background-color: orange;
+
+/* .links-container p {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    height: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+} */
+
+.selected {
+
 }
+
+.selected a {
+    font-weight: 600;
+    font-family: Arial, Helvetica, sans-serif;
+    color: blue;
+}
+
+@media screen and (max-width: 1200px) {
+    .links-container a {
+        font-size: 1rem;
+    }
+  }

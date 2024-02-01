@@ -137,9 +137,11 @@
   font-size: 1rem;
   border: solid 2px black;
   color: white;
+  width: 10rem;
+  /* position: absolute; */
+
   margin-left: auto;
   margin-right: auto;
-  width: 10rem;
 }
 
 .confirmate-newbill-button {
@@ -162,6 +164,9 @@
   display: grid;
   place-content: center;
   height: 4rem;
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
 }
 
 .close-button-newbill {

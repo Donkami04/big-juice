@@ -35,7 +35,9 @@ const PrivateRoute = ({ element }) => {
 
 function App() {
   const location = useLocation();
+  const navigate = useNavigate();
   const pageTitle = useTabsName(location.pathname);
+
 
   useEffect(() => {
     document.title = pageTitle;
