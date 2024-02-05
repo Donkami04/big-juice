@@ -44,7 +44,32 @@ const Products = sequelize.define(
       allowNull: true,
       defaultValue : 0
     },
-    pulpa: {
+    pulpa_mora: {
+      type: DataTypes.FLOAT(10, 2),
+      allowNull: true,
+      defaultValue : 0
+    },
+    pulpa_maracuya: {
+      type: DataTypes.FLOAT(10, 2),
+      allowNull: true,
+      defaultValue : 0
+    },
+    pulpa_mango: {
+      type: DataTypes.FLOAT(10, 2),
+      allowNull: true,
+      defaultValue : 0
+    },
+    pulpa_lulo: {
+      type: DataTypes.FLOAT(10, 2),
+      allowNull: true,
+      defaultValue : 0
+    },
+    pulpa_guanabana: {
+      type: DataTypes.FLOAT(10, 2),
+      allowNull: true,
+      defaultValue : 0
+    },
+    pulpa_borojo: {
       type: DataTypes.FLOAT(10, 2),
       allowNull: true,
       defaultValue : 0

@@ -17,8 +17,6 @@ export function NewProduct({ setShowNewProduct, getData }) {
   const jwtToken = localStorage.getItem("jwtToken");
   const [showUnityMesuer, setShowUnityMesuer] = useState(false);
   const [unityMesure, setUnityMesure] = useState("");
-  const [pulpaSelected, setPulpaSelected] = useState("");
-  const [quantityPulpa, setQuantityPulpa] = useState("");
   const [productForm, setProductForm] = useState({
     name: "",
     quantity: "",
@@ -29,13 +27,12 @@ export function NewProduct({ setShowNewProduct, getData }) {
     leche: "",
     leche_polvo: "",
     azucar: "",
-    // [pulpaSelected]: "",
-    // pulpa_mora: "",
-    // pulpa_maracuya: "",
-    // pulpa_mango: "",
-    // pulpa_lulo: "",
-    // pulpa_guanabana: "",
-    // pulpa_borojo: "",
+    pulpa_mora: "",
+    pulpa_maracuya: "",
+    pulpa_mango: "",
+    pulpa_lulo: "",
+    pulpa_guanabana: "",
+    pulpa_borojo: "",
     saborizante: "",
     canela: "",
     miel: "",
@@ -164,7 +161,6 @@ export function NewProduct({ setShowNewProduct, getData }) {
     newProductForm[e.target.name] = e.target.value;
     newProductForm["category"] = category;
     setProductForm(newProductForm);
-    console.log(productForm);
   };
 
   const fillFormNewIngredient = (e) => {
@@ -183,21 +179,6 @@ export function NewProduct({ setShowNewProduct, getData }) {
     newIngredientForm[e.target.name] = e.target.value;
     newIngredientForm["category"] = category;
     setIngredientForm(newIngredientForm);
-  };
-
-  const updatePulpa = (value) => {
-    setPulpaSelected(value);
-    const newProductForm = { ...productForm };
-    newProductForm.value = "";
-    setProductForm(newProductForm);
-  };
-
-  const updateQuantityPulpa = (value) => {
-    const finalQuantity = parseFloat(value);
-    setQuantityPulpa(finalQuantity);
-    const newProductForm = { ...productForm };
-    newProductForm[pulpaSelected] = finalQuantity;
-    setProductForm(newProductForm);
   };
 
   return (
@@ -271,33 +252,13 @@ export function NewProduct({ setShowNewProduct, getData }) {
                 />
               </div>
               <div>
-                <label>Pulpa</label>
-                <select
-                  name="pulpa"
-                  type="text"
-                  value={pulpaSelected || ""}
-                  onChange={(e) => updatePulpa(e.target.value)}
-                >
-                  <option value="" disabled>
-                    ...
-                  </option>
-                  <option value="pulpa_lulo">Lulo</option>
-                  <option value="pulpa_mango">Mango</option>
-                </select>
-                <label>Cantidad de Pulpa (gr)</label>
-                <input
-                  type="number"
-                  name="pulpa"
-                  value={quantityPulpa} //!!!!!!!!!!!!!!!!!!
-                  onChange={(e) => updateQuantityPulpa(e.target.value)}
-                />
-                {/* <label>Pulpa (gr)</label>
+                <label>Pulpa (gr)</label>
                 <input
                   type="number"
                   name="pulpa"
                   value={productForm.pulpa}
                   onChange={fillFormNewProduct}
-                /> */}
+                />
                 <label>Saborizante (gr)</label>
                 <input
                   type="number"

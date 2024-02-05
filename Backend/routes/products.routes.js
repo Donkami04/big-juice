@@ -9,7 +9,6 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
-      console.log(req.user)
       const products = await ProductsController.getProducts();
       res.json(products);
     } catch (error) {

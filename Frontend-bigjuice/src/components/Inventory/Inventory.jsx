@@ -41,7 +41,12 @@ export function Inventory() {
     leche: "",
     leche_polvo: "",
     azucar: "",
-    pulpa: "",
+    pulpa_mora: "",
+    pulpa_maracuya: "",
+    pulpa_mango: "",
+    pulpa_lulo: "",
+    pulpa_guanabana: "",
+    pulpa_borojo: "",
     saborizante: "",
     canela: "",
     miel: "",
@@ -213,7 +218,7 @@ export function Inventory() {
                         className="name-inventory"
                         onClick={() => showForms(element)}
                       >
-                        {element.name.toUpperCase()}
+                        {element.name.toUpperCase().replace("_", " ")}
                       </td>
                       <td>{element.quantity}</td>
                       <td>{(element.quantity / 1000).toFixed(1)}</td>

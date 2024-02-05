@@ -160,10 +160,15 @@ class IngredientsController {
         { name: "azucar", quantity: dataProduct.azucar * quantityProduced },
         { name: "leche", quantity: dataProduct.leche * quantityProduced },
         {
-          name: "leche polvo",
+          name: "leche_polvo",
           quantity: dataProduct.leche_polvo * quantityProduced,
         },
-        { name: "pulpa", quantity: dataProduct.pulpa * quantityProduced },
+        { name: "pulpa_mora", quantity: dataProduct.pulpa_mora * quantityProduced },
+        { name: "pulpa_maracuya", quantity: dataProduct.pulpa_maracuya * quantityProduced },
+        { name: "pulpa_mango", quantity: dataProduct.pulpa_mango * quantityProduced },
+        { name: "pulpa_lulo", quantity: dataProduct.pulpa_lulo * quantityProduced },
+        { name: "pulpa_guanabana", quantity: dataProduct.pulpa_guanabana * quantityProduced },
+        { name: "pulpa_borojo", quantity: dataProduct.pulpa_borojo * quantityProduced },
         {
           name: "saborizante",
           quantity: dataProduct.saborizante * quantityProduced,
@@ -173,12 +178,15 @@ class IngredientsController {
       ];
 
       ingredientUpdates.forEach(async (e) => {
+        console.log("###################################")
+        console.log(e)
         await Ingredients.update(
           { quantity: Sequelize.literal(`quantity - ${e.quantity}`) },
           { where: { name: e.name, ubication: ubication } }
         );
       });
     } catch (error) {
+      console.log(error)
       return {
         status: 500,
         message: error.message,

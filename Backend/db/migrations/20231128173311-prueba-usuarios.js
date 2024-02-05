@@ -92,10 +92,35 @@ module.exports = {
         allowNull: true,
         defaultValue: 0,
       },
-      pulpa: {
+      pulpa_mora: {
         type: Sequelize.FLOAT(10, 2),
         allowNull: true,
-        defaultValue: 0,
+        defaultValue : 0
+      },
+      pulpa_maracuya: {
+        type: Sequelize.FLOAT(10, 2),
+        allowNull: true,
+        defaultValue : 0
+      },
+      pulpa_mango: {
+        type: Sequelize.FLOAT(10, 2),
+        allowNull: true,
+        defaultValue : 0
+      },
+      pulpa_lulo: {
+        type: Sequelize.FLOAT(10, 2),
+        allowNull: true,
+        defaultValue : 0
+      },
+      pulpa_guanabana: {
+        type: Sequelize.FLOAT(10, 2),
+        allowNull: true,
+        defaultValue : 0
+      },
+      pulpa_borojo: {
+        type: Sequelize.FLOAT(10, 2),
+        allowNull: true,
+        defaultValue : 0
       },
       saborizante: {
         type: Sequelize.FLOAT(10, 2),
