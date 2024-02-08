@@ -14,9 +14,8 @@ export function NewBill({
   ubication,
   jwtToken,
   closeNewBillForm,
-  products,
-  ingredients,
   ingredientsAndProducts,
+  refreshTable,
 }) {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
@@ -74,6 +73,7 @@ export function NewBill({
       );
 
       if (request.data.status === 201) {
+        refreshTable();
         closeNewBillForm();
         setName("");
         setAmount("");

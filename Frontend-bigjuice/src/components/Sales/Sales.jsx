@@ -6,6 +6,7 @@ import { BASE_API_URL } from "../../utils/api/bigjuice";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { ConfirmationMessage } from "../ConfirmationMessage/ConfirmationMessage";
+import { CuadreCaja } from "./CuadreCaja/CuadreCaja";
 import "./Sales.css";
 
 export function Sales() {
@@ -28,6 +29,8 @@ export function Sales() {
   const [showDeleteSale, setShowDeleteSale] = useState(false);
   const [showDeleteMessage, setShowDeleteMessage] = useState(false);
   const [saleId, setSaleId] = useState("");
+  const [saleInformation, setSaleInformation] = useState({});
+  const [showCuadreCaja, setShowCuadreCaja] = useState(false);
 
   useEffect(() => {
     rol !== "admin"
@@ -98,7 +101,7 @@ export function Sales() {
           },
         }
       );
-
+      setShowCuadreCaja(true);
       setSales(dataTotal.data.data.sales);
       setTotal(useColMoney(dataTotal.data.data.totalSales));
       setTotalJugos(useColMoney(dataTotalJugos.data.data));
@@ -135,29 +138,50 @@ export function Sales() {
     setSalesRappi(rappiSalesMoneyFormat);
   };
 
-  const openConfirmationDeleteSale = (saleId) => {
-    setSaleId(saleId);
-    setShowDeleteMessage(true);
-  };
-
   const deleteSale = async (saleId) => {
     try {
-      const deleteRequest = await axios.delete(
-        `${BASE_API_URL}/sales/remove/${saleId}`,
+      const restoreProducts = await axios.post(
+        `${BASE_API_URL}/products/restore-product`,
+        {
+          ...saleInformation,
+        },
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
         }
       );
+      if (restoreProducts.status === 200) {
+        const deleteRequest = await axios.delete(
+          `${BASE_API_URL}/sales/remove/${saleId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        );
 
-      setShowDeleteMessage(false);
-      setSaleId("");
-      handleSubmit();
+        if (deleteRequest.status === 200) {
+          setShowDeleteMessage(false);
+          setSaleId("");
+          handleSubmit(); // Actualizamos la tabla
+        }
+
+        if (restoreProducts.status !== 200 && deleteRequest !== 200) {
+          throw Error;
+        }
+      }
     } catch (error) {
+      console.log("holi");
       console.error(error);
-      setSalesMessage(error.response.data.message);
+      setSalesMessage(error.response.data.message || error.response.data);
     }
+  };
+
+  const openConfirmationDeleteSale = (data) => {
+    setSaleId(data.id);
+    setSaleInformation(data);
+    setShowDeleteMessage(true);
   };
 
   const closeConfirmationDeleteSale = () => {
@@ -167,6 +191,13 @@ export function Sales() {
   return (
     <div>
       <Navbar />
+      {showCuadreCaja && (
+        <CuadreCaja
+          total={total}
+          salesNequi={salesNequi}
+          salesRappi={salesRappi}
+        />
+      )}
       {showDeleteMessage && (
         <ConfirmationMessage>
           <div className="container-deletesale-message">
@@ -174,6 +205,9 @@ export function Sales() {
               Esta seguro que desea eliminar la venta con ID{" "}
               <span style={{ color: "red" }}>{saleId}</span>
             </p>
+            {showSalesMessage && (
+              <p className="sales-message">{salesMessage}</p>
+            )}
             <div className="buttons-delete-supplier-container">
               <button
                 className="confirm-delete-supplier"
@@ -237,9 +271,6 @@ export function Sales() {
             />
           </div>
         </form>
-        <p className={`sales-message display-${showSalesMessage}`}>
-          {salesMessage}
-        </p>
 
         <section className={`totals-sales-messages display-${showSalesTable}`}>
           <table>
@@ -289,7 +320,7 @@ export function Sales() {
                         <FaRegTrashAlt
                           style={{ position: "absolute", left: "5px" }}
                           className="delete-sale-button"
-                          onClick={() => openConfirmationDeleteSale(sale.id)}
+                          onClick={() => openConfirmationDeleteSale(sale)}
                         />
                       )}
                       {sale.id}

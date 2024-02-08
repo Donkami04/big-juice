@@ -26,7 +26,6 @@ router.post(
   async (req, res, next) => {
     try {
       const data = req.body;
-      console.log(data) //! Eliminar
       const { user } = req.user;
       const newBill = await BillsController.createBill(data, user);
       res.status(newBill.status).json({
@@ -96,6 +95,27 @@ router.delete(
     try {
       const id = req.params.id;
       const billDeleted = await BillsController.deleteBill(id);
+      res.status(billDeleted.status).json({
+        status: billDeleted.status,
+        message: billDeleted.message,
+        error: billDeleted.error,
+        data: billDeleted.data,
+      });
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+);
+
+router.post(
+  "/restore-bill",
+  passport.authenticate("jwt", { session: false }),
+  checkRoles("admin"),
+  async (req, res, next) => {
+    try {
+      const data = req.body;
+      const billDeleted = await BillsController.deleteBillIngredients(data);
       res.status(billDeleted.status).json({
         status: billDeleted.status,
         message: billDeleted.message,

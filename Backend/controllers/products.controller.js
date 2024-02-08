@@ -227,6 +227,7 @@ class ProductsController {
   }
 
   // Aumenta el inventario de jugos y sin disminuir el de ingredientes
+  // Utilizada cuando se elimina una venta
   static async increaseProducts(data) {
     try {
       const ubication = data.ubication;
@@ -240,29 +241,15 @@ class ProductsController {
 
       return {
         status: 200,
-        message: "Todos los productos han sido actualizados correctamente.",
+        message: "Todos los productos de la venta eliminada han sido actualizados correctamente.",
       };
-
-      // for (const product of data.products) {
-      //   const productName = product.name;
-      //   console.log(product)
-      //   const quantityProduced = product.quantity;
-
-      //   Products.update(
-      //     { quantity: Sequelize.literal(`quantity + ${quantityProduced}`) },
-      //     { where: { name: productName, ubication: ubication } }
-      //   );
-
-      //   return {
-      //     status: 200,
-      //     message: "Todos los productos han sido actualizados correctamente.",
-      //   };
       
     } catch (error) {
       console.error(error);
       return {
         status: 500,
-        message: `Error al actualizar los productos e ingredientes: ${error.message}`,
+        message: 'Error al actualizar los productos de la venta eliminada',
+        error: error.message
       };
     }
   }

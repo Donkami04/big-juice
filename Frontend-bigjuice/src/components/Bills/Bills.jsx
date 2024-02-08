@@ -31,6 +31,7 @@ export function Bills() {
   const [showDeleteMessage, setShowDeleteMessage] = useState(false);
   const [billName, setBillName] = useState("");
   const [billId, setBillId] = useState("");
+  const [billData, setBillData] = useState({});
 
   const userUbication = localStorage.getItem("ubication");
   const jwtToken = localStorage.getItem("jwtToken");
@@ -122,23 +123,42 @@ export function Bills() {
 
   const deleteBill = async () => {
     try {
-      const deleteRequest = await axios.delete(
-        `${BASE_API_URL}/bills/remove/${billId}`,
+      const deleteBillElements = await axios.post(
+        `${BASE_API_URL}/bills/restore-bill`,
+        {
+          ...billData,
+        },
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
         }
       );
-      console.log(deleteRequest);
 
-      setShowDeleteMessage(false);
-      setBillId("");
-      setBillName("");
-      handleSubmit();
+      if (deleteBillElements.status === 200) {
+        const deleteRequest = await axios.delete(
+          `${BASE_API_URL}/bills/remove/${billId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        );
+
+        if (deleteRequest.status === 200) {
+          setShowDeleteMessage(false);
+          setBillId("");
+          setBillName("");
+          handleSubmit();
+        }
+
+        if (deleteRequest.status !== 200 || deleteBillElements.status !== 200) {
+          throw Error;
+        }
+      }
     } catch (error) {
       console.error(error);
-      // setSalesMessage(error.response.data.message);
+      setbillsMessage(error.response.data.message || error.response.data);
     }
   };
 
@@ -150,9 +170,11 @@ export function Bills() {
   };
 
   const openConfirmationDeleteBill = (bill) => {
+    setBillData(bill);
     setBillId(bill.id);
     setShowDeleteMessage(true);
     setBillName(bill.name);
+    setbillsMessage("");
   };
 
   return (
@@ -166,6 +188,7 @@ export function Bills() {
           products={products}
           ingredients={ingredients}
           ingredientsAndProducts={ingredientsAndProducts}
+          refreshTable={handleSubmit}
         />
       )}
       {showDeleteMessage && (
@@ -175,6 +198,9 @@ export function Bills() {
               Esta seguro que desea eliminar la compra{" "}
               <span style={{ color: "red" }}>{billName.toUpperCase()}</span>
             </p>
+            {showBillsMessage && (
+              <p className="error-message">{billsMessage}</p>
+            )}
             <div className="buttons-delete-supplier-container">
               <button className="confirm-delete-supplier" onClick={deleteBill}>
                 Confirmar
@@ -238,7 +264,7 @@ export function Bills() {
             />
           </div>
         </form>
-        {billsMessage && <p className="error-message">{billsMessage}</p>}
+        {showBillsMessage && <p className="error-message">{billsMessage}</p>}
         {/* <p className={`bills-message display-${showBillsMessage}`}>
           {billsMessage}
         </p> */}
@@ -288,10 +314,10 @@ export function Bills() {
                   <td>{bill.ubication}</td>
                   <td>
                     <ul>
-                      {bill.elements ? (
+                      {bill.elements && bill.elements.length > 0 ? (
                         bill.elements.map((element, index) => (
                           <li key={index}>
-                            {element.name.replace("_", " ")} -{" "}
+                            {element.name.toUpperCase().replace("_", " ")} -{" "}
                             {element.unityMesure === "kg"
                               ? element.quantity / 1000
                               : element.quantity}{" "}
