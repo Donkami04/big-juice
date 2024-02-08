@@ -1,4 +1,6 @@
 const { Bills } = require("../db/models/bills");
+const { Ingredients } = require("../db/models/ingredients");
+const { Products } = require("../db/models/products");
 const { Sequelize } = require("sequelize");
 const { Op } = require("sequelize");
 const { getCurrentTime } = require("../utils/currentTime");
@@ -36,6 +38,7 @@ class BillsController {
         date: currentDateTime,
         user: user,
         description: data.description,
+        elements: data.elements,
       });
 
       if (data.dataBill) {
@@ -152,6 +155,40 @@ class BillsController {
       return {
         status: 500,
         message: `Error en el cálculo de la venta total: ${error}`,
+      };
+    }
+  }
+
+  static async deleteBillIngredients(data) {
+    try {
+      const ubication = data.ubication;
+
+      data.elements.forEach((e) => {
+        if (e.category === "ingredient" || e.category === "others")
+          Ingredients.update(
+            { quantity: Sequelize.literal(`quantity - ${e.quantity}`) },
+            { where: { name: e.name, ubication: ubication } }
+          );
+
+        if (e.category === "otros") {
+          Products.update(
+            { quantity: Sequelize.literal(`quantity - ${e.quantity}`) },
+            { where: { name: e.name, ubication: ubication } }
+          );
+        }
+      });
+
+      return {
+        status: 200,
+        message: "Todos los productos han sido actualizados correctamente.",
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        status: 500,
+        message:
+          "Error al actualizar los productos e ingredientes de la compra eliminada",
+        error: error.message,
       };
     }
   }

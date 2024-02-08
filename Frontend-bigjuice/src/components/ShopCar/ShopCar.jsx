@@ -337,7 +337,7 @@ export const ShopCar = ({
         </div>
         {products.length === 0 ? null : (
           <p onClick={zeroSaleForm} className="zero-sale">
-            $0
+            Interno
           </p>
         )}
       </form>

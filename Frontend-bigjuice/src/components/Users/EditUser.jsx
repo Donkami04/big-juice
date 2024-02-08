@@ -5,9 +5,15 @@ import { ConfirmationMessage } from "../ConfirmationMessage/ConfirmationMessage"
 import { IoCloseSharp } from "react-icons/io5";
 import "./Users.css";
 
-export function EditUser({ user, setShowUserForm, getData, closeEditUserFormFunction }) {
+export function EditUser({
+  user,
+  setShowUserForm,
+  getData,
+  closeEditUserFormFunction,
+}) {
   const jwtToken = localStorage.getItem("jwtToken");
-  const [password, setPassword] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState("");
   const [userData, setUserData] = useState({
     id: "",
     name: "",
@@ -35,14 +41,16 @@ export function EditUser({ user, setShowUserForm, getData, closeEditUserFormFunc
           },
         }
       );
-      console.log(request.data.status);
       if (request.data.status === 200) {
         getData();
         setShowUserForm(false);
-        setShowEditUserForm(false);
+        setShowMessage(false);
+        setMessage("");
       }
     } catch (error) {
-      console.error(error);
+      console.log(error.response.data.message);
+      setShowMessage(true);
+      setMessage(error.response.data.message);
     }
   };
 
@@ -110,6 +118,7 @@ export function EditUser({ user, setShowUserForm, getData, closeEditUserFormFunc
               onChange={fillDataForm}
               placeholder="Opcional"
             />
+            {showMessage && <p className="error-message">{message}</p>}
             <div className="buttons-edituser-container">
               <button
                 className="confirm-edit-user"

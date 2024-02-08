@@ -102,8 +102,8 @@ export function NewProduct({ setShowNewProduct, getData }) {
     //   }
     // }
     try {
-      // console.log(Object.keys(finalData).length);
-      // console.log(finalData);
+      console.log(Object.keys(finalData).length);
+      console.log(finalData);
       if (category === "jugos" && Object.keys(finalData).length < 16) {
         setShowMessage(true);
         setMessage("Por favor rellene todos los campos del formulario.");
@@ -140,7 +140,7 @@ export function NewProduct({ setShowNewProduct, getData }) {
           },
         }
       );
-
+      console.log(request);
       if (request.data.status === 201) {
         getData();
         setShowNewProduct(false);
@@ -174,17 +174,10 @@ export function NewProduct({ setShowNewProduct, getData }) {
           },
         }
       );
-      console.log(request);
-      if (request.data.status === 201) {
-        getData();
-        setShowNewProduct(false);
-        setShowMessage(false);
-        setMessage("");
-      }
+      getData();
+      setShowNewProduct(false);
     } catch (error) {
       console.error(error);
-      setShowMessage(true);
-      setMessage(error.response.data.message);
     }
   };
 
@@ -306,7 +299,7 @@ export function NewProduct({ setShowNewProduct, getData }) {
                   value={productForm.azucar}
                   onChange={fillFormNewProduct}
                 />
-                {/* <label>Pulpa</label>
+                <label>Pulpa</label>
                 <br />
                 <select
                   style={{ width: "85%" }}
@@ -324,17 +317,17 @@ export function NewProduct({ setShowNewProduct, getData }) {
                   <option value="pulpa_maracuya">Maracuya</option>
                   <option value="pulpa_guanabana">Guanabana</option>
                   <option value="pulpa_borojo">Borojo</option>
-                </select> */}
+                </select>
               </div>
               <div>
-                {/* <br />
+                <br />
                 <label>Cantidad de Pulpa (gr)</label>
                 <input
                   type="number"
                   name="pulpa"
                   value={quantityPulpa}
                   onChange={(e) => updateQuantityPulpa(e.target.value)}
-                /> */}
+                />
                 {/* <label>Pulpa (gr)</label>
                 <input
                   type="number"
@@ -382,33 +375,6 @@ export function NewProduct({ setShowNewProduct, getData }) {
                   <option value="villa colombia">Villa Colombia</option>
                   <option value="unico">Unico</option>
                 </select>
-                <label>Pulpa</label>
-                <br />
-                <select
-                  style={{ width: "85%" }}
-                  name="pulpa"
-                  type="text"
-                  value={pulpaSelected || ""}
-                  onChange={(e) => updatePulpa(e.target.value)}
-                >
-                  <option value="" disabled>
-                    ...
-                  </option>
-                  <option value="pulpa_mora">Mora</option>
-                  <option value="pulpa_mango">Mango</option>
-                  <option value="pulpa_lulo">Lulo</option>
-                  <option value="pulpa_maracuya">Maracuya</option>
-                  <option value="pulpa_guanabana">Guanabana</option>
-                  <option value="pulpa_borojo">Borojo</option>
-                </select>
-                <br />
-                <label>Cantidad de Pulpa (gr)</label>
-                <input
-                  type="number"
-                  name="pulpa"
-                  value={quantityPulpa}
-                  onChange={(e) => updateQuantityPulpa(e.target.value)}
-                />
               </div>
             </div>
           )}
@@ -487,7 +453,6 @@ export function NewProduct({ setShowNewProduct, getData }) {
                 <option value="villa colombia">Villa Colombia</option>
                 <option value="unico">Unico</option>
               </select>
-              {/* {showMessage && <p className="error-message">{message}</p>} */}
             </div>
           )}
           {showMessage && <p className="error-message">{message}</p>}

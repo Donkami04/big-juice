@@ -17,7 +17,6 @@ class ProductsController {
 
   static async createProduct(data) {
     try {
-      console.log(data)
       const productDoesExist = await Products.findOne({
         where: { name: data.name, ubication: data.ubication },
       });
@@ -37,7 +36,12 @@ class ProductsController {
         leche: data.leche,
         leche_polvo: data.leche_polvo,
         azucar: data.azucar,
-        pulpa: data.pulpa,
+        pulpa_mora: data.pulpa_mora,
+        pulpa_lulo: data.pulpa_lulo,
+        pulpa_maracuya: data.pulpa_maracuya,
+        pulpa_guanabana: data.pulpa_guanabana,
+        pulpa_borojo: data.pulpa_borojo,
+        pulpa_mango: data.pulpa_mango,
         saborizante: data.saborizante,
         canela: data.canela,
         miel: data.miel,
@@ -79,7 +83,12 @@ class ProductsController {
           leche: changes.leche,
           leche_polvo: changes.leche_polvo,
           azucar: changes.azucar,
-          pulpa: changes.pulpa,
+          pulpa_mora: changes.pulpa_mora,
+          pulpa_lulo: changes.pulpa_lulo,
+          pulpa_maracuya: changes.pulpa_maracuya,
+          pulpa_guanabana: changes.pulpa_guanabana,
+          pulpa_borojo: changes.pulpa_borojo,
+          pulpa_mango: changes.pulpa_mango,
           canela: changes.canela,
           miel: changes.miel,
           tarrina: changes.tarrina,
@@ -139,21 +148,18 @@ class ProductsController {
         });
 
         if (productDoesExist === null) {
-          console.log("PRODUCTO NO EXISTE");
           throw new Error(
             `El producto ${productName.toUpperCase()} no existe.`
           );
         }
 
         if (productDoesExist.quantity === 0) {
-          console.log("PRODUCTO ES 0");
           throw new Error(
             `El producto ${productName.toUpperCase()} está agotado.`
           );
         }
 
         if (quantitySold > productDoesExist.quantity) {
-          console.log("LA VENTA SUPERA EL STOCK");
           throw new Error(
             `No hay suficiente cantidad de ${productName.toUpperCase()} para realizar esta venta.`
           );
@@ -184,13 +190,13 @@ class ProductsController {
   }
 
   // Esta se usa cuando se registra la produccion de jugos
+  // Aumenta el inventario de jugos y disminuye el de ingredientes
   static async increaseStockProduct(productsToIncrease) {
     try {
       for (const product of productsToIncrease) {
         const productName = product.name;
         const quantityProduced = product.quantity;
         const ubication = product.ubication;
-        console.log(productName, quantityProduced, ubication)
         Products.update(
           { quantity: Sequelize.literal(`quantity + ${quantityProduced}`) },
           { where: { name: productName, ubication: ubication } }
@@ -216,6 +222,34 @@ class ProductsController {
       return {
         status: 500,
         message: `Error al actualizar los productos e ingredientes: ${error.message}`,
+      };
+    }
+  }
+
+  // Aumenta el inventario de jugos y sin disminuir el de ingredientes
+  // Utilizada cuando se elimina una venta
+  static async increaseProducts(data) {
+    try {
+      const ubication = data.ubication;
+
+      data.products.forEach((e) => {
+        Products.update(
+          { quantity: Sequelize.literal(`quantity + ${e.quantity}`) },
+          { where: { name: e.name, ubication: ubication } }
+        );
+      })
+
+      return {
+        status: 200,
+        message: "Todos los productos de la venta eliminada han sido actualizados correctamente.",
+      };
+      
+    } catch (error) {
+      console.error(error);
+      return {
+        status: 500,
+        message: 'Error al actualizar los productos de la venta eliminada',
+        error: error.message
       };
     }
   }

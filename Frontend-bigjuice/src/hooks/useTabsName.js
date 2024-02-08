@@ -10,7 +10,7 @@ export const useTabsName = (pathname) => {
     case "/produccion":
       return "Registrar produccion";
     case "/compras":
-      return "Repote de Compras";
+      return "Reporte de Compras";
     case "/proveedores":
       return "Proveedores";
     case "/inventario":

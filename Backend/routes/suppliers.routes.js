@@ -2,6 +2,12 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const { checkRoles } = require("../middlewares/auth.handler");
+const { validateData } = require("../middlewares/validator.handler");
+const {
+  createSupplierSchema,
+  editSupplierSchema,
+} = require("../db/schemas/suppliers.schema");
+
 const { SuppliersController } = require("../controllers/suppliers.controller");
 
 router.get(
@@ -21,6 +27,7 @@ router.post(
   "/new",
   passport.authenticate("jwt", { session: false }),
   checkRoles("admin"),
+  validateData(createSupplierSchema),
   async (req, res, next) => {
     try {
       const data = req.body;
@@ -42,12 +49,13 @@ router.put(
   "/edit/:id",
   passport.authenticate("jwt", { session: false }),
   checkRoles("admin"),
+  validateData(editSupplierSchema),
   async (req, res, next) => {
     try {
       const id = req.params.id;
       const changes = req.body;
-      console.log(id)
-      console.log(changes)
+      console.log(id);
+      console.log(changes);
       const supplierEdit = await SuppliersController.editOneSupplier(
         id,
         changes

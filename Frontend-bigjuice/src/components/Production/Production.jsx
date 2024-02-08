@@ -3,6 +3,7 @@ import { BASE_API_URL } from "../../utils/api/bigjuice";
 import { Navbar } from "../Navbar/Navbar";
 import { PopUp } from "../PopUp/PopUp";
 import { getProducts } from "../../utils/api/bigjuice";
+import { ProductionHistoric } from "./ProductionHistoric/ProductionHistoric";
 
 import axios from "axios";
 import "./Production.css";
@@ -15,18 +16,24 @@ export function Production() {
   const [message, setMessage] = useState("");
   const [jugos, setJugos] = useState([]);
   const [showMessage, setShowMessage] = useState(false);
+  const [showHistoric, setShowHistoric] = useState(false);
+  const [showButtonHistoric, setShowButtonHistoric] = useState(true);
   const jwtToken = localStorage.getItem("jwtToken");
   const userUbication = localStorage.getItem("ubication");
+  const rol = localStorage.getItem("rol");
 
   useEffect(() => {
     const fetchData = async () => {
+      if (rol !== "admin") {
+        setShowButtonHistoric(false);
+      }
       try {
         const dataProducts = await getProducts(jwtToken);
         const productsUbiJugos = dataProducts.filter(
           (product) =>
             product.ubication === userUbication && product.category === "jugos"
         );
- 
+
         setJugos(productsUbiJugos);
       } catch (error) {
         console.error(error);
@@ -37,6 +44,11 @@ export function Production() {
   }, []);
 
   const openConfirmationMessage = () => {
+    if (!name || quantity <= 0 || !quantity) {
+      setShowProductionMessage("true");
+      setProductionMessage("Selecciona un producto y especifica la cantidad");
+      return;
+    }
     setShowMessage(true);
   };
 
@@ -71,14 +83,32 @@ export function Production() {
         }
       );
 
-      setShowProductionMessage(" green-message");
-      setProductionMessage(productionRequest.data.message);
+      const historicProductionNew = await axios.post(
+        `${BASE_API_URL}/production/new`,
+        {
+          ...dataProduct,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+      console.log(productionRequest);
+      console.log(historicProductionNew);
+      if (
+        productionRequest.status === 200 &&
+        historicProductionNew.status === 201
+      ) {
+        setShowProductionMessage(" green-message");
+        setProductionMessage(productionRequest.data.message);
 
-      // Borramos el mensaje exitoso despues de 5 segundos
-      setTimeout(() => {
-        setShowProductionMessage("false");
-        setProductionMessage("");
-      }, 5000);
+        // Borramos el mensaje exitoso despues de 5 segundos
+        setTimeout(() => {
+          setShowProductionMessage("false");
+          setProductionMessage("");
+        }, 5000);
+      }
     } catch (error) {
       console.error(error);
       setShowProductionMessage("");
@@ -89,8 +119,6 @@ export function Production() {
   const closeMessage = () => {
     setShowMessage(false);
   };
-
-  
 
   return (
     <>
@@ -105,6 +133,15 @@ export function Production() {
       )}
 
       <Navbar />
+      {showHistoric && <ProductionHistoric setShowHistoric={setShowHistoric} />}
+      {showButtonHistoric && (
+        <button
+          onClick={() => setShowHistoric(true)}
+          className="show-historic-production-button"
+        >
+          Ver histórico de producción
+        </button>
+      )}
       <main className="production-container">
         <form>
           <div>
@@ -119,7 +156,7 @@ export function Production() {
               </option>
               {/* Usamos .map() para generar las opciones dinámicamente */}
               {jugos.map((product) => (
-                <option key={product.name+product.id} value={product.name}>
+                <option key={product.name + product.id} value={product.name}>
                   {product.name.toUpperCase()}
                 </option>
               ))}

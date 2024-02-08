@@ -31,6 +31,7 @@
   border-collapse: collapse;
   width: 100%;
   text-align: center;
+
 }
 
 .bills-table thead {
@@ -61,4 +62,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.button-bills-find {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 }

@@ -9,6 +9,7 @@ import {
 } from "../../utils/api/bigjuice";
 import { NewBill } from "./NewBill/NewBill";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 import { ConfirmationMessage } from "../ConfirmationMessage/ConfirmationMessage";
 import "./Bills.css";
 
@@ -30,6 +31,7 @@ export function Bills() {
   const [showDeleteMessage, setShowDeleteMessage] = useState(false);
   const [billName, setBillName] = useState("");
   const [billId, setBillId] = useState("");
+  const [billData, setBillData] = useState({});
 
   const userUbication = localStorage.getItem("ubication");
   const jwtToken = localStorage.getItem("jwtToken");
@@ -53,15 +55,19 @@ export function Bills() {
   useEffect(() => {
     if (rol !== "admin") {
       setShowDeleteBill(false);
+      setbillsMessage("No estas autorizado.");
+      setShowBillsMessage(true);
     }
     setUbication(userUbication);
     getData();
-    
+
     const fechaActual = new Date();
     const dia = fechaActual.getDate();
     const mes = fechaActual.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por lo que sumamos 1
     const ano = fechaActual.getFullYear();
-    const fechaFormateada = `${ano}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia}`;
+    const fechaFormateada = `${ano}-${mes < 10 ? "0" + mes : mes}-${
+      dia < 10 ? "0" + dia : dia
+    }`;
     setSdate(fechaFormateada);
     setEdate(fechaFormateada);
   }, []);
@@ -73,10 +79,9 @@ export function Bills() {
   const handleSubmit = async () => {
     if (rol !== "admin") {
       setbillsMessage("No estas autorizado.");
-      setShowBillsMessage("");
+      setShowBillsMessage(true);
       return;
     }
-    console.log(sdate)
 
     try {
       const dataBills = await axios.post(
@@ -118,23 +123,42 @@ export function Bills() {
 
   const deleteBill = async () => {
     try {
-      const deleteRequest = await axios.delete(
-        `${BASE_API_URL}/bills/remove/${billId}`,
+      const deleteBillElements = await axios.post(
+        `${BASE_API_URL}/bills/restore-bill`,
+        {
+          ...billData,
+        },
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
         }
       );
-      console.log(deleteRequest);
 
-      setShowDeleteMessage(false);
-      setBillId("");
-      setBillName("");
-      handleSubmit();
+      if (deleteBillElements.status === 200) {
+        const deleteRequest = await axios.delete(
+          `${BASE_API_URL}/bills/remove/${billId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        );
+
+        if (deleteRequest.status === 200) {
+          setShowDeleteMessage(false);
+          setBillId("");
+          setBillName("");
+          handleSubmit();
+        }
+
+        if (deleteRequest.status !== 200 || deleteBillElements.status !== 200) {
+          throw Error;
+        }
+      }
     } catch (error) {
       console.error(error);
-      // setSalesMessage(error.response.data.message);
+      setbillsMessage(error.response.data.message || error.response.data);
     }
   };
 
@@ -146,9 +170,11 @@ export function Bills() {
   };
 
   const openConfirmationDeleteBill = (bill) => {
+    setBillData(bill);
     setBillId(bill.id);
     setShowDeleteMessage(true);
     setBillName(bill.name);
+    setbillsMessage("");
   };
 
   return (
@@ -162,6 +188,7 @@ export function Bills() {
           products={products}
           ingredients={ingredients}
           ingredientsAndProducts={ingredientsAndProducts}
+          refreshTable={handleSubmit}
         />
       )}
       {showDeleteMessage && (
@@ -171,6 +198,9 @@ export function Bills() {
               Esta seguro que desea eliminar la compra{" "}
               <span style={{ color: "red" }}>{billName.toUpperCase()}</span>
             </p>
+            {showBillsMessage && (
+              <p className="error-message">{billsMessage}</p>
+            )}
             <div className="buttons-delete-supplier-container">
               <button className="confirm-delete-supplier" onClick={deleteBill}>
                 Confirmar
@@ -214,7 +244,7 @@ export function Bills() {
               id="ubication"
               value={ubication}
               onChange={(e) => setUbication(e.target.value)}
-              className={` ubication-selector-bills`}
+              className={`ubication-selector-sales`}
             >
               <option value="" disabled>
                 Selecciona...
@@ -224,14 +254,20 @@ export function Bills() {
             </select>
           </div>
           <div className="button-bills-find">
-            <button type="button" onClick={handleSubmit}>
+            {/* <button type="button" onClick={handleSubmit}>
               Buscar
-            </button>
+            </button> */}
+            <p>Buscar</p>
+            <FaMagnifyingGlass
+              style={{ fontSize: "1.3rem", cursor: "pointer" }}
+              onClick={handleSubmit}
+            />
           </div>
         </form>
-        <p className={`bills-message display-${showBillsMessage}`}>
+        {showBillsMessage && <p className="error-message">{billsMessage}</p>}
+        {/* <p className={`bills-message display-${showBillsMessage}`}>
           {billsMessage}
-        </p>
+        </p> */}
       </div>
 
       <section className={`totals-bills-messages display-${showBillsTotals}`}>
@@ -254,7 +290,7 @@ export function Bills() {
               <th>Fecha</th>
               <th>Usuario</th>
               <th>Ubicación</th>
-              <th>Observación</th>
+              <th>Elementos</th>
             </tr>
           </thead>
           <tbody>
@@ -276,12 +312,27 @@ export function Bills() {
                   <td>{bill.date}</td>
                   <td>{bill.user}</td>
                   <td>{bill.ubication}</td>
-                  <td>{bill.description}</td>
+                  <td>
+                    <ul>
+                      {bill.elements && bill.elements.length > 0 ? (
+                        bill.elements.map((element, index) => (
+                          <li key={index}>
+                            {element.name.toUpperCase().replace("_", " ")} -{" "}
+                            {element.unityMesure === "kg"
+                              ? element.quantity / 1000
+                              : element.quantity}{" "}
+                            {element.unityMesure}
+                          </li>
+                        ))
+                      ) : (
+                        <span>No hay elementos</span>
+                      )}
+                    </ul>
+                  </td>
                 </tr>
               ))}
           </tbody>
         </table>
-        
       </main>
     </>
   );

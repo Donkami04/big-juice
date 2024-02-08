@@ -3,6 +3,7 @@ const passport = require("passport");
 const router = express.Router();
 const { checkRoles } = require("../middlewares/auth.handler");
 const { SalesController } = require("../controllers/sales.controller");
+// const { ProductsController } = require("../controllers/products.controller");
 const moment = require("moment");
 
 router.get(

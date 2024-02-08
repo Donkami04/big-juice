@@ -12,11 +12,13 @@ import "./Suppliers.css";
 export function Suppliers() {
   const [suppliers, setSuppliers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [adminButtonsSuppliers, setAdminButtonsSuppliers] = useState(false);
+  const [adminButtonsSuppliers, setAdminButtonsSuppliers] = useState(true);
   const [showNewSupplierForm, setShowNewSupplierForm] = useState(false);
   const [showNewSupplierButton, setShowNewSupplierButton] = useState(true);
   const [showEditSupplierForm, setShowEditSupplierForm] = useState(false);
   const [showDeleteMessage, setShowDeleteMessage] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState("");
 
   const [supplierName, setSupplierName] = useState("");
   const [supplierUbication, setSupplierUbication] = useState("");
@@ -28,30 +30,23 @@ export function Suppliers() {
   const jwtToken = localStorage.getItem("jwtToken");
   const rol = localStorage.getItem("rol");
 
+  const fetchData = async () => {
+    if (rol !== "admin") {
+      setAdminButtonsSuppliers(false);
+      setShowNewSupplierButton(false);
+    }
+    try {
+      const response = await axios.get(`${BASE_API_URL}/suppliers`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      setSuppliers(response.data); // Accede a la propiedad 'data'
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      // rol !== "admin"
-      //   ? setAdminButtonsSuppliers(false)
-      //   : setAdminButtonsSuppliers(true);
-      //   setShowNewSupplierButton(false);
-      if (rol !== "admin") {
-        setAdminButtonsSuppliers(false);
-        setShowNewSupplierButton(false);
-      } else {
-        setAdminButtonsSuppliers(true);
-        setShowNewSupplierButton(true);
-      }
-      try {
-        const response = await axios.get(`${BASE_API_URL}/suppliers`, {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        });
-        setSuppliers(response.data); // Accede a la propiedad 'data'
-      } catch (error) {
-        console.error(error);
-      }
-    };
     fetchData();
   }, []);
 
@@ -79,15 +74,25 @@ export function Suppliers() {
           },
         }
       );
-      const getSuppliersUpdated = await axios.get(`${BASE_API_URL}/suppliers`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
-      setSuppliers(getSuppliersUpdated.data);
-      setShowEditSupplierForm(false);
+
+      if (productionRequest.data.status === 201) {
+        const getSuppliersUpdated = await axios.get(
+          `${BASE_API_URL}/suppliers`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        );
+        setSuppliers(getSuppliersUpdated.data);
+        setShowEditSupplierForm(false);
+        setShowMessage(false);
+        setMessage("");
+      }
     } catch (error) {
       console.error(error);
+      setMessage(error.response.data.message);
+      setShowMessage(true);
     }
   };
 
@@ -104,10 +109,14 @@ export function Suppliers() {
 
   const closeEditForm = () => {
     setShowEditSupplierForm(false);
+    setShowMessage(false);
+    setMessage("");
   };
 
   const closeDeleteConfirmation = () => {
     setShowDeleteMessage(false);
+    setShowMessage(false);
+    setMessage("");
   };
 
   const confirmDeleteSupplier = async () => {
@@ -120,9 +129,16 @@ export function Suppliers() {
           },
         }
       );
-      setShowDeleteMessage(false);
+      if (deleteRequest.data.status === 200) {
+        fetchData();
+        setShowDeleteMessage(false);
+        setShowMessage(false);
+        setMessage("");
+      }
     } catch (error) {
-      console.error();
+      console.error(error);
+      setMessage(error.response.data.message);
+      setShowMessage(true);
     }
   };
 
@@ -142,6 +158,8 @@ export function Suppliers() {
 
   const closeFormNewSupp = () => {
     setShowNewSupplierForm(false);
+    setShowMessage(false);
+    setMessage("");
   };
 
   const newSupplier = async () => {
@@ -167,16 +185,23 @@ export function Suppliers() {
           Authorization: `Bearer ${jwtToken}`,
         },
       });
-      setSuppliers(getSuppliersUpdated.data);
-      setShowNewSupplierForm(false);
-      setSupplierName("");
-      setSupplierUbication("");
-      setDate("");
-      setPhone("");
-      setEmail("");
-      setIngredient("");
+
+      if (newSupplierRequest.data.status === 201) {
+        setSuppliers(getSuppliersUpdated.data);
+        setShowNewSupplierForm(false);
+        setSupplierName("");
+        setSupplierUbication("");
+        setDate("");
+        setPhone("");
+        setEmail("");
+        setIngredient("");
+        setShowMessage(false);
+        setMessage("");
+      }
     } catch (error) {
       console.error(error);
+      setMessage(error.response.data.message);
+      setShowMessage(true);
     }
   };
 
@@ -185,7 +210,7 @@ export function Suppliers() {
       <Navbar />
 
       {showEditSupplierForm && (
-        <ConfirmationMessage>
+        <ConfirmationMessage height={"25rem"}>
           <form className="form-edit-supplier">
             <p onClick={closeEditForm} className="close-editsupplier-button">
               x
@@ -223,6 +248,7 @@ export function Suppliers() {
             >
               <option value="villa colombia">Villa Colombia</option>
             </select>
+            {showMessage && <p className="error-message">{message}</p>}
             <button
               type="button"
               className="button-edit-supplier"
@@ -239,6 +265,7 @@ export function Suppliers() {
           <p className="message-confirm-delete-supplier">
             {`¿Está seguro que desea eliminar el proveedor ${supplierName}?`}
           </p>
+          {showMessage && <p className="error-message">{message}</p>}
           <div className="buttons-delete-supplier-container">
             <button
               className="confirm-delete-supplier"
@@ -257,7 +284,7 @@ export function Suppliers() {
       )}
 
       {showNewSupplierForm && (
-        <ConfirmationMessage>
+        <ConfirmationMessage height={"25rem"}>
           <form className="form-edit-supplier">
             <p onClick={closeFormNewSupp} className="close-editsupplier-button">
               x
@@ -269,7 +296,7 @@ export function Suppliers() {
               value={supplierName}
               onChange={(e) => setSupplierName(e.target.value)}
             />
-            <label>Producto</label>
+            <label>Producto que distribuye</label>
             <input
               type="text"
               value={ingredient}
@@ -283,7 +310,7 @@ export function Suppliers() {
             />
             <label>Correo</label>
             <input
-              type="text"
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -298,6 +325,7 @@ export function Suppliers() {
               </option>
               <option value="villa colombia">Villa Colombia</option>
             </select>
+            {showMessage && <p className="error-message">{message}</p>}
             <button
               type="button"
               className="button-edit-supplier"
@@ -331,7 +359,7 @@ export function Suppliers() {
                 onClick={() => deleteSupplier(supplier)}
                 className="suppliers-buttons-close"
               >
-                <RiDeleteBin6Line color="greenyellow"/>
+                <RiDeleteBin6Line color="greenyellow" />
               </span>
             )}
             {adminButtonsSuppliers && (

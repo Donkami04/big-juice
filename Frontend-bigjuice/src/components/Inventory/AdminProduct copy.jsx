@@ -8,6 +8,7 @@ import {
 import { useEffect, useState } from "react";
 
 export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
+  console.log(element);
   const [height, setHeight] = useState("");
   const [optionButton, setOptionButton] = useState(false);
   const [showAdminButtons, setShowAdminButtons] = useState(true);
@@ -41,18 +42,6 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
     category: "",
     ubication: "",
   });
-  const [pulpaSelected, setPulpaSelected] = useState("");
-  const [quantityPulpa, setQuantityPulpa] = useState("");
-
-  useEffect(() => {
-    for (var property in element) {
-      // Verificar si la propiedad contiene la palabra "pulpa" y su valor es diferente de 0
-      if (property.includes("pulpa") && element[property] > 0) {
-        setPulpaSelected(property);
-        setQuantityPulpa(element[property]);
-      }
-    }
-  }, []);
 
   useEffect(() => {
     if (element.category === "jugos" || element.category === "otros") {
@@ -96,6 +85,7 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
       let value = parseFloat(e.target.value);
       if (!isNaN(value)) {
         value = parseFloat(value.toFixed(2));
+        console.log(parseFloat(value));
         newProductForm[e.target.name] = value;
         setProductForm(newProductForm);
         return;
@@ -109,12 +99,14 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
   };
 
   const fillFormNewIngredient = (e) => {
+    console.log(e.target.value);
     const newIngredientForm = { ...ingredientForm };
     // Convertir a número si es un campo numérico
     let value = parseFloat(e.target.value);
     // Redondear a dos decimales si es un número
     if (!isNaN(value)) {
       value = parseFloat(value.toFixed(2));
+      console.log(parseFloat(value));
       newIngredientForm[e.target.name] = value;
 
       setIngredientForm(newIngredientForm);
@@ -138,8 +130,6 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
   const editProductRequest = async (event) => {
     event.preventDefault();
     const finalData = { ...productForm };
-    console.log(Object.keys(finalData).length);
-    console.log(finalData);
     for (var key in finalData) {
       if (finalData.hasOwnProperty(key)) {
         if (finalData[key] === "") {
@@ -224,12 +214,6 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
     setShowEditDeleteButton(false);
     setDeleteConfirmation(false);
     setOptionButton(false);
-  };
-
-  const editQuantityPulpa = (value) => {
-    const newProductForm = { ...productForm };
-    newProductForm[pulpaSelected] = value;
-    setProductForm(newProductForm);
   };
 
   return (
@@ -339,9 +323,8 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
                   <input
                     type="number"
                     name="pulpa"
-                    value={productForm[pulpaSelected]}
-                    // value={quantityPulpa}
-                    onChange={(e) => editQuantityPulpa(e.target.value)}
+                    value={productForm.pulpa}
+                    onChange={fillFormNewProduct}
                   />
                   <label>Saborizante (gr)</label>
                   <input

@@ -1,22 +1,18 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('bills', {
-      id: {
+    await queryInterface.createTable('production', {
+      production_id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      name: {
-        type: Sequelize.STRING(100),
+      producto: {
+        type: Sequelize.STRING(45),
         allowNull: false,
       },
-      amount: {
+      quantity: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      ubication: {
-        type: Sequelize.STRING(100),
         allowNull: false,
       },
       date: {
@@ -24,21 +20,17 @@ module.exports = {
         allowNull: false,
       },
       user: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.STRING(45),
         allowNull: false,
       },
-      description: {
+      ubication: {
         type: Sequelize.STRING(100),
-        allowNull: true,
-      },
-      elements: {
-        type: DataTypes.JSON,
-        allowNull: true,
-      },
+        allowNull: false,
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('bills');
+    await queryInterface.dropTable('production');
 
   },
 };

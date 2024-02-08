@@ -12,9 +12,10 @@ export function Users() {
   const [users, setUsers] = useState([]);
   const [showUsersData, setShowUsersData] = useState(true);
   const [showUsersMessage, setShowUsersMessage] = useState(false);
-  const [usersMessage, setUsersMessage] = useState("");
+  const [unauthorizedMessage, setUnauthorizedMessage] = useState("");
   const [showEditUserForm, setShowEditUserForm] = useState(false);
   const [showButtonNewUserForm, setShowButtonNewUserForm] = useState(true);
+  const [usersMessage, setUsersMessage] = useState("");
   const [user, setUser] = useState({});
   const [userId, setUserId] = useState("");
   const [showDelete, setShowDelete] = useState(false);
@@ -32,7 +33,7 @@ export function Users() {
   const getData = async () => {
     if (rol !== "admin") {
       setShowUsersData(false);
-      setShowUsersMessage(true);
+      setUnauthorizedMessage(true);
       setShowButtonNewUserForm(false);
     }
 
@@ -55,9 +56,9 @@ export function Users() {
   const passUserData = (dataUser) => {
     setUser(dataUser);
     setShowEditUserForm(true);
-    console.log(user);
   };
 
+  // Funcion para eliminar un usuario.
   const deleteRequest = async () => {
     try {
       const request = await axios.delete(
@@ -68,7 +69,6 @@ export function Users() {
           },
         }
       );
-
       if (request.data.status === 200) {
         setUserId("");
         setUser({});
@@ -93,6 +93,7 @@ export function Users() {
     setShowDelete(false);
   };
 
+  // Funcion para Crear un usuario.
   const newUserFunction = async (e) => {
     e.preventDefault();
     try {
@@ -107,13 +108,19 @@ export function Users() {
           },
         }
       );
-      console.log(request);
-      if (request.data.status === 201) {
+      console.log(request.status);
+      if (request.status === 201) {
         getData();
         setShowNewUserForm(false);
-        setUser({ name: "", rol: "", ubication: "", id: "", password: "" });
+        setUserForm({ name: "", rol: "", ubication: "", id: "", password: "" });
+        setShowUsersMessage(false);
+        setUsersMessage("");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      setUsersMessage(error.response.data.message);
+      setShowUsersMessage(true);
+    }
   };
 
   const fillDataUserForm = async (e) => {
@@ -138,12 +145,12 @@ export function Users() {
     setShowEditUserForm(false);
     setUserId("");
     setUser({ name: "", rol: "", ubication: "", id: "", password: "" });
-  }
+  };
 
   return (
     <div>
       <Navbar />
-      {showUsersMessage && (
+      {unauthorizedMessage && (
         <p className="inventory-message">
           Inicia Sesión con una cuenta autorizada.
         </p>
@@ -189,6 +196,7 @@ export function Users() {
               name="name"
               value={userForm.name}
               onChange={fillDataUserForm}
+              required
             />
             <label>Rol</label>
             <select
@@ -218,7 +226,7 @@ export function Users() {
             </select>
             <label>Id</label>
             <input
-              type="text"
+              type="number"
               name="id"
               value={userForm.id}
               onChange={fillDataUserForm}
@@ -231,9 +239,22 @@ export function Users() {
               onChange={fillDataUserForm}
               required
             />
+            {showUsersMessage && (
+              <p className="error-message">{usersMessage}</p>
+            )}
             <div className="buttons-edituser-container">
-              <button className="confirm-edit-user" onClick={(e) => newUserFunction(e)}>Crear</button>
-              <button className="confirm-cancel-user" onClick={(e) => closeNewUserForm(e)}>Cancelar</button>
+              <button
+                className="confirm-edit-user"
+                onClick={(e) => newUserFunction(e)}
+              >
+                Crear
+              </button>
+              <button
+                className="confirm-cancel-user"
+                onClick={(e) => closeNewUserForm(e)}
+              >
+                Cancelar
+              </button>
             </div>
           </form>
         </ConfirmationMessage>
@@ -259,9 +280,11 @@ export function Users() {
                   <td>{user.registration_date}</td>
                   <td>{user.ubication.toUpperCase()}</td>
                   <td onClick={() => showDeleteUserMessage(user)}>
-                    {<RiDeleteBin6Line />}
+                    {<RiDeleteBin6Line color={"red"} />}
                   </td>
-                  <td onClick={() => passUserData(user)}>{<MdEdit />}</td>
+                  <td onClick={() => passUserData(user)}>
+                    {<MdEdit color={"blue"} />}
+                  </td>
                 </tr>
               ))}
             </tbody>

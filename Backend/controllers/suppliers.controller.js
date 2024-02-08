@@ -63,7 +63,7 @@ class SuppliersController {
         { where: { id: id} }
       );
       return {
-        status: 200,
+        status: 201,
         message: "El Proveedor ha sido modificado.",
       };
     } catch (error) {

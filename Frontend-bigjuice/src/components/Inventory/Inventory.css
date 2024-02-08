@@ -1,30 +1,41 @@
 .tables-inventory-container {
-  display: flex;
+  /* display: flex; */
   /* height: calc(100vh - 12rem - 1px); */
-  text-align: center;
-  justify-content: center;
+  /* text-align: center;
+  justify-content: center; */
   margin-top: 30px;
-  width: 100vw;
+  width: calc(100vw - 20px);
 
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+    padding-left: 10px;
+  padding-right: 10px;
 }
 
 .table-container {
   max-height: calc(100vh - 9rem - 66px);
   overflow-y: auto;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   width: 100%;
-  display: flex;
+  /* display: flex; */
+  /* justify-content: center; */
+ 
+  /* background-color: blue; */
+  /* padding-left: 10px;
+  padding-right: 10px; */
 
-  justify-content: center;
 }
 
 .inventory-table {
-  width: 90%;
+  width: 100%;
   font-size: 1rem;
   border-collapse: collapse;
-  margin-left: 10px;
-  margin-right: 10px;
+  /* margin-left: 10px;
+  margin-right: 10px; */
   border-bottom: 1px solid black;
+  text-align: center;
+  /* table-layout: fixed; */
 }
 
 .inventory-table th,
@@ -49,9 +60,9 @@
   height: 2rem;
 }
 
-.inventory-table tr:hover {
+/* .inventory-table tr:hover {
   background-color: #c6c6c690;
-}
+} */
 
 .yellow-color {
   background-color: rgba(255, 255, 0, 0.449);
@@ -123,18 +134,32 @@
 .edit-delete-product-buttons {
   height: 100%;
   display: flex;
+  flex-direction: column;
   text-align: center;
   align-items: center;
   justify-content: space-evenly;
+}
+
+.buttons-admin-inventory {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  ;
 }
 
 .name-inventory {
   cursor: pointer;
 }
 
-.name-inventory:hover {
-  color: blue;
+.inventory-table tr:hover {
+  cursor: pointer;
+  color: var(--lila-oscuro);
+  font-weight: bolder;
 }
+/* .name-inventory:hover {
+  color: var(--lila-oscuro);
+  font-weight: bolder;
+} */
 
 .button-delete-inventory {
   background-color: red;
@@ -186,7 +211,7 @@
   place-content: center;
 }
 
-@media screen and (max-width: 1200px) {
+/* @media screen and (max-width: 1200px) {
   .inventory-table {
     width: 20rem;
     
@@ -203,4 +228,4 @@
   .inventory-table td {
     font-size: 0.9rem;
   }
-}
+} */

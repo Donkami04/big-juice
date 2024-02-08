@@ -41,7 +41,12 @@ export function Inventory() {
     leche: "",
     leche_polvo: "",
     azucar: "",
-    pulpa: "",
+    pulpa_mora: "",
+    pulpa_maracuya: "",
+    pulpa_mango: "",
+    pulpa_lulo: "",
+    pulpa_guanabana: "",
+    pulpa_borojo: "",
     saborizante: "",
     canela: "",
     miel: "",
@@ -77,8 +82,8 @@ export function Inventory() {
       setOthersUbication(dataOthersFiltered);
       setProductsUbication(dataProductsFiltered);
     } catch (error) {
-      // setShowInventoryMessage(true);
-      // setInventoryMessage("Inicia Sesión con una cuenta autorizada")
+      setShowInventoryMessage(true);
+      setInventoryMessage(error.data.message);
     }
   };
 
@@ -171,11 +176,11 @@ export function Inventory() {
               <tbody>
                 {productsUbication &&
                   productsUbication.map((element) => (
-                    <tr key={element.id + element.name}>
-                      <td
-                        className="name-inventory"
-                        onClick={() => showForms(element)}
-                      >
+                    <tr
+                      onClick={() => showForms(element)}
+                      key={element.id + element.name}
+                    >
+                      <td className="name-inventory">
                         {element.category === "jugos"
                           ? `${element.name.toUpperCase()}`
                           : element.name.toUpperCase()}
@@ -208,12 +213,12 @@ export function Inventory() {
               <tbody>
                 {inventoryUbication &&
                   inventoryUbication.map((element) => (
-                    <tr key={element.id + element.name}>
-                      <td
-                        className="name-inventory"
-                        onClick={() => showForms(element)}
-                      >
-                        {element.name.toUpperCase()}
+                    <tr
+                      onClick={() => showForms(element)}
+                      key={element.id + element.name}
+                    >
+                      <td className="name-inventory">
+                        {element.name.toUpperCase().replace("_", " ")}
                       </td>
                       <td>{element.quantity}</td>
                       <td>{(element.quantity / 1000).toFixed(1)}</td>
@@ -233,11 +238,11 @@ export function Inventory() {
               <tbody>
                 {othersUbication &&
                   othersUbication.map((element) => (
-                    <tr key={element.id + element.name}>
-                      <td
-                        className="name-inventory"
-                        onClick={() => showForms(element)}
-                      >
+                    <tr
+                      onClick={() => showForms(element)}
+                      key={element.id + element.name}
+                    >
+                      <td className="name-inventory">
                         {element.name.toUpperCase()}
                       </td>
                       <td>{Math.floor(element.quantity)}</td>
