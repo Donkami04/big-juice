@@ -178,8 +178,6 @@ class IngredientsController {
       ];
 
       ingredientUpdates.forEach(async (e) => {
-        console.log("###################################")
-        console.log(e)
         await Ingredients.update(
           { quantity: Sequelize.literal(`quantity - ${e.quantity}`) },
           { where: { name: e.name, ubication: ubication } }

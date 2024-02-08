@@ -24,12 +24,13 @@
     height: 3rem;
     background-color: var(--lila-oscuro);
     color: greenyellow;
-    font-size: 2rem;
+    font-size: 1.4rem;
 }
 
 .user-table-container table td {
-    height: 10px;
-    font-size: 1.2rem;
+    height: 30px;
+    font-size: 1.1rem;
+    
 }
 
 .user-table-container table th, .user-table-container table td {

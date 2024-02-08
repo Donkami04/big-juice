@@ -2,7 +2,7 @@
 
 .form-sales-dates {
   margin: auto;
-  width: 50%;
+  width: 70%;
   display: flex;
   justify-content: space-evenly;
   height: 4rem;
@@ -16,14 +16,14 @@
   flex-direction: column;
 }
 
-.button-sales-find,
+/* .button-sales-find,
 .button-sales-find button {
   display: grid;
   place-content: center;
   height: 2rem;
   display: grid;
   place-content: center;
-}
+} */
 
 
 

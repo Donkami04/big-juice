@@ -17,6 +17,11 @@ export function NewProduct({ setShowNewProduct, getData }) {
   const jwtToken = localStorage.getItem("jwtToken");
   const [showUnityMesuer, setShowUnityMesuer] = useState(false);
   const [unityMesure, setUnityMesure] = useState("");
+  const [pulpaSelected, setPulpaSelected] = useState("");
+  const [quantityPulpa, setQuantityPulpa] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
+  const [showButtonForm, setShowButtonForm] = useState(false);
+  const [message, setMessage] = useState("");
   const [productForm, setProductForm] = useState({
     name: "",
     quantity: "",
@@ -27,12 +32,6 @@ export function NewProduct({ setShowNewProduct, getData }) {
     leche: "",
     leche_polvo: "",
     azucar: "",
-    pulpa_mora: "",
-    pulpa_maracuya: "",
-    pulpa_mango: "",
-    pulpa_lulo: "",
-    pulpa_guanabana: "",
-    pulpa_borojo: "",
     saborizante: "",
     canela: "",
     miel: "",
@@ -47,6 +46,8 @@ export function NewProduct({ setShowNewProduct, getData }) {
   });
 
   const selectCategory = (categorySelected) => {
+    setShowMessage(false);
+    setMessage("");
     setCategory(categorySelected);
     const initialForm = { ...productForm };
     initialForm["category"] = categorySelected;
@@ -60,7 +61,7 @@ export function NewProduct({ setShowNewProduct, getData }) {
       setShowJugosForm(true);
       setShowOtrosForm(false);
       setShowIngredientForm(false);
-      setHeightForm("30rem");
+      setHeightForm("37rem");
     }
     if (categorySelected === "otros") {
       const initialForm = { ...productForm };
@@ -69,14 +70,15 @@ export function NewProduct({ setShowNewProduct, getData }) {
       setShowOtrosForm(true);
       setShowJugosForm(false);
       setShowIngredientForm(false);
-      setHeightForm("23rem");
+      setHeightForm("25rem");
     }
     if (categorySelected === "ingredient" || categorySelected === "others") {
       setShowIngredientForm(true);
       setShowOtrosForm(false);
       setShowJugosForm(false);
-      setHeightForm("23rem");
+      setHeightForm("25rem");
     }
+    setShowButtonForm(true);
   };
 
   const selectRequest = (event) => {
@@ -92,14 +94,41 @@ export function NewProduct({ setShowNewProduct, getData }) {
   const newProductRequest = async (event) => {
     event.preventDefault();
     const finalData = { ...productForm };
-    for (var key in finalData) {
-      if (finalData.hasOwnProperty(key)) {
-        if (finalData[key] === "") {
-          finalData[key] = 0;
+    // for (var key in finalData) {
+    //   if (finalData.hasOwnProperty(key)) {
+    //     if (finalData[key] === "") {
+    //       finalData[key] = 0;
+    //     }
+    //   }
+    // }
+    try {
+      console.log(Object.keys(finalData).length);
+      console.log(finalData);
+      if (category === "jugos" && Object.keys(finalData).length < 16) {
+        setShowMessage(true);
+        setMessage("Por favor rellene todos los campos del formulario.");
+        return;
+      }
+
+      if (
+        (category !== "jugos" && finalData.name === "") ||
+        finalData.sale_price === "" ||
+        finalData.quantity === "" ||
+        finalData.ubication === ""
+      ) {
+        setShowMessage(true);
+        setMessage("Por favor rellene todos los campos del formulario.");
+        return;
+      }
+
+      for (var key in finalData) {
+        if (finalData.hasOwnProperty(key)) {
+          if (finalData[key] === "") {
+            finalData[key] = 0;
+          }
         }
       }
-    }
-    try {
+
       const request = await axios.post(
         `${BASE_API_URL}/products/new`,
         {
@@ -111,9 +140,16 @@ export function NewProduct({ setShowNewProduct, getData }) {
           },
         }
       );
-      getData();
-      setShowNewProduct(false);
+      console.log(request);
+      if (request.data.status === 201) {
+        getData();
+        setShowNewProduct(false);
+        setShowMessage(false);
+        setMessage("");
+      }
     } catch (error) {
+      setMessage(error.response.data.message);
+      setShowMessage(true);
       console.error(error);
     }
   };
@@ -152,7 +188,6 @@ export function NewProduct({ setShowNewProduct, getData }) {
     // Redondear a dos decimales si es un número
     if (!isNaN(value)) {
       value = parseFloat(value.toFixed(2));
-      console.log(parseFloat(value));
       newProductForm[e.target.name] = value;
       newProductForm["category"] = category;
       setProductForm(newProductForm);
@@ -170,7 +205,6 @@ export function NewProduct({ setShowNewProduct, getData }) {
     // Redondear a dos decimales si es un número
     if (!isNaN(value)) {
       value = parseFloat(value.toFixed(2));
-      console.log(parseFloat(value));
       newIngredientForm[e.target.name] = value;
       newIngredientForm["category"] = category;
       setIngredientForm(newIngredientForm);
@@ -179,6 +213,21 @@ export function NewProduct({ setShowNewProduct, getData }) {
     newIngredientForm[e.target.name] = e.target.value;
     newIngredientForm["category"] = category;
     setIngredientForm(newIngredientForm);
+  };
+
+  const updatePulpa = (value) => {
+    setPulpaSelected(value);
+    const newProductForm = { ...productForm };
+    newProductForm.value = "";
+    setProductForm(newProductForm);
+  };
+
+  const updateQuantityPulpa = (value) => {
+    const finalQuantity = parseFloat(value);
+    setQuantityPulpa(finalQuantity);
+    const newProductForm = { ...productForm };
+    newProductForm[pulpaSelected] = finalQuantity;
+    setProductForm(newProductForm);
   };
 
   return (
@@ -250,15 +299,42 @@ export function NewProduct({ setShowNewProduct, getData }) {
                   value={productForm.azucar}
                   onChange={fillFormNewProduct}
                 />
+                <label>Pulpa</label>
+                <br />
+                <select
+                  style={{ width: "85%" }}
+                  name="pulpa"
+                  type="text"
+                  value={pulpaSelected || ""}
+                  onChange={(e) => updatePulpa(e.target.value)}
+                >
+                  <option value="" disabled>
+                    ...
+                  </option>
+                  <option value="pulpa_mora">Mora</option>
+                  <option value="pulpa_mango">Mango</option>
+                  <option value="pulpa_lulo">Lulo</option>
+                  <option value="pulpa_maracuya">Maracuya</option>
+                  <option value="pulpa_guanabana">Guanabana</option>
+                  <option value="pulpa_borojo">Borojo</option>
+                </select>
               </div>
               <div>
-                <label>Pulpa (gr)</label>
+                <br />
+                <label>Cantidad de Pulpa (gr)</label>
+                <input
+                  type="number"
+                  name="pulpa"
+                  value={quantityPulpa}
+                  onChange={(e) => updateQuantityPulpa(e.target.value)}
+                />
+                {/* <label>Pulpa (gr)</label>
                 <input
                   type="number"
                   name="pulpa"
                   value={productForm.pulpa}
                   onChange={fillFormNewProduct}
-                />
+                /> */}
                 <label>Saborizante (gr)</label>
                 <input
                   type="number"
@@ -289,6 +365,7 @@ export function NewProduct({ setShowNewProduct, getData }) {
                 />
                 <label>Ubicación</label> <br />
                 <select
+                  style={{ width: "85%" }}
                   name="ubication"
                   type="text"
                   value={productForm.ubication}
@@ -378,14 +455,17 @@ export function NewProduct({ setShowNewProduct, getData }) {
               </select>
             </div>
           )}
-          <div className="button-new-inventory-container">
-            <button
-              className="button-new-inventory"
-              onClick={(e) => selectRequest(e)}
-            >
-              Crear
-            </button>
-          </div>
+          {showMessage && <p className="error-message">{message}</p>}
+          {showButtonForm && (
+            <div className="button-new-inventory-container">
+              <button
+                className="button-new-inventory"
+                onClick={(e) => selectRequest(e)}
+              >
+                Crear
+              </button>
+            </div>
+          )}
         </form>
       </ConfirmationMessage>
     </div>

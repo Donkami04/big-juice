@@ -2,6 +2,8 @@ const express = require("express");
 const passport = require("passport");
 const router = express.Router();
 const { checkRoles, checkUbication } = require("../middlewares/auth.handler");
+const { validateData } = require("../middlewares/validator.handler");
+const { createUserSchema, editUserSchema } = require("../db/schemas/users.schema");
 const { UserController } = require("../controllers/users.controller");
 
 router.get(
@@ -18,10 +20,27 @@ router.get(
   }
 );
 
+router.get(
+  "/data",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res, next) => {
+    try {
+      const userData = req.user;
+      res.status(200).json({
+        rol: userData.rol,
+        ubication: userData.ubication,
+      })
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 router.post(
   "/new",
   passport.authenticate("jwt", { session: false }),
   checkRoles("admin"),
+  validateData(createUserSchema),
   async (req, res, next) => {
     try {
       const data = req.body;
@@ -43,6 +62,7 @@ router.put(
   "/edit/:id",
   passport.authenticate("jwt", { session: false }),
   checkRoles("admin"),
+  // validateData(editUserSchema),
   async (req, res, next) => {
     try {
       const id = req.params.id;

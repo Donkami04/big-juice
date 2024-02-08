@@ -82,8 +82,8 @@ export function Inventory() {
       setOthersUbication(dataOthersFiltered);
       setProductsUbication(dataProductsFiltered);
     } catch (error) {
-      // setShowInventoryMessage(true);
-      // setInventoryMessage("Inicia Sesión con una cuenta autorizada")
+      setShowInventoryMessage(true);
+      setInventoryMessage(error.data.message);
     }
   };
 
@@ -176,11 +176,11 @@ export function Inventory() {
               <tbody>
                 {productsUbication &&
                   productsUbication.map((element) => (
-                    <tr key={element.id + element.name}>
-                      <td
-                        className="name-inventory"
-                        onClick={() => showForms(element)}
-                      >
+                    <tr
+                      onClick={() => showForms(element)}
+                      key={element.id + element.name}
+                    >
+                      <td className="name-inventory">
                         {element.category === "jugos"
                           ? `${element.name.toUpperCase()}`
                           : element.name.toUpperCase()}
@@ -213,11 +213,11 @@ export function Inventory() {
               <tbody>
                 {inventoryUbication &&
                   inventoryUbication.map((element) => (
-                    <tr key={element.id + element.name}>
-                      <td
-                        className="name-inventory"
-                        onClick={() => showForms(element)}
-                      >
+                    <tr
+                      onClick={() => showForms(element)}
+                      key={element.id + element.name}
+                    >
+                      <td className="name-inventory">
                         {element.name.toUpperCase().replace("_", " ")}
                       </td>
                       <td>{element.quantity}</td>
@@ -238,11 +238,11 @@ export function Inventory() {
               <tbody>
                 {othersUbication &&
                   othersUbication.map((element) => (
-                    <tr key={element.id + element.name}>
-                      <td
-                        className="name-inventory"
-                        onClick={() => showForms(element)}
-                      >
+                    <tr
+                      onClick={() => showForms(element)}
+                      key={element.id + element.name}
+                    >
+                      <td className="name-inventory">
                         {element.name.toUpperCase()}
                       </td>
                       <td>{Math.floor(element.quantity)}</td>

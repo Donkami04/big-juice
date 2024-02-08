@@ -41,7 +41,9 @@ export function Sales() {
     const dia = fechaActual.getDate();
     const mes = fechaActual.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por lo que sumamos 1
     const ano = fechaActual.getFullYear();
-    const fechaFormateada = `${ano}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia}`;
+    const fechaFormateada = `${ano}-${mes < 10 ? "0" + mes : mes}-${
+      dia < 10 ? "0" + dia : dia
+    }`;
     setSdate(fechaFormateada);
     setEdate(fechaFormateada);
   }, []);
@@ -227,8 +229,12 @@ export function Sales() {
               <option value="unico">Único</option>
             </select>
           </div>
-          <div className="button-sales-find">
-            <FaMagnifyingGlass style={{fontSize: "1.3rem", cursor: "pointer"}} onClick={handleSubmit} />
+          <div className="button-bills-find">
+            <p>Buscar</p>
+            <FaMagnifyingGlass
+              style={{ fontSize: "1.3rem", cursor: "pointer" }}
+              onClick={handleSubmit}
+            />
           </div>
         </form>
         <p className={`sales-message display-${showSalesMessage}`}>
@@ -280,7 +286,8 @@ export function Sales() {
                   <td>
                     <div className="td-delete-container">
                       {showDeleteSale && (
-                        <FaRegTrashAlt style={{position: "absolute", left: "5px"}}
+                        <FaRegTrashAlt
+                          style={{ position: "absolute", left: "5px" }}
                           className="delete-sale-button"
                           onClick={() => openConfirmationDeleteSale(sale.id)}
                         />

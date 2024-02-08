@@ -8,3 +8,11 @@
     --verde-viche: rgb(165, 190, 0);
     --lila-oscuro: rgb(110, 37, 148);
 }
+
+.error-message {
+    font-weight: bolder;
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

@@ -1,14 +1,12 @@
-const { Bills } = require("../db/models/bills");
+const { Production } = require("../db/models/production");
 const { Sequelize } = require("sequelize");
 const { Op } = require("sequelize");
 const { getCurrentTime } = require("../utils/currentTime");
-const { IngredientsController } = require("./ingredients.controller");
-const { ProductsController } = require("./products.controller");
 
-class BillsController {
-  static async getBills(initialDate, finalDate, ubication) {
+class ProductionController {
+  static async getProduction(initialDate, finalDate, ubication) {
     try {
-      const bills = await Bills.findAll({
+      const dataProduction = await Production.findAll({
         where: {
           date: {
             [Op.between]: [`${initialDate} 00:00`, `${finalDate} 23:59`],
@@ -16,46 +14,38 @@ class BillsController {
           ubication: ubication,
         },
       });
-      return bills;
+      return dataProduction;
     } catch (error) {
       return {
         status: 500,
-        message: "Error al obtener los gastos.",
+        message: "Error al obtener los datos de produccion.",
         error: error.message,
       };
     }
   }
 
-  static async createBill(data, user) {
+  static async createProduction(data, user) {
     try {
       const currentDateTime = getCurrentTime();
-      const newBill = await Bills.create({
-        name: data.name,
-        amount: data.amount,
-        ubication: data.ubication,
+      const newProduction = await Production.create({
+        product: data.name,
+        quantity: data.quantity,
         date: currentDateTime,
-        user: user,
-        description: data.description,
-        elements: data.elements
+        user: user.user,
+        ubication: user.ubication,
       });
-
-      if (data.dataBill) {
-        await Promise.all([
-          IngredientsController.increaseInventoryIngredient(data),
-          ProductsController.increaseInventoryProduct(data),
-        ]);
-      }
+      console.log(newProduction)
 
       return {
         status: 201,
-        message: "La compra ha sido creada.",
-        data: newBill,
+        message: "La produccion ha sido registrada.",
+        data: newProduction,
       };
     } catch (error) {
       console.error(error);
       return {
         status: 500,
-        message: "Error con la creación de la compra",
+        message: "Error con la creación del registro de produccion",
         error: error.message,
       };
     }
@@ -63,14 +53,14 @@ class BillsController {
 
   static async editOneBill(id, changes) {
     try {
-      const bill = await Bills.findByPk(id);
+      const bill = await Production.findByPk(id);
       if (!bill) {
         return {
           status: 404,
           message: "La compra no existe.",
         };
       }
-      await Bills.update(
+      await Production.update(
         {
           name: changes.name,
           amount: changes.amount,
@@ -97,7 +87,7 @@ class BillsController {
 
   static async deleteBill(id) {
     try {
-      const bill = await Bills.findOne({
+      const bill = await Production.findOne({
         where: { id: id },
       });
       if (!bill) {
@@ -107,8 +97,8 @@ class BillsController {
         };
       }
 
-      await Bills.destroy({ where: { id: id } });
-      const checkBillIsDeleted = await Bills.findByPk(bill.id);
+      await Production.destroy({ where: { id: id } });
+      const checkBillIsDeleted = await Production.findByPk(bill.id);
       if (checkBillIsDeleted === null) {
         return {
           status: 200,
@@ -126,10 +116,10 @@ class BillsController {
     }
   }
 
-  static async totalBills(initialDate, finalDate, ubication) {
-    let totalBills = 0;
+  static async totalProduction(initialDate, finalDate, ubication) {
+    let totalProduction = 0;
     try {
-      const bills = await Bills.findAll({
+      const dataProduction = await Production.findAll({
         where: {
           date: {
             [Op.between]: [
@@ -141,13 +131,13 @@ class BillsController {
         },
       });
 
-      bills.forEach((sale) => {
-        totalBills += sale.amount;
+      dataProduction.forEach((sale) => {
+        totalProduction += sale.amount;
       });
 
       return {
         status: 200,
-        data: totalBills,
+        data: totalProduction,
       };
     } catch (error) {
       return {
@@ -158,4 +148,4 @@ class BillsController {
   }
 }
 
-module.exports = { BillsController };
+module.exports = { ProductionController };

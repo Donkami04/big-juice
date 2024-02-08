@@ -9,7 +9,6 @@ import {
 } from "../../utils/api/bigjuice";
 import { NewBill } from "./NewBill/NewBill";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { FaMagnifyingGlass } from "react-icons/fa6";
 import { ConfirmationMessage } from "../ConfirmationMessage/ConfirmationMessage";
 import "./Bills.css";
 
@@ -54,8 +53,6 @@ export function Bills() {
   useEffect(() => {
     if (rol !== "admin") {
       setShowDeleteBill(false);
-      setbillsMessage("No estas autorizado.");
-      setShowBillsMessage(true);
     }
     setUbication(userUbication);
     getData();
@@ -78,7 +75,7 @@ export function Bills() {
   const handleSubmit = async () => {
     if (rol !== "admin") {
       setbillsMessage("No estas autorizado.");
-      setShowBillsMessage(true);
+      setShowBillsMessage("");
       return;
     }
 
@@ -218,7 +215,7 @@ export function Bills() {
               id="ubication"
               value={ubication}
               onChange={(e) => setUbication(e.target.value)}
-              className={`ubication-selector-sales`}
+              className={` ubication-selector-bills`}
             >
               <option value="" disabled>
                 Selecciona...
@@ -228,20 +225,14 @@ export function Bills() {
             </select>
           </div>
           <div className="button-bills-find">
-            {/* <button type="button" onClick={handleSubmit}>
+            <button type="button" onClick={handleSubmit}>
               Buscar
-            </button> */}
-            <p>Buscar</p>
-            <FaMagnifyingGlass
-              style={{ fontSize: "1.3rem", cursor: "pointer" }}
-              onClick={handleSubmit}
-            />
+            </button>
           </div>
         </form>
-        {billsMessage && <p className="error-message">{billsMessage}</p>}
-        {/* <p className={`bills-message display-${showBillsMessage}`}>
+        <p className={`bills-message display-${showBillsMessage}`}>
           {billsMessage}
-        </p> */}
+        </p>
       </div>
 
       <section className={`totals-bills-messages display-${showBillsTotals}`}>
@@ -286,22 +277,9 @@ export function Bills() {
                   <td>{bill.date}</td>
                   <td>{bill.user}</td>
                   <td>{bill.ubication}</td>
+                  {/* <td>{bill.description}</td> */}
                   <td>
-                    <ul>
-                      {bill.elements ? (
-                        bill.elements.map((element, index) => (
-                          <li key={index}>
-                            {element.name.replace("_", " ")} -{" "}
-                            {element.unityMesure === "kg"
-                              ? element.quantity / 1000
-                              : element.quantity}{" "}
-                            {element.unityMesure}
-                          </li>
-                        ))
-                      ) : (
-                        <span>No hay elementos</span>
-                      )}
-                    </ul>
+                    <div>{bill.elements}</div>
                   </td>
                 </tr>
               ))}

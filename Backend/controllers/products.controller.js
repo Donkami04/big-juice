@@ -190,6 +190,7 @@ class ProductsController {
   }
 
   // Esta se usa cuando se registra la produccion de jugos
+  // Aumenta el inventario de jugos y disminuye el de ingredientes
   static async increaseStockProduct(productsToIncrease) {
     try {
       for (const product of productsToIncrease) {
@@ -216,6 +217,47 @@ class ProductsController {
           message: "Todos los productos han sido actualizados correctamente.",
         };
       }
+    } catch (error) {
+      console.error(error);
+      return {
+        status: 500,
+        message: `Error al actualizar los productos e ingredientes: ${error.message}`,
+      };
+    }
+  }
+
+  // Aumenta el inventario de jugos y sin disminuir el de ingredientes
+  static async increaseProducts(data) {
+    try {
+      const ubication = data.ubication;
+
+      data.products.forEach((e) => {
+        Products.update(
+          { quantity: Sequelize.literal(`quantity + ${e.quantity}`) },
+          { where: { name: e.name, ubication: ubication } }
+        );
+      })
+
+      return {
+        status: 200,
+        message: "Todos los productos han sido actualizados correctamente.",
+      };
+
+      // for (const product of data.products) {
+      //   const productName = product.name;
+      //   console.log(product)
+      //   const quantityProduced = product.quantity;
+
+      //   Products.update(
+      //     { quantity: Sequelize.literal(`quantity + ${quantityProduced}`) },
+      //     { where: { name: productName, ubication: ubication } }
+      //   );
+
+      //   return {
+      //     status: 200,
+      //     message: "Todos los productos han sido actualizados correctamente.",
+      //   };
+      
     } catch (error) {
       console.error(error);
       return {

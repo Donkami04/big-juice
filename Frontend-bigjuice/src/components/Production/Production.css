@@ -5,6 +5,16 @@
     position: relative;
 }
 
+.show-historic-production-button {
+    position: absolute;
+    margin-left: 10px;
+    margin-top: 10px;
+    width: 100px;
+    cursor: pointer;
+    z-index: 9998;
+}
+
+
 .production-container form {
     display: flex;
     flex-direction: column;

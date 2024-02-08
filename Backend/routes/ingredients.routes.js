@@ -5,6 +5,9 @@ const { checkRoles } = require("../middlewares/auth.handler");
 const {
   IngredientsController,
 } = require("../controllers/ingredients.controller");
+const { validateData } = require("../middlewares/validator.handler");
+const { createIngredientSchema } = require("../db/schemas/ingredients.schema");
+
 
 
 router.get(
@@ -50,6 +53,7 @@ router.post(
   "/new",
   passport.authenticate("jwt", { session: false }),
   checkRoles("admin"),
+  validateData(createIngredientSchema),
   async (req, res, next) => {
     try {
       const data = req.body;

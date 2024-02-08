@@ -165,7 +165,7 @@ module.exports = {
         allowNull: false,
       },
       category: {
-        type: ubication.STRING(100),
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       ubication: {

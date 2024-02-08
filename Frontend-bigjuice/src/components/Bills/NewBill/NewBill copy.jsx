@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useColMoney } from "../../../hooks/useColMoney";
 import { BASE_API_URL } from "../../../utils/api/bigjuice";
-import { OptionsBill } from "./OptionsBill";
+// import { OptionsBill } from "./asdasd";
 import { ConfirmationMessage } from "../../ConfirmationMessage/ConfirmationMessage";
 import axios from "axios";
-import { IoMdClose } from "react-icons/io";
+import { FaTrashCan } from "react-icons/fa6";
+import { CiCirclePlus } from "react-icons/ci";
+import { FaCirclePlus } from "react-icons/fa6";
+import BarLoader from "react-spinners/BarLoader";
 import "./NewBill.css";
 
 export function NewBill({
@@ -19,19 +22,41 @@ export function NewBill({
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [newBillMessage, setNewBillMessage] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
   const [amountMoneyFormat, setAmountMoneyFormat] = useState("");
   const [selectedData, setSelectedData] = useState([]);
   const [unityMesure, setUnityMesure] = useState("");
   const [showButtonCreate, setShowButtonCreate] = useState(true);
   const [showButtonConfirmate, setShowButtonConfirmate] = useState(false);
+  const [showButtonAdd, setShowButtonAdd] = useState(true);
+  const [showButtonNew, setShowButtonNew] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([{}]);
+  const [showSpinner, setShowSpinner] = useState(false);
+  // const [elementsBill, setElementsBill] = useState([]);
+
+  const fillElementsBill = () => {};
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!name || !amount) {
+      setShowMessage(true);
+      setNewBillMessage("Debe rellenar al menos Nombre y Valor de la compra.");
+      return;
+    }
     handleSendData();
-    console.log(selectedData);
+
+    // const elementsBill = selectedData.map((e) => {
+    //   return {
+    //     name: e.name,
+    //     category: e.category,
+    //     quantity: e.quantity,
+    //     unityMesure: e.unityMesure,
+    //   };
+    // })
+
     try {
-      const data = await axios.post(
+      const request = await axios.post(
         `${BASE_API_URL}/bills/new`,
         {
           name: name,
@@ -39,6 +64,7 @@ export function NewBill({
           description: "" || description,
           ubication: ubication,
           dataBill: selectedData,
+          elements: selectedData,
         },
         {
           headers: {
@@ -47,28 +73,46 @@ export function NewBill({
         }
       );
 
-      setName("");
-      setAmount("");
-      setDescription("");
-      setAmountMoneyFormat("");
-      setNewBillMessage(data.data.message);
+      if (request.data.status === 201) {
+        closeNewBillForm();
+        setName("");
+        setAmount("");
+        setDescription("");
+        setAmountMoneyFormat("");
+        setShowButtonConfirmate(false);
+        setShowButtonCreate(true);
+        setNewBillMessage("");
+        setShowMessage(false);
+      }
     } catch (error) {
       console.error(error);
+      setNewBillMessage(error.response.data.message);
+      setShowMessage(true);
     }
   };
 
   const handleSelectChange = (index, field, value) => {
-    console.log(index)
     const newSelectedOptions = [...selectedOptions];
     newSelectedOptions[index] = {
       ...newSelectedOptions[index],
       [field]: value,
     };
-    setSelectedOptions(newSelectedOptions);
 
-    if (value && index === newSelectedOptions.length - 1) {
-      setSelectedOptions([...newSelectedOptions, {}]);
+    // Automatically set the category based on the selected name
+    if (field === "name" && value) {
+      const selectedProduct = ingredientsAndProducts.find(
+        (item) => item.name === value
+      );
+
+      if (selectedProduct) {
+        newSelectedOptions[index] = {
+          ...newSelectedOptions[index],
+          category: selectedProduct.category,
+        };
+      }
     }
+
+    setSelectedOptions(newSelectedOptions);
   };
 
   const handleSendData = () => {
@@ -89,9 +133,9 @@ export function NewBill({
   };
 
   const categoriesArray = [
-    { id: 1, category: "Productos", values: "otros" },
-    { id: 2, category: "Ingredientes", values: "ingredient" },
-    { id: 3, category: "Otros", values: "others" },
+    { id: 1, category: "Productos", value: "otros" },
+    { id: 2, category: "Ingredientes", value: "ingredient" },
+    { id: 3, category: "Otros", value: "others" },
   ];
 
   const handleInputChange = (e) => {
@@ -119,22 +163,45 @@ export function NewBill({
     changeMoney();
     handleSendData();
     setShowButtonCreate(false);
-    setShowButtonConfirmate(true);
+    // setShowButtonConfirmate(true);
+    setShowButtonAdd(false);
+    setShowSpinner(true);
+    setTimeout(() => {
+      setShowSpinner(false);
+      setShowButtonConfirmate(true);
+    }, 1000);
+  };
+
+  const handleDeleteOption = (index) => {
+    const newSelectedOptions = [...selectedOptions];
+    newSelectedOptions.splice(index, 1);
+    setSelectedOptions(newSelectedOptions);
+  };
+
+  const handleAddOption = () => {
+    setSelectedOptions([...selectedOptions, {}]);
   };
 
   return (
     <div>
-      <ConfirmationMessage height={"35rem"} width={"35rem"}>
+      <ConfirmationMessage height={"38rem"} width={"35rem"}>
         {/* <div className="close-button-container-newbill">
         <IoMdClose
           onClick={closeNewBillForm}
           style={{ position: "absolute", right: "5px", cursor: "pointer" }}
         />
       </div> */}
-        <h2>Crear Compra</h2>
+        <p
+          title="Cerrar"
+          className="close-button-newbill"
+          onClick={closeNewBillForm}
+        >
+          x
+        </p>
+        <h2>Crear Compra / Registrar Gasto</h2>
         <div className="form-newbill-container">
           <form>
-            <label>Compra</label>
+            <label>Nombre</label>
             <input
               className="date-selector-bills"
               value={name}
@@ -163,12 +230,12 @@ export function NewBill({
                     </option>
                     {ingredientsAndProducts.map((item) => (
                       <option key={item.id + item.name} value={item.name}>
-                        {item.name.toUpperCase()}
+                        {item.name.toUpperCase().replace("_", " ")}
                       </option>
                     ))}
                   </select>
 
-                  <select
+                  {/* <select
                     value={option.category || ""}
                     onChange={(e) =>
                       handleSelectChange(index, "category", e.target.value)
@@ -182,7 +249,7 @@ export function NewBill({
                         {item.category.toUpperCase()}
                       </option>
                     ))}
-                  </select>
+                  </select> */}
 
                   <select
                     name="mesure"
@@ -208,8 +275,22 @@ export function NewBill({
                     }
                     placeholder="Cantidad"
                   />
+                  <p onClick={() => handleDeleteOption(index)}>
+                    <FaTrashCan
+                      title="Eliminar elemento de la compra"
+                      style={{ color: "red", cursor: "pointer" }}
+                    />
+                  </p>
                 </main>
               ))}
+              {showButtonAdd && (
+                <p onClick={handleAddOption}>
+                  <FaCirclePlus
+                    title="Agregar más elementos a la compra"
+                    className="more-elements-button-newbill"
+                  />
+                </p>
+              )}
             </section>
             <label>Observación</label>
             <textarea
@@ -219,13 +300,26 @@ export function NewBill({
               type="text"
               onChange={(e) => setDescription(e.target.value)}
             ></textarea>
-            <div className="button-bills-find">
-              <p className="newbill-message">{newBillMessage}</p>
-              {showButtonCreate && <button onClick={changeMessageButton}>Crear</button>}
+            <div className="button-send-newbill-container">
+              {showButtonCreate && (
+                <button
+                  className="send-newbill-button"
+                  onClick={changeMessageButton}
+                >
+                  Registrar compra
+                </button>
+              )}
+              {showSpinner && <BarLoader color="red" />}
               {showButtonConfirmate && (
-                <button onClick={handleSubmit}>Confirmar</button>
+                <button
+                  className="confirmate-newbill-button"
+                  onClick={(e) => handleSubmit(e)}
+                >
+                  ⚠️ Confirmar ⚠️
+                </button>
               )}
             </div>
+            {showMessage && <p className="newbill-message">{newBillMessage}</p>}
           </form>
         </div>
       </ConfirmationMessage>

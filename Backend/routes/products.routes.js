@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const { checkRoles } = require("../middlewares/auth.handler");
+const { validateData } = require("../middlewares/validator.handler");
+const { createProductSchema } = require("../db/schemas/products.schema");
 const { ProductsController } = require("../controllers/products.controller");
 
 router.get(
@@ -43,9 +45,11 @@ router.post(
   "/new",
   passport.authenticate("jwt", { session: false }),
   checkRoles("admin"),
+  // validateData(createProductSchema),
   async (req, res, next) => {
     try {
       const data = req.body;
+      console.log(data)
       const newProduct = await ProductsController.createProduct(data);
       res.status(newProduct.status).json({
         status: newProduct.status,
@@ -98,12 +102,12 @@ router.post("/discount-stock", async (req, res, next) => {
 });
 
 router.post(
-  "/produce",
+  "/restore-product",
   passport.authenticate("jwt", { session: false }),
   async (req, res, next) => {
     try {
-      const data = req.body.listProducts;
-      const response = await ProductsController.increaseStockProduct(data);
+      const data = req.body;
+      const response = await ProductsController.increaseProducts(data);
       res.status(response.status).json({
         status: response.status,
         message: response.message,

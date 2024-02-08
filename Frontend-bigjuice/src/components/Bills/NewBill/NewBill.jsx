@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useColMoney } from "../../../hooks/useColMoney";
 import { BASE_API_URL } from "../../../utils/api/bigjuice";
-import { OptionsBill } from "./OptionsBill";
+// import { OptionsBill } from "./asdasd";
 import { ConfirmationMessage } from "../../ConfirmationMessage/ConfirmationMessage";
 import axios from "axios";
 import { FaTrashCan } from "react-icons/fa6";
 import { CiCirclePlus } from "react-icons/ci";
 import { FaCirclePlus } from "react-icons/fa6";
-import BarLoader   from "react-spinners/BarLoader";	
+import BarLoader from "react-spinners/BarLoader";
 import "./NewBill.css";
 
 export function NewBill({
@@ -22,6 +22,7 @@ export function NewBill({
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [newBillMessage, setNewBillMessage] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
   const [amountMoneyFormat, setAmountMoneyFormat] = useState("");
   const [selectedData, setSelectedData] = useState([]);
   const [unityMesure, setUnityMesure] = useState("");
@@ -31,11 +32,29 @@ export function NewBill({
   const [showButtonNew, setShowButtonNew] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([{}]);
   const [showSpinner, setShowSpinner] = useState(false);
+  // const [elementsBill, setElementsBill] = useState([]);
+
+  const fillElementsBill = () => {};
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!name || !amount) {
+      setShowMessage(true);
+      setNewBillMessage("Debe rellenar al menos Nombre y Valor de la compra.");
+      return;
+    }
     handleSendData();
-    console.log(selectedData);
+
+    // const elementsBill = selectedData.map((e) => {
+    //   return {
+    //     name: e.name,
+    //     category: e.category,
+    //     quantity: e.quantity,
+    //     unityMesure: e.unityMesure,
+    //   };
+    // })
+
     try {
       const request = await axios.post(
         `${BASE_API_URL}/bills/new`,
@@ -45,6 +64,7 @@ export function NewBill({
           description: "" || description,
           ubication: ubication,
           dataBill: selectedData,
+          elements: selectedData,
         },
         {
           headers: {
@@ -53,17 +73,21 @@ export function NewBill({
         }
       );
 
-      closeNewBillForm();
-      setName("");
-      setAmount("");
-      setDescription("");
-      setAmountMoneyFormat("");
-      setShowButtonConfirmate(false);
-      setShowButtonCreate(true);
-      setNewBillMessage("");
+      if (request.data.status === 201) {
+        closeNewBillForm();
+        setName("");
+        setAmount("");
+        setDescription("");
+        setAmountMoneyFormat("");
+        setShowButtonConfirmate(false);
+        setShowButtonCreate(true);
+        setNewBillMessage("");
+        setShowMessage(false);
+      }
     } catch (error) {
-      console.error(error.response.data.message);
+      console.error(error);
       setNewBillMessage(error.response.data.message);
+      setShowMessage(true);
     }
   };
 
@@ -73,11 +97,22 @@ export function NewBill({
       ...newSelectedOptions[index],
       [field]: value,
     };
-    setSelectedOptions(newSelectedOptions);
 
-    // if (value && index === newSelectedOptions.length - 1) {
-    //   setSelectedOptions([...newSelectedOptions, {}]);
-    // }
+    // Automatically set the category based on the selected name
+    if (field === "name" && value) {
+      const selectedProduct = ingredientsAndProducts.find(
+        (item) => item.name === value
+      );
+
+      if (selectedProduct) {
+        newSelectedOptions[index] = {
+          ...newSelectedOptions[index],
+          category: selectedProduct.category,
+        };
+      }
+    }
+
+    setSelectedOptions(newSelectedOptions);
   };
 
   const handleSendData = () => {
@@ -130,11 +165,11 @@ export function NewBill({
     setShowButtonCreate(false);
     // setShowButtonConfirmate(true);
     setShowButtonAdd(false);
-    setShowSpinner(true)
+    setShowSpinner(true);
     setTimeout(() => {
       setShowSpinner(false);
       setShowButtonConfirmate(true);
-    }, 3000);
+    }, 1000);
   };
 
   const handleDeleteOption = (index) => {
@@ -156,7 +191,13 @@ export function NewBill({
           style={{ position: "absolute", right: "5px", cursor: "pointer" }}
         />
       </div> */}
-      <p title="Cerrar" className="close-button-newbill" onClick={closeNewBillForm}>x</p>
+        <p
+          title="Cerrar"
+          className="close-button-newbill"
+          onClick={closeNewBillForm}
+        >
+          x
+        </p>
         <h2>Crear Compra / Registrar Gasto</h2>
         <div className="form-newbill-container">
           <form>
@@ -187,27 +228,13 @@ export function NewBill({
                     <option value="" disabled>
                       Elemento
                     </option>
-                    {ingredientsAndProducts.map((item) => (
-                      <option key={item.id + item.name} value={item.name}>
-                        {item.name.toUpperCase()}
-                      </option>
-                    ))}
-                  </select>
-
-                  <select
-                    value={option.category || ""}
-                    onChange={(e) =>
-                      handleSelectChange(index, "category", e.target.value)
-                    }
-                  >
-                    <option value="" disabled>
-                      Categoria
-                    </option>
-                    {categoriesArray.map((item) => (
-                      <option key={item.id} value={item.value}>
-                        {item.category.toUpperCase()}
-                      </option>
-                    ))}
+                    {ingredientsAndProducts
+                      .filter((item) => item.category !== "jugos")
+                      .map((item) => (
+                        <option key={item.id + item.name} value={item.name}>
+                          {item.name.toUpperCase().replace("_", " ")}
+                        </option>
+                      ))}
                   </select>
 
                   <select
@@ -268,17 +295,17 @@ export function NewBill({
                   Registrar compra
                 </button>
               )}
-              {showSpinner && (<BarLoader   color="red" />)}
+              {showSpinner && <BarLoader color="red" />}
               {showButtonConfirmate && (
                 <button
                   className="confirmate-newbill-button"
-                  onClick={handleSubmit}
+                  onClick={(e) => handleSubmit(e)}
                 >
                   ⚠️ Confirmar ⚠️
                 </button>
               )}
             </div>
-            <p className="newbill-message">{newBillMessage}</p>
+            {showMessage && <p className="newbill-message">{newBillMessage}</p>}
           </form>
         </div>
       </ConfirmationMessage>
