@@ -1,8 +1,8 @@
 const { Products } = require("../db/models/products");
 const { Sequelize } = require("sequelize");
 const { IngredientsController } = require("./ingredients.controller");
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
 class ProductsController {
   static async getProducts() {
@@ -53,11 +53,7 @@ class ProductsController {
         image: image.filename,
       });
 
-      const imagePath = path.join(
-        __dirname,
-        "../uploads/images",
-        image.filename
-      );
+      const imagePath = path.join(__dirname, '../uploads/images', imagen.filename);
       fs.renameSync(image.path, imagePath);
 
       return {
@@ -66,18 +62,15 @@ class ProductsController {
         data: newProduct,
       };
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
       return {
         status: 500,
-        message: `Error con la creación del producto.`,
-        error: error.message,
+        message: `Error con la creación del producto: ${error.message}.`,
       };
     }
   }
 
   static async editOneProduct(id, changes, image) {
-    console.log(changes)
-    console.log(image)
     try {
       const product = await Products.findByPk(id);
       if (!product) {
@@ -86,106 +79,42 @@ class ProductsController {
           message: "El Producto no existe.",
         };
       }
-
-      const updateData = {
-        name: changes.name.toLowerCase(),
-        quantity: changes.quantity,
-        sale_price: changes.sale_price,
-        category: changes.category,
-        ubication: changes.ubication,
-        hielo: changes.hielo,
-        leche: changes.leche,
-        leche_polvo: changes.leche_polvo,
-        azucar: changes.azucar,
-        pulpa_mora: changes.pulpa_mora,
-        pulpa_lulo: changes.pulpa_lulo,
-        pulpa_maracuya: changes.pulpa_maracuya,
-        pulpa_guanabana: changes.pulpa_guanabana,
-        pulpa_borojo: changes.pulpa_borojo,
-        pulpa_mango: changes.pulpa_mango,
-        canela: changes.canela,
-        miel: changes.miel,
-        tarrina: changes.tarrina,
-        pitillo: changes.pitillo,
-      };
-
-      if (image) {
-        updateData.image = image.filename;
-        const imagePath = path.join(
-          __dirname,
-          "../uploads/images",
-          image.filename
-        );
-        await fs.promises.rename(image.path, imagePath);
-
-      }
-
-      await Products.update(updateData, { where: { id: id } });
-      console.log("termino todo bien")
+      await Products.update(
+        {
+          name: changes.name.toLowerCase(),
+          quantity: changes.quantity,
+          sale_price: changes.sale_price,
+          category: changes.category,
+          ubication: changes.ubication,
+          hielo: changes.hielo,
+          leche: changes.leche,
+          leche_polvo: changes.leche_polvo,
+          azucar: changes.azucar,
+          pulpa_mora: changes.pulpa_mora,
+          pulpa_lulo: changes.pulpa_lulo,
+          pulpa_maracuya: changes.pulpa_maracuya,
+          pulpa_guanabana: changes.pulpa_guanabana,
+          pulpa_borojo: changes.pulpa_borojo,
+          pulpa_mango: changes.pulpa_mango,
+          canela: changes.canela,
+          miel: changes.miel,
+          tarrina: changes.tarrina,
+          pitillo: changes.pitillo,
+          image: image.filename,
+        },
+        { where: { id: id } }
+      );
       return {
         status: 200,
         message: "El Producto ha sido modificado exitosamente.",
       };
     } catch (error) {
-      console.log("termino todo mal")
-      console.log(error)
       return {
         status: 500,
-        message: 'Error del servidor al editar el producto.',
-        error: error.message,
+        message: `Error del servidor al editar el producto ${error.message}.`,
       };
     }
   }
-
-  // static async editOneProduct(id, changes, image) {
-  //   try {
-  //     const product = await Products.findByPk(id);
-  //     if (!product) {
-  //       return {
-  //         status: 404,
-  //         message: "El Producto no existe.",
-  //       };
-  //     }
-  //     await Products.update(
-  //       {
-  //         name: changes.name.toLowerCase(),
-  //         quantity: changes.quantity,
-  //         sale_price: changes.sale_price,
-  //         category: changes.category,
-  //         ubication: changes.ubication,
-  //         hielo: changes.hielo,
-  //         leche: changes.leche,
-  //         leche_polvo: changes.leche_polvo,
-  //         azucar: changes.azucar,
-  //         pulpa_mora: changes.pulpa_mora,
-  //         pulpa_lulo: changes.pulpa_lulo,
-  //         pulpa_maracuya: changes.pulpa_maracuya,
-  //         pulpa_guanabana: changes.pulpa_guanabana,
-  //         pulpa_borojo: changes.pulpa_borojo,
-  //         pulpa_mango: changes.pulpa_mango,
-  //         canela: changes.canela,
-  //         miel: changes.miel,
-  //         tarrina: changes.tarrina,
-  //         pitillo: changes.pitillo,
-  //         image: image.filename,
-  //       },
-  //       { where: { id: id } }
-  //     );
-
-  //     const imagePath = path.join(__dirname, '../uploads/images', imagen.filename);
-  //     fs.renameSync(image.path, imagePath);
-
-  //     return {
-  //       status: 200,
-  //       message: "El Producto ha sido modificado exitosamente.",
-  //     };
-  //   } catch (error) {
-  //     return {
-  //       status: 500,
-  //       message: `Error del servidor al editar el producto ${error.message}.`,
-  //     };
-  //   }
-  // }
 
   static async deleteProduct(id) {
     try {
@@ -316,19 +245,19 @@ class ProductsController {
           { quantity: Sequelize.literal(`quantity + ${e.quantity}`) },
           { where: { name: e.name, ubication: ubication } }
         );
-      });
+      })
 
       return {
         status: 200,
-        message:
-          "Todos los productos de la venta eliminada han sido actualizados correctamente.",
+        message: "Todos los productos de la venta eliminada han sido actualizados correctamente.",
       };
+      
     } catch (error) {
       console.error(error);
       return {
         status: 500,
-        message: "Error al actualizar los productos de la venta eliminada",
-        error: error.message,
+        message: 'Error al actualizar los productos de la venta eliminada',
+        error: error.message
       };
     }
   }

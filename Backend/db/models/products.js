@@ -99,6 +99,10 @@ const Products = sequelize.define(
       allowNull: true,
       defaultValue : 0
     },
+    image: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    }
   },
   {
     tableName: "products",

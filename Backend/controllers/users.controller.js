@@ -34,7 +34,11 @@ class UserController {
         rol: data.rol,
         password: hashedPassword,
         ubication: data.ubication,
-        registration_date: currentDateTime
+        registration_date: currentDateTime,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+        cedula: data.cedula
       });
 
       const dataNewUser = { ...newUser.get({ plain: true }) };

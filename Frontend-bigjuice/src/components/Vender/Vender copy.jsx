@@ -15,6 +15,7 @@ export const Vender = () => {
   const [message, setMessage] = useState("");
   const [showMessage, setShowMessage] = useState(false);
   const userUbication = localStorage.getItem("ubication");
+  const jwtToken = localStorage.getItem("jwtToken");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,6 +29,7 @@ export const Vender = () => {
           (product) =>
             product.ubication === userUbication && product.category === "otros"
         );
+        
         setProducts(productsUbiJugos);
         setJugos(productsUbiJugos);
         setOtros(productsUbiOtros);
@@ -70,6 +72,19 @@ export const Vender = () => {
     setProducts(categorySelected);
   };
 
+  const handleEscapeKey = (event) => {
+    if (event.key === "Escape") {
+      closeMessage();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleEscapeKey);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, []);
 
   return (
     <div className="main-vender-container">

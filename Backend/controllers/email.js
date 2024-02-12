@@ -12,7 +12,6 @@ const zeroSaleEmail = async (user, customer, ubication) => {
              <p>El cliente ha sido ${customer.toUpperCase()}</p>
              <p>Alerta automatica de Big Juice.</p>`,
     });
-    console.log(response);
     return {
       status: 201,
       message: "Notificación enviada exitosamente.",

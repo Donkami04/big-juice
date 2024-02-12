@@ -26,6 +26,22 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
+      email: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
+      phone: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
+      address: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
+      cedula: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
     });
 
     await queryInterface.createTable("categories", {
@@ -147,6 +163,10 @@ module.exports = {
         allowNull: true,
         defaultValue: 0,
       },
+      image: {
+        type: Sequelize.STRING(100),
+        allowNull: true,
+      }
     });
 
     await queryInterface.createTable("ingredients", {

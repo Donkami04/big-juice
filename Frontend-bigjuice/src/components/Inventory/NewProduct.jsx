@@ -14,6 +14,7 @@ export function NewProduct({ setShowNewProduct, getData }) {
   const [showOtrosForm, setShowOtrosForm] = useState(false);
   const [showIngredientForm, setShowIngredientForm] = useState(false);
   const [heightForm, setHeightForm] = useState("");
+  const [widthForm, setWidthFormForm] = useState("");
   const jwtToken = localStorage.getItem("jwtToken");
   const [showUnityMesuer, setShowUnityMesuer] = useState(false);
   const [unityMesure, setUnityMesure] = useState("");
@@ -37,6 +38,7 @@ export function NewProduct({ setShowNewProduct, getData }) {
     miel: "",
     tarrina: 0,
     pitillo: 0,
+    image: null,
   });
   const [ingredientForm, setIngredientForm] = useState({
     name: "",
@@ -62,6 +64,7 @@ export function NewProduct({ setShowNewProduct, getData }) {
       setShowOtrosForm(false);
       setShowIngredientForm(false);
       setHeightForm("37rem");
+      setWidthFormForm("30rem");
     }
     if (categorySelected === "otros") {
       const initialForm = { ...productForm };
@@ -81,6 +84,11 @@ export function NewProduct({ setShowNewProduct, getData }) {
     setShowButtonForm(true);
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setProductForm({ ...productForm, image: file }); // Cambiar "image" a "imagen"
+  };
+
   const selectRequest = (event) => {
     event.preventDefault();
     if (category === "jugos" || category === "otros") {
@@ -94,16 +102,8 @@ export function NewProduct({ setShowNewProduct, getData }) {
   const newProductRequest = async (event) => {
     event.preventDefault();
     const finalData = { ...productForm };
-    // for (var key in finalData) {
-    //   if (finalData.hasOwnProperty(key)) {
-    //     if (finalData[key] === "") {
-    //       finalData[key] = 0;
-    //     }
-    //   }
-    // }
+
     try {
-      // console.log(Object.keys(finalData).length);
-      // console.log(finalData);
       if (category === "jugos" && Object.keys(finalData).length < 16) {
         setShowMessage(true);
         setMessage("Por favor rellene todos los campos del formulario.");
@@ -128,7 +128,8 @@ export function NewProduct({ setShowNewProduct, getData }) {
           }
         }
       }
-
+      console.log("Antes de enviar");
+      console.log(finalData);
       const request = await axios.post(
         `${BASE_API_URL}/products/new`,
         {
@@ -136,6 +137,7 @@ export function NewProduct({ setShowNewProduct, getData }) {
         },
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${jwtToken}`,
           },
         }
@@ -174,7 +176,7 @@ export function NewProduct({ setShowNewProduct, getData }) {
           },
         }
       );
-      console.log(request);
+
       if (request.data.status === 201) {
         getData();
         setShowNewProduct(false);
@@ -239,7 +241,7 @@ export function NewProduct({ setShowNewProduct, getData }) {
 
   return (
     <div>
-      <ConfirmationMessage height={heightForm}>
+      <ConfirmationMessage height={heightForm} width={widthForm}>
         <p
           title="Cerrar"
           className="close-confirmationmessage-inventory"
@@ -306,42 +308,10 @@ export function NewProduct({ setShowNewProduct, getData }) {
                   value={productForm.azucar}
                   onChange={fillFormNewProduct}
                 />
-                {/* <label>Pulpa</label>
-                <br />
-                <select
-                  style={{ width: "85%" }}
-                  name="pulpa"
-                  type="text"
-                  value={pulpaSelected || ""}
-                  onChange={(e) => updatePulpa(e.target.value)}
-                >
-                  <option value="" disabled>
-                    ...
-                  </option>
-                  <option value="pulpa_mora">Mora</option>
-                  <option value="pulpa_mango">Mango</option>
-                  <option value="pulpa_lulo">Lulo</option>
-                  <option value="pulpa_maracuya">Maracuya</option>
-                  <option value="pulpa_guanabana">Guanabana</option>
-                  <option value="pulpa_borojo">Borojo</option>
-                </select> */}
+                <label>Imagen:</label>
+                <input type="file" name="image" onChange={handleImageChange} />
               </div>
               <div>
-                {/* <br />
-                <label>Cantidad de Pulpa (gr)</label>
-                <input
-                  type="number"
-                  name="pulpa"
-                  value={quantityPulpa}
-                  onChange={(e) => updateQuantityPulpa(e.target.value)}
-                /> */}
-                {/* <label>Pulpa (gr)</label>
-                <input
-                  type="number"
-                  name="pulpa"
-                  value={productForm.pulpa}
-                  onChange={fillFormNewProduct}
-                /> */}
                 <label>Saborizante (gr)</label>
                 <input
                   type="number"
@@ -370,9 +340,8 @@ export function NewProduct({ setShowNewProduct, getData }) {
                   value={productForm.quantity}
                   onChange={fillFormNewProduct}
                 />
-                <label>Ubicación</label> <br />
+                <label>Ubicación</label>
                 <select
-                  style={{ width: "85%" }}
                   name="ubication"
                   type="text"
                   value={productForm.ubication}
@@ -383,9 +352,7 @@ export function NewProduct({ setShowNewProduct, getData }) {
                   <option value="unico">Unico</option>
                 </select>
                 <label>Pulpa</label>
-                <br />
                 <select
-                  style={{ width: "85%" }}
                   name="pulpa"
                   type="text"
                   value={pulpaSelected || ""}
@@ -401,7 +368,6 @@ export function NewProduct({ setShowNewProduct, getData }) {
                   <option value="pulpa_guanabana">Guanabana</option>
                   <option value="pulpa_borojo">Borojo</option>
                 </select>
-                <br />
                 <label>Cantidad de Pulpa (gr)</label>
                 <input
                   type="number"
@@ -446,6 +412,8 @@ export function NewProduct({ setShowNewProduct, getData }) {
                 <option value="villa colombia">Villa Colombia</option>
                 <option value="unico">Unico</option>
               </select>
+              <label>Imagen:</label>
+              <input type="file" name="image" onChange={handleImageChange} />
             </div>
           )}
           {showIngredientForm && (

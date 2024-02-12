@@ -54,8 +54,6 @@ router.put(
     try {
       const id = req.params.id;
       const changes = req.body;
-      console.log(id);
-      console.log(changes);
       const supplierEdit = await SuppliersController.editOneSupplier(
         id,
         changes

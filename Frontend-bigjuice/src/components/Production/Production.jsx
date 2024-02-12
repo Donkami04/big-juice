@@ -94,8 +94,7 @@ export function Production() {
           },
         }
       );
-      console.log(productionRequest);
-      console.log(historicProductionNew);
+
       if (
         productionRequest.status === 200 &&
         historicProductionNew.status === 201

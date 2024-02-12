@@ -72,6 +72,7 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
       setShowOtrosForm(true);
       setShowJugosForm(false);
       setShowIngredientForm(false);
+      setHeight("25rem");
     }
     if (element.category === "ingredient" || element.category === "others") {
       setShowIngredientForm(true);
@@ -80,7 +81,7 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
     }
     setOptionButton(true);
     if (element.category === "jugos") {
-      setHeight("25rem");
+      setHeight("33rem");
     }
     setShowAdminButtons(false);
   };
@@ -138,8 +139,6 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
   const editProductRequest = async (event) => {
     event.preventDefault();
     const finalData = { ...productForm };
-    console.log(Object.keys(finalData).length);
-    console.log(finalData);
     for (var key in finalData) {
       if (finalData.hasOwnProperty(key)) {
         if (finalData[key] === "") {
@@ -147,7 +146,7 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
         }
       }
     }
-
+    console.log(finalData);
     try {
       const request = await axios.put(
         `${BASE_API_URL}/products/edit/${element.id}`,
@@ -156,11 +155,11 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
         },
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${jwtToken}`,
           },
         }
       );
-      console.log(request);
       getData();
       setShowEditDeleteButton(false);
     } catch (error) {
@@ -201,7 +200,6 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
           },
         }
       );
-      console.log(request);
       getData();
       setShowEditDeleteButton(false);
     }
@@ -214,7 +212,6 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
           },
         }
       );
-      console.log(request);
       getData();
       setShowEditDeleteButton(false);
     }
@@ -230,6 +227,11 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
     const newProductForm = { ...productForm };
     newProductForm[pulpaSelected] = value;
     setProductForm(newProductForm);
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setProductForm({ ...productForm, image: file }); // Cambiar "image" a "imagen"
   };
 
   return (
@@ -382,6 +384,12 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
                     <option value="villa colombia">Villa Colombia</option>
                     <option value="unico">Unico</option>
                   </select>
+                  <label>Imagen:</label>
+                  <input
+                    type="file"
+                    name="image"
+                    onChange={handleImageChange}
+                  />
                 </div>
               </div>
             )}
@@ -419,6 +427,8 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
                   <option value="villa colombia">Villa Colombia</option>
                   <option value="unico">Unico</option>
                 </select>
+                <label>Imagen:</label>
+                <input type="file" name="image" onChange={handleImageChange} />
               </div>
             )}
             {showIngredientForm && (
