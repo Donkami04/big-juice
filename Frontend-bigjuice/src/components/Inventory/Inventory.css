@@ -196,21 +196,19 @@
   width: calc(100% - 30px)
 }
 
-/* @media screen and (max-width: 1200px) {
-  .inventory-table {
-    width: 20rem;
-    
+@media screen and (max-width: 500px) {
+  .tables-inventory-container {
+    display: flex;
+    flex-direction: column;
   }
 
-  .table-container {
-    width: 20rem;
+  .button-new-product {
+    display: none;
   }
 
-  .inventory-table th {
-    font-size: 1rem;
+  .select-ubication-inventory {
+    font-size: 1.2rem;
+    width: 12rem;
+    height: 2rem;
   }
-
-  .inventory-table td {
-    font-size: 0.9rem;
-  }
-} */
+}

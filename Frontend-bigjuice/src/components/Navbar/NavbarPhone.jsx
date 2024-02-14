@@ -1,44 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { NavbarPhone } from "./NavbarPhone";
-import { TiThMenu } from "react-icons/ti";
-import "./Navbar.css";
 
-export const Navbar = () => {
-  const jwtToken = localStorage.getItem("jwtToken");
-  const isLoggedIn = !!jwtToken; // Convertir a un valor booleano
-  const navigate = useNavigate();
+import "./NavbarPhone.css";
 
-  const [selectedLink, setSelectedLink] = useState(null);
-  const [showSideMenu, setShowSideMenu] = useState(false);
-
-  const handleLinkClick = (link) => {
-    console.log(link);
-    setSelectedLink(link);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("jwtToken");
-    localStorage.removeItem("ubication");
-    localStorage.removeItem("rol");
-    navigate("/login"); // Redirigir a la página de login
-  };
-
-  // Use useEffect to update selectedLink immediately after navigation
+export function NavbarPhone({
+  handleLinkClick,
+  setSelectedLink,
+  selectedLink,
+  setShowSideMenu,
+}) {
   useEffect(() => {
     const currentPath = window.location.pathname;
     setSelectedLink(currentPath);
   }, []);
 
   return (
-    <div className="main-navbar-container">
-      <div className="logo-container">
+    <div className="slide-menu-phone">
+      <div className="logo-container-phone">
+        <p
+          onClick={() => setShowSideMenu(false)}
+          className="close-side-menu-phone"
+        >
+          X
+        </p>
         <img src="/logo.png" alt="logo-big-juice" />
       </div>
-      <div onClick={() => setShowSideMenu(true)}>
-        <TiThMenu className="open-side-menu" size={"3rem"} />
-      </div>
-      <div className="links-container">
+      <div className="links-container-phone">
         <p className={selectedLink === "/vender" ? "selected" : ""}>
           <Link to="/vender" onClick={() => handleLinkClick("/vender")}>
             VENDER
@@ -77,24 +64,7 @@ export const Navbar = () => {
             USUARIOS
           </Link>
         </p>
-        <div className="logout-button-container">
-          <p
-            className="logout-button"
-            onClick={isLoggedIn ? handleLogout : () => navigate("/login")}
-          >
-            {isLoggedIn ? "Cerrar Sesión" : "Iniciar Sesión"}
-          </p>
-        </div>
       </div>
-      {showSideMenu && (
-        <NavbarPhone
-          handleLinkClick={handleLinkClick}
-          handleLogout={handleLogout}
-          setSelectedLink={setSelectedLink}
-          selectedLink={selectedLink}
-          setShowSideMenu={setShowSideMenu}
-        />
-      )}
     </div>
   );
-};
+}
