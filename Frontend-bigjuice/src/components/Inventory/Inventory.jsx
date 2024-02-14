@@ -15,6 +15,7 @@ export function Inventory() {
   const [inventory, setInventory] = useState([]);
   const [products, setProducts] = useState([]);
   const [productsUbication, setProductsUbication] = useState([]);
+  const [totalJugos, setTotalJugos] = useState("");
   const [inventoryUbication, setInventoryUbication] = useState([]);
   const [othersUbication, setOthersUbication] = useState([]);
   const [ubication, setUbication] = useState("");
@@ -78,6 +79,14 @@ export function Inventory() {
       const dataProductsFiltered = dataProducts.filter(
         (e) => e.ubication === userUbication
       );
+      console.log(dataProductsFiltered);
+      let counterJugos = 0;
+      dataProductsFiltered.forEach((e) => {
+        if (e.category === "jugos") {
+          counterJugos += e.quantity;
+        }
+      });
+      setTotalJugos(counterJugos);
       setInventoryUbication(dataInventoryFiltered);
       setOthersUbication(dataOthersFiltered);
       setProductsUbication(dataProductsFiltered);
@@ -166,6 +175,9 @@ export function Inventory() {
       {showTableInventory && (
         <div className="tables-inventory-container">
           <div className="table-container">
+            <h2 style={{ textAlign: "center" }}>
+              Productos - <span>{totalJugos} Jugos</span>
+            </h2>
             <table className="inventory-table">
               <thead>
                 <tr>
@@ -202,6 +214,7 @@ export function Inventory() {
             </table>
           </div>
           <div className="table-container">
+            <h2 style={{ textAlign: "center" }}>Ingredientes</h2>
             <table className="inventory-table">
               <thead>
                 <tr>
@@ -228,6 +241,7 @@ export function Inventory() {
             </table>
           </div>
           <div className="table-container">
+            <h2 style={{ textAlign: "center" }}>Otros</h2>
             <table className="inventory-table">
               <thead>
                 <tr>
