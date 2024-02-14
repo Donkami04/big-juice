@@ -2,16 +2,16 @@ import axios from "axios";
 
 const ENVIRONMENT = import.meta.env.VITE_ENVIRONMENT;
 let envi;
+export let BASE_API_URL = "";
 
 if (ENVIRONMENT === "local") {
-  envi = "localhost";
+  BASE_API_URL = 'http://localhost:3000/api/bigjuice';
 } else if (ENVIRONMENT === "development") {
   envi = "";
 } else if (ENVIRONMENT === "production") {
-  envi = "";
+  BASE_API_URL = "https://big-juice-api.onrender.com/api/bigjuice/"
 }
 
-export const BASE_API_URL = `http://${envi}:3000/api/bigjuice`;
 
 export const getProducts = async (jwtToken) => {
   return axios
