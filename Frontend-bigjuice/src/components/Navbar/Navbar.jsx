@@ -13,7 +13,6 @@ export const Navbar = () => {
   const [showSideMenu, setShowSideMenu] = useState(false);
 
   const handleLinkClick = (link) => {
-    console.log(link);
     setSelectedLink(link);
   };
 

@@ -76,8 +76,6 @@ class ProductsController {
   }
 
   static async editOneProduct(id, changes, image) {
-    console.log(changes)
-    console.log(image)
     try {
       const product = await Products.findByPk(id);
       if (!product) {
@@ -121,13 +119,11 @@ class ProductsController {
       }
 
       await Products.update(updateData, { where: { id: id } });
-      console.log("termino todo bien")
       return {
         status: 200,
         message: "El Producto ha sido modificado exitosamente.",
       };
     } catch (error) {
-      console.log("termino todo mal")
       console.log(error)
       return {
         status: 500,

@@ -11,7 +11,6 @@ export const ProductCard = ({ data, addToShopcar, removeFromShopcar }) => {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
-  console.log(data);
   return (
     <div className="product-card">
       <div className="name-product-container">

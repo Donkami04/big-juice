@@ -146,7 +146,6 @@ export function AdminProduct({ element, getData, setShowEditDeleteButton }) {
         }
       }
     }
-    console.log(finalData);
     try {
       const request = await axios.put(
         `${BASE_API_URL}/products/edit/${element.id}`,

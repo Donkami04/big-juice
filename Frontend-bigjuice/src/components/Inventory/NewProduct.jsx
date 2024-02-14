@@ -128,8 +128,6 @@ export function NewProduct({ setShowNewProduct, getData }) {
           }
         }
       }
-      console.log("Antes de enviar");
-      console.log(finalData);
       const request = await axios.post(
         `${BASE_API_URL}/products/new`,
         {

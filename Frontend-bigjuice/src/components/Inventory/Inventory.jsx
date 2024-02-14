@@ -79,7 +79,6 @@ export function Inventory() {
       const dataProductsFiltered = dataProducts.filter(
         (e) => e.ubication === userUbication
       );
-      console.log(dataProductsFiltered);
       let counterJugos = 0;
       dataProductsFiltered.forEach((e) => {
         if (e.category === "jugos") {

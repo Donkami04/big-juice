@@ -34,7 +34,6 @@ class ProductionController {
         user: user.user,
         ubication: user.ubication,
       });
-      console.log(newProduction)
 
       return {
         status: 201,

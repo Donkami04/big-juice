@@ -32,7 +32,7 @@ module.exports = {
         allowNull: true,
       },
       elements: {
-        type: DataTypes.JSON,
+        type: Sequelize.JSON,
         allowNull: true,
       },
     });
