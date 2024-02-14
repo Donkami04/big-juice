@@ -184,7 +184,6 @@ class IngredientsController {
         );
       });
     } catch (error) {
-      console.log(error)
       return {
         status: 500,
         message: error.message,

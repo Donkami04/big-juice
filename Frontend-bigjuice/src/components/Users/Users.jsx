@@ -28,6 +28,10 @@ export function Users() {
     ubication: "",
     id: "",
     password: "",
+    email: "",
+    phone: "",
+    address: "",
+    cedula: "",
   });
 
   const getData = async () => {
@@ -89,7 +93,17 @@ export function Users() {
 
   const cancelDeleteFunciton = () => {
     setUserId("");
-    setUser({ name: "", rol: "", ubication: "", id: "", password: "" });
+    setUser({
+      name: "",
+      rol: "",
+      ubication: "",
+      id: "",
+      password: "",
+      email: "",
+      phone: "",
+      address: "",
+      cedula: "",
+    });
     setShowDelete(false);
   };
 
@@ -108,16 +122,25 @@ export function Users() {
           },
         }
       );
-      console.log(request.status);
+
       if (request.status === 201) {
         getData();
         setShowNewUserForm(false);
-        setUserForm({ name: "", rol: "", ubication: "", id: "", password: "" });
+        setUserForm({
+          name: "",
+          rol: "",
+          ubication: "",
+          id: "",
+          password: "",
+          email: "",
+          phone: "",
+          address: "",
+          cedula: "",
+        });
         setShowUsersMessage(false);
         setUsersMessage("");
       }
     } catch (error) {
-      console.log(error);
       setUsersMessage(error.response.data.message);
       setShowUsersMessage(true);
     }
@@ -187,7 +210,7 @@ export function Users() {
         </ConfirmationMessage>
       )}
       {showNewUserForm && (
-        <ConfirmationMessage height={"25rem"}>
+        <ConfirmationMessage height={"36rem"}>
           <h2 style={{ textAlign: "center" }}>Crear nuevo usuario</h2>
           <form className="form-new-user">
             <label>Nombre</label>
@@ -239,6 +262,38 @@ export function Users() {
               onChange={fillDataUserForm}
               required
             />
+            <label>Correo</label>
+            <input
+              type="text"
+              name="email"
+              value={userForm.email}
+              onChange={fillDataUserForm}
+              required
+            />
+            <label>Teléfono</label>
+            <input
+              type="text"
+              name="phone"
+              value={userForm.phone}
+              onChange={fillDataUserForm}
+              required
+            />
+            <label>Dirección</label>
+            <input
+              type="text"
+              name="address"
+              value={userForm.address}
+              onChange={fillDataUserForm}
+              required
+            />
+            <label>Cédula</label>
+            <input
+              type="text"
+              name="cedula"
+              value={userForm.cedula}
+              onChange={fillDataUserForm}
+              required
+            />
             {showUsersMessage && (
               <p className="error-message">{usersMessage}</p>
             )}
@@ -265,8 +320,12 @@ export function Users() {
             <thead>
               <tr>
                 <th>Nombre</th>
-                <th>Id Usuario</th>
+                <th>Id</th>
                 <th>Rol</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Dirección</th>
+                <th>Cédula</th>
                 <th>Fecha de Registro</th>
                 <th>Ubicación</th>
               </tr>
@@ -277,6 +336,10 @@ export function Users() {
                   <td>{user.name}</td>
                   <td>{user.id}</td>
                   <td>{user.rol.toUpperCase()}</td>
+                  <td>{user.phone}</td>
+                  <td>{user.email}</td>
+                  <td>{user.address}</td>
+                  <td>{user.cedula}</td>
                   <td>{user.registration_date}</td>
                   <td>{user.ubication.toUpperCase()}</td>
                   <td onClick={() => showDeleteUserMessage(user)}>

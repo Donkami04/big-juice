@@ -1,35 +1,43 @@
 import { FaPlus } from "react-icons/fa6";
 import { FaMinus } from "react-icons/fa";
+import { BASE_API_URL } from "../../utils/api/bigjuice";
 import "./ProductCard.css";
 
 export const ProductCard = ({ data, addToShopcar, removeFromShopcar }) => {
   const name = data.name.toUpperCase();
-  const value = data.sale_price.toLocaleString('es-CO', {
-    style: 'currency',
-    currency: 'COP',
+  const value = data.sale_price.toLocaleString("es-CO", {
+    style: "currency",
+    currency: "COP",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
-
+  console.log(data);
   return (
     <div className="product-card">
-
       <div className="name-product-container">
         <p>{name}</p>
       </div>
-      
+
       <div className="product-image-container">
-        <img src="" alt="" />
+        <img
+          className="product-image"
+          src={`${BASE_API_URL}/products/images/${data.image}`}
+          alt={name}
+        />
       </div>
 
-        <p className="add-product product-button" 
-        onClick={() => addToShopcar(data)}>
-          <FaPlus />
-        </p>
-        <p className="remove-product product-button" 
-        onClick={() => removeFromShopcar(data)}>
-          <FaMinus />
-        </p>
+      <p
+        className="add-product product-button"
+        onClick={() => addToShopcar(data)}
+      >
+        <FaPlus />
+      </p>
+      <p
+        className="remove-product product-button"
+        onClick={() => removeFromShopcar(data)}
+      >
+        <FaMinus />
+      </p>
 
       <div className="price-product-container">
         <p>{value}</p>

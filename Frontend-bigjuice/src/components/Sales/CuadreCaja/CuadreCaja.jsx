@@ -7,12 +7,20 @@ export function CuadreCaja({ total, salesNequi, salesRappi }) {
   const [initialMoneyBox, setInitialMoneyBox] = useState("");
   const [showTotal, setShowTotal] = useState(false);
   const [totalMoney, setTotalMoney] = useState("");
-
+  const [showError, setShowError] = useState(false);
+  const [message, setMessage] = useState("");
   total = parseInt(total.replace("$", "").replace(".", ""));
   salesNequi = parseInt(salesNequi.replace("$", "").replace(".", ""));
   salesRappi = parseInt(salesRappi.replace("$", "").replace(".", ""));
 
   const calculateTotal = () => {
+    if (!initialMoneyBox) {
+      setShowError(true);
+      setMessage("Ingrese el dinero inicial de la caja");
+      return;
+    }
+    setShowError(false);
+    setMessage("");
     const result = parseInt(initialMoneyBox) + total - salesNequi - salesRappi;
     setTotalMoney(result);
     setShowTotal(true);
@@ -28,6 +36,7 @@ export function CuadreCaja({ total, salesNequi, salesRappi }) {
         type="number"
       />
       <button onClick={calculateTotal}>Calcular</button>
+      {showError && <p className="error-message">{message}</p>}
       {showTotal && (
         <p className="total-moneybox">
           Dinero que debe haber en la caja:{" "}

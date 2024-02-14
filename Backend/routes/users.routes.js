@@ -62,7 +62,7 @@ router.put(
   "/edit/:id",
   passport.authenticate("jwt", { session: false }),
   checkRoles("admin"),
-  // validateData(editUserSchema),
+  validateData(editUserSchema),
   async (req, res, next) => {
     try {
       const id = req.params.id;

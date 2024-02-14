@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { NavbarPhone } from "./NavbarPhone";
+import { TiThMenu } from "react-icons/ti";
 import "./Navbar.css";
 
 export const Navbar = () => {
@@ -8,8 +10,10 @@ export const Navbar = () => {
   const navigate = useNavigate();
 
   const [selectedLink, setSelectedLink] = useState(null);
+  const [showSideMenu, setShowSideMenu] = useState(false);
 
   const handleLinkClick = (link) => {
+    console.log(link);
     setSelectedLink(link);
   };
 
@@ -30,6 +34,9 @@ export const Navbar = () => {
     <div className="main-navbar-container">
       <div className="logo-container">
         <img src="/logo.png" alt="logo-big-juice" />
+      </div>
+      <div onClick={() => setShowSideMenu(true)}>
+        <TiThMenu className="open-side-menu" size={"3rem"} />
       </div>
       <div className="links-container">
         <p className={selectedLink === "/vender" ? "selected" : ""}>
@@ -53,7 +60,10 @@ export const Navbar = () => {
           </Link>
         </p>
         <p className={selectedLink === "/proveedores" ? "selected" : ""}>
-          <Link to="/proveedores" onClick={() => handleLinkClick("/proveedores")}>
+          <Link
+            to="/proveedores"
+            onClick={() => handleLinkClick("/proveedores")}
+          >
             PROVEEDORES
           </Link>
         </p>
@@ -68,11 +78,23 @@ export const Navbar = () => {
           </Link>
         </p>
         <div className="logout-button-container">
-          <p className="logout-button" onClick={isLoggedIn ? handleLogout : () => navigate("/login")}>
+          <p
+            className="logout-button"
+            onClick={isLoggedIn ? handleLogout : () => navigate("/login")}
+          >
             {isLoggedIn ? "Cerrar Sesión" : "Iniciar Sesión"}
           </p>
         </div>
       </div>
+      {showSideMenu && (
+        <NavbarPhone
+          handleLinkClick={handleLinkClick}
+          handleLogout={handleLogout}
+          setSelectedLink={setSelectedLink}
+          selectedLink={selectedLink}
+          setShowSideMenu={setShowSideMenu}
+        />
+      )}
     </div>
   );
 };

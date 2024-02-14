@@ -9,7 +9,7 @@
 }
 
 .user-table-container table {
-    width: 75%;
+    width: 95%;
     /* height: 40rem; */
     border-collapse: collapse;
 
@@ -24,17 +24,18 @@
     height: 3rem;
     background-color: var(--lila-oscuro);
     color: greenyellow;
-    font-size: 1.4rem;
+    font-size: 1.1rem;
 }
 
 .user-table-container table td {
     height: 30px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     
 }
 
 .user-table-container table th, .user-table-container table td {
     border: solid 1px black;
+    padding: 5px;
 
 }
 
@@ -137,3 +138,9 @@
     background-color: greenyellow;
     color: rgb(110, 37, 148);
 }
+
+@media screen and (max-width: 1300px) {
+    .user-table-container table td {
+        font-size: 0.9rem;
+    }
+  }

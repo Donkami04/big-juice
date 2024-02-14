@@ -10,6 +10,7 @@ export function EditUser({
   setShowUserForm,
   getData,
   closeEditUserFormFunction,
+  setShowEditUserForm,
 }) {
   const jwtToken = localStorage.getItem("jwtToken");
   const [showMessage, setShowMessage] = useState(false);
@@ -20,6 +21,10 @@ export function EditUser({
     rol: "",
     ubication: "",
     password: "",
+    email: "",
+    phone: "",
+    address: "",
+    cedula: "",
   });
 
   useEffect(() => {
@@ -43,28 +48,35 @@ export function EditUser({
       );
       if (request.data.status === 200) {
         getData();
-        setShowUserForm(false);
+        // setShowUserForm(false);
         setShowMessage(false);
         setMessage("");
+        setShowEditUserForm(false);
       }
     } catch (error) {
-      console.log(error.response.data.message);
       setShowMessage(true);
-      setMessage(error.response.data.message);
+      setMessage(
+        error.response.data.message ||
+          error.response.data ||
+          "Erro desconocido al editar usuario"
+      );
     }
   };
 
   const fillDataForm = (e) => {
     const newUserData = { ...userData };
     newUserData[e.target.name] = e.target.value;
-    console.log(newUserData.password);
+
     setUserData(newUserData);
   };
 
   return (
     <div>
-      <ConfirmationMessage height={"25rem"}>
-        <h2 style={{ textAlign: "center" }}>{`Editar Usuario ${user.name}`}</h2>
+      <ConfirmationMessage height={"36rem"}>
+        <h2 style={{ textAlign: "center" }}>
+          Editar Usuario: <br />
+          <span style={{ color: "blue" }}>{user.name}</span>
+        </h2>
         <div className="edituser-container-form">
           <form>
             <label htmlFor="">Id</label>
@@ -117,6 +129,38 @@ export function EditUser({
               value={userData.password}
               onChange={fillDataForm}
               placeholder="Opcional"
+            />
+            <label>Correo</label>
+            <input
+              type="text"
+              name="email"
+              value={userData.email}
+              onChange={fillDataForm}
+              required
+            />
+            <label>Teléfono</label>
+            <input
+              type="text"
+              name="phone"
+              value={userData.phone}
+              onChange={fillDataForm}
+              required
+            />
+            <label>Dirección</label>
+            <input
+              type="text"
+              name="address"
+              value={userData.address}
+              onChange={fillDataForm}
+              required
+            />
+            <label>Cédula</label>
+            <input
+              type="text"
+              name="cedula"
+              value={userData.cedula}
+              onChange={fillDataForm}
+              required
             />
             {showMessage && <p className="error-message">{message}</p>}
             <div className="buttons-edituser-container">

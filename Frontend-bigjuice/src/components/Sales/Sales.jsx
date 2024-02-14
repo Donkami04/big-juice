@@ -110,9 +110,8 @@ export function Sales() {
       setShowSalesMessage("false");
     } catch (error) {
       setShowSalesTable("false");
-      setShowSalesMessage("");
-      setSalesMessage(error.response.data.message);
-      console.error(error);
+      setShowSalesMessage(true);
+      setSalesMessage(error.response.data.message || error.response.data);
     }
   };
 
@@ -172,8 +171,6 @@ export function Sales() {
         }
       }
     } catch (error) {
-      console.log("holi");
-      console.error(error);
       setSalesMessage(error.response.data.message || error.response.data);
     }
   };
@@ -271,7 +268,7 @@ export function Sales() {
             />
           </div>
         </form>
-
+        {showSalesMessage && <p className="sales-message">{salesMessage}</p>}
         <section className={`totals-sales-messages display-${showSalesTable}`}>
           <table>
             <tbody>

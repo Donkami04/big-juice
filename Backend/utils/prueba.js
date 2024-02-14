@@ -79,4 +79,3 @@ detailsSales.forEach((venta) => {
   }
 })
 
-console.log(totalJugos)
