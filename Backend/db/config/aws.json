@@ -14,15 +14,11 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "dvvhhngssuzgyq5nt1mh",
-    "password": "pscale_pw_TrGzs4spBDceNjrMXULhln6k3Sn6EU2olufTR73oHjQ",
-    "database": "big-juice-db",
-    "host": "aws.connect.psdb.cloud",
+    "username": "admin_bj",
+    "password": "280429",
+    "database": "bigjuice_db",
+    "host": "3.223.207.97",
     "dialect": "mysql",
-    "dialectOptions": {
-      "ssl": {
-        "rejectUnauthorized": true
-      }
-    }
+    "port": 3306
   }
 }
