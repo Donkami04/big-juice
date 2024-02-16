@@ -14,8 +14,8 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "dvvhhngssuzgyq5nt1mh",
-    "password": "pscale_pw_TrGzs4spBDceNjrMXULhln6k3Sn6EU2olufTR73oHjQ",
+    "username": "lwj5pa1rn93hqlhyzxiq",
+    "password": "pscale_pw_gTW8mXWdwkEsZLtfuvGGdIE9F5YBbPJeGrMFHDLGd90",
     "database": "big-juice-db",
     "host": "aws.connect.psdb.cloud",
     "dialect": "mysql",

@@ -9,7 +9,7 @@ if (ENVIRONMENT === "local") {
 } else if (ENVIRONMENT === "development") {
   envi = "";
 } else if (ENVIRONMENT === "production") {
-  BASE_API_URL = "http://3.212.152.222:3000/api/bigjuice"
+  BASE_API_URL = "https://api.bigjuice.net/api/bigjuice"
 }
 
 
