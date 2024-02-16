@@ -13,7 +13,6 @@ import { Suppliers } from "./components/Suppliers/Suppliers";
 import { Inventory } from "./components/Inventory/Inventory";
 import { Users } from "./components/Users/Users";
 
-
 // Hooks
 import { useTabsName } from "./hooks/useTabsName";
 
@@ -38,7 +37,6 @@ function App() {
   const navigate = useNavigate();
   const pageTitle = useTabsName(location.pathname);
 
-
   useEffect(() => {
     document.title = pageTitle;
   }, [pageTitle]);
@@ -49,18 +47,30 @@ function App() {
         <title>{useTabsName(location.pathname)}</title>
       </Helmet>
       <Routes location={location}>
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route
           path="/login/admin-ubication"
           element={<PrivateRoute element={<UbicationSelector />} />}
         />
         <Route path="/vender" element={<PrivateRoute element={<Vender />} />} />
         <Route path="/ventas" element={<PrivateRoute element={<Sales />} />} />
-        <Route path="/produccion" element={<PrivateRoute element={<Production />} />} />
+        <Route
+          path="/produccion"
+          element={<PrivateRoute element={<Production />} />}
+        />
         <Route path="/compras" element={<PrivateRoute element={<Bills />} />} />
-        <Route path="/proveedores" element={<PrivateRoute element={<Suppliers />} />} />
-        <Route path="/inventario" element={<PrivateRoute element={<Inventory />} />} />
-        <Route path="/usuarios" element={<PrivateRoute element={<Users />} />} />
+        <Route
+          path="/proveedores"
+          element={<PrivateRoute element={<Suppliers />} />}
+        />
+        <Route
+          path="/inventario"
+          element={<PrivateRoute element={<Inventory />} />}
+        />
+        <Route
+          path="/usuarios"
+          element={<PrivateRoute element={<Users />} />}
+        />
       </Routes>
     </>
   );
