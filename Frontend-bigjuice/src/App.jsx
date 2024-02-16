@@ -25,7 +25,7 @@ const PrivateRoute = ({ element }) => {
     const jwtToken = localStorage.getItem("jwtToken");
     if (!jwtToken || jwtToken.length < 150) {
       // Redirigir a la página de login si no hay jwtToken
-      navigate("/login");
+      navigate("/");
     }
   }, [navigate]);
 
@@ -49,7 +49,7 @@ function App() {
       <Routes location={location}>
         <Route path="/" element={<Login />} />
         <Route
-          path="/login/admin-ubication"
+          path="/admin-ubication"
           element={<PrivateRoute element={<UbicationSelector />} />}
         />
         <Route path="/vender" element={<PrivateRoute element={<Vender />} />} />

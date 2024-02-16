@@ -20,7 +20,7 @@ export const Navbar = () => {
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("ubication");
     localStorage.removeItem("rol");
-    navigate("/login"); // Redirigir a la página de login
+    navigate("/"); // Redirigir a la página de login
   };
 
   // Use useEffect to update selectedLink immediately after navigation
