@@ -1,81 +1,24 @@
-const ventas = [
-  {
-      "id": 7,
-      "amount": 24000,
-      "user": "camilo",
-      "id_user": 2,
-      "date": "2023-12-01 17:35",
-      "products": [
-          {
-              "amount": 18000,
-              "product": "mora",
-              "category": "jugos",
-              "quantity": 3
-          },
-          {
-              "amount": 6000,
-              "product": "lulo",
-              "category": "jugos",
-              "quantity": 1
-          }
-      ]
-  },
-  {
-      "id": 8,
-      "amount": 24000,
-      "user": "camilo",
-      "id_user": 2,
-      "date": "2023-12-01 17:35",
-      "products": [
-          {
-              "amount": 3000,
-              "product": "pasteles",
-              "category": "otros",
-              "quantity": 2
-          },
-          {
-              "amount": 10000,
-              "product": "almohabana",
-              "category": "otros",
-              "quantity": 5
-          }
-      ]
-  },
-  {
-      "id": 9,
-      "amount": 24000,
-      "user": "camilo",
-      "id_user": 2,
-      "date": "2023-12-01 17:37",
-      "products": [
-          {
-              "amount": 30000,
-              "product": "mango",
-              "category": "jugos",
-              "quantity": 5
-          },
-          {
-              "amount": 6000,
-              "product": "borojo",
-              "category": "jugos",
-              "quantity": 1
-          }
-      ]
-  }
-];
+const fs = require('fs');
+const { get } = require('http');
 
-const detailsSales = [];
-ventas.forEach((venta) => {
-  venta.products.forEach((v) => {
-    detailsSales.push(v)
-  } )
-});
+const getCurrentTime = () => {
+  const now = new Date();
 
-let totalJugos = 0;
+  // Configurar opciones para obtener la fecha y hora en la zona horaria de Bogotá
+  const options = {
+    timeZone: 'America/Bogota',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  };
 
-detailsSales.forEach((venta) => {
-  if (venta.category === "jugos") {
-    totalJugos += venta.amount;
-  }
-})
+  // Obtener la fecha y hora en la zona horaria de Bogotá
+  const dateTime = now.toLocaleString('en-US', options);
 
+  return dateTime;
+};
+
+module.exports = { getCurrentTime };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BASE_API_URL } from "../../utils/api/bigjuice";
 import { useColMoney } from "../../hooks/useColMoney";
 import { ConfirmationMessage } from "../ConfirmationMessage/ConfirmationMessage";
+import { Spinner } from "../Spinner/Spinner";
 import axios from "axios";
 import "./ShopCar.css";
 
@@ -22,6 +23,7 @@ export const ShopCar = ({
   const [zeroMessage, setZeroMessage] = useState("");
   const [user, setUser] = useState("");
   const [customer, setCustomer] = useState("");
+  const [showSpinner, setShowSpinner] = useState(false);
   const token = localStorage.getItem("jwtToken");
   const ubication = localStorage.getItem("ubication");
 
@@ -96,9 +98,10 @@ export const ShopCar = ({
   };
 
   // Se utiliza para enviar la peticion POST
+  //! ########################################
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setShowSpinner(true);
     try {
       if (products.length === 0) {
         SetShopCarMessage("No se puede hacer una venta sin productos");
@@ -125,6 +128,7 @@ export const ShopCar = ({
           },
         }
       );
+      setShowSpinner(false);
       if (response.data.status === 201) {
         const calculatedChangeMoneyFormat = useColMoney(integerPagaCon - total);
         // setChange(calculatedChangeMoneyFormat);
@@ -140,7 +144,7 @@ export const ShopCar = ({
       }
     } catch (error) {
       // saleSuccesMessage(error);
-
+      setShowSpinner(false);
       console.error(error);
       const message = error.response.data.message;
       saleSuccesMessage(message);
@@ -258,6 +262,7 @@ export const ShopCar = ({
           </div>
         </div>
       )}
+      {showSpinner ? <Spinner /> : ""}
       <form className="main-shopcar-container" onSubmit={handleSubmit}>
         <div className="sale-title">
           <h1>VENTA</h1>

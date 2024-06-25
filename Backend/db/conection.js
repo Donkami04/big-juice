@@ -6,13 +6,15 @@ const env = process.env.NODE_ENV || 'local';
 const config = dbConfig[env];
 const sequelize = new Sequelize(config.database, config.username, config.password, {
   host: config.host,
-  dialect: 'mysql',
-  dialectOptions: {
-    ssl: {
-      rejectUnauthorized: true,
-    },
-  },
+  port: config.port,
+  dialect: config.dialect,
+  // dialectOptions: {
+  //   ssl: {
+  //     rejectUnauthorized: false,
+  //   },
+  // },
 });
+
 
 sequelize
   .authenticate()

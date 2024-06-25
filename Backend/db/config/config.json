@@ -1,28 +1,18 @@
 {
-  "development": {
-    "username": "root",
-    "password": null,
-    "database": "database_development",
+  "local": {
+    "username": "bjadmin",
+    "password": "280429",
+    "database": "bigjuice",
     "host": "127.0.0.1",
-    "dialect": "mysql"
-  },
-  "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "port": 33061
+
   },
   "production": {
-    "username": "lwj5pa1rn93hqlhyzxiq",
-    "password": "pscale_pw_gTW8mXWdwkEsZLtfuvGGdIE9F5YBbPJeGrMFHDLGd90",
-    "database": "big-juice-db",
-    "host": "aws.connect.psdb.cloud",
-    "dialect": "mysql",
-    "dialectOptions": {
-      "ssl": {
-        "rejectUnauthorized": true
-      }
-    }
+    "username": "donkami",
+    "password": "camilo123",
+    "database": "bg-database",
+    "host": "34.225.55.33",
+    "dialect": "mysql"
   }
 }
