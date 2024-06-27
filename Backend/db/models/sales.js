@@ -35,7 +35,7 @@ const Sales = sequelize.define(
       defaultValue : false
     },
     products: {
-      type: DataTypes.JSON,
+      type: DataTypes.TEXT("long"),
       allowNull: false,
     },
   },

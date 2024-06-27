@@ -3,7 +3,7 @@ import { Navbar } from "../Navbar/Navbar";
 import { useColMoney } from "../../hooks/useColMoney";
 import axios from "axios";
 import { BASE_API_URL } from "../../utils/api/bigjuice";
-import { FaMagnifyingGlass } from "react-icons/fa6";
+import { FaCircleRight, FaMagnifyingGlass } from "react-icons/fa6";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { ConfirmationMessage } from "../ConfirmationMessage/ConfirmationMessage";
 import { CuadreCaja } from "./CuadreCaja/CuadreCaja";

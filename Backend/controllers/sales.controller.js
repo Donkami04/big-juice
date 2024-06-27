@@ -39,7 +39,7 @@ class SalesController {
         user: data.user,
         id_user: data.id_user,
         date: currentDateTime,
-        products: data.products,
+        products: JSON.stringify(data.products),
         rappi: data.rappi,
         nequi: data.nequi,
       });
@@ -59,6 +59,7 @@ class SalesController {
   }
 
   static async totalSales(initialDate, finalDate, ubication) {
+
     let totalSales = 0;
     try {
       const sales = await Sales.findAll({
@@ -102,8 +103,8 @@ class SalesController {
         where: {
           date: {
             [Op.between]: [
-              new Date(`${initialDate} 00:00`),
-              new Date(`${finalDate} 23:59`),
+              `${initialDate} 00:00:00`,
+              `${finalDate} 23:59:59`,
             ],
           },
           ubication: ubication,
@@ -111,6 +112,7 @@ class SalesController {
       });
 
       sales.forEach((sale) => {
+        sale.products = JSON.parse(sale.products)
         sale.products.forEach((e) => {
           salesCategory.push(e);
         });
