@@ -65,15 +65,10 @@ class SalesController {
       const sales = await Sales.findAll({
         where: {
           date: {
-            // [Op.between]: [new Date(initialDate), new Date(finalDate)],
             [Op.between]: [
               `${initialDate} 00:00:00`,
               `${finalDate} 23:59:59`,
             ],
-            // [Op.between]: [
-            //   new Date(`${initialDate} 00:00:00`),
-            //   new Date(`${finalDate} 23:59:59`),
-            // ],
           },
           ubication: ubication,
         },
@@ -81,6 +76,7 @@ class SalesController {
 
       sales.forEach((sale) => {
         totalSales += sale.amount;
+        sale.dataValues.products = JSON.parse(sale.dataValues.products);
       });
 
       return {

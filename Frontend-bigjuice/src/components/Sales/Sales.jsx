@@ -7,6 +7,7 @@ import { FaCircleRight, FaMagnifyingGlass } from "react-icons/fa6";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { ConfirmationMessage } from "../ConfirmationMessage/ConfirmationMessage";
 import { CuadreCaja } from "./CuadreCaja/CuadreCaja";
+import { useCurrentDate } from "../../hooks/useCurrentDate";
 import "./Sales.css";
 
 export function Sales() {
@@ -31,6 +32,12 @@ export function Sales() {
   const [saleId, setSaleId] = useState("");
   const [saleInformation, setSaleInformation] = useState({});
   const [showCuadreCaja, setShowCuadreCaja] = useState(false);
+  const [numberNequiSold, setNumberNequiSold] = useState([]);
+  const [numberRappiSold, setNumberRappiSold] = useState([]);
+  const [positionSalesDate, setPositionSalesDate] = useState("");
+
+  // Consumos internos
+  const [zeroSales, setZeroSales] = useState([]);
 
   useEffect(() => {
     rol !== "admin"
@@ -38,23 +45,23 @@ export function Sales() {
       : setShowUbicationSelector("");
 
     rol !== "admin" ? setShowDeleteSale(false) : setShowDeleteSale(true);
-
     setUbication(userUbication);
-    const fechaActual = new Date();
-    const dia = fechaActual.getDate();
-    const mes = fechaActual.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por lo que sumamos 1
-    const ano = fechaActual.getFullYear();
-    const fechaFormateada = `${ano}-${mes < 10 ? "0" + mes : mes}-${
-      dia < 10 ? "0" + dia : dia
-    }`;
-    setSdate(fechaFormateada);
-    setEdate(fechaFormateada);
+    const currentDate = useCurrentDate();
+    setSdate(currentDate);
+    setEdate(currentDate);
   }, []);
 
   const handleSubmit = async () => {
     if (!sdate || !edate) {
       setShowSalesMessage("");
       setSalesMessage("Por favor, selecciona ambas fechas.");
+      return;
+    }
+    if (sdate > edate) {
+      setShowSalesMessage("");
+      setSalesMessage(
+        "La fecha de inicio no puede ser mayor que la fecha de fin."
+      );
       return;
     }
     try {
@@ -101,8 +108,37 @@ export function Sales() {
           },
         }
       );
+
+      let dataNumberRappiJugosSold = 0;
+      let dataNumberNequiJugosSold = 0;
+      let dataNumberZeroSaleJugosSold = 0;
+      const salesList = dataTotal.data.data.sales;
+      salesList.forEach((s) => {
+        if (s.nequi === true) {
+          console.log(s.products);
+          s.products.forEach((p) => {
+            if (p.category === "jugos") dataNumberNequiJugosSold += p.quantity;
+          });
+        }
+        if (s.rappi === true) {
+          s.products.forEach((p) => {
+            if (p.category === "jugos") dataNumberRappiJugosSold += p.quantity;
+          });
+        }
+        if (s.amount === 0) {
+          s.products.forEach((p) => {
+            if (p.category === "jugos") {
+              dataNumberZeroSaleJugosSold += p.quantity;
+            }
+          });
+        }
+      });
+      setPositionSalesDate("position-left-sales-date");
+      setNumberNequiSold(dataNumberNequiJugosSold);
+      setNumberRappiSold(dataNumberRappiJugosSold);
+      setZeroSales(dataNumberZeroSaleJugosSold);
       setShowCuadreCaja(true);
-      setSales(dataTotal.data.data.sales);
+      setSales(salesList);
       setTotal(useColMoney(dataTotal.data.data.totalSales));
       setTotalJugos(useColMoney(dataTotalJugos.data.data));
       setTotalOthers(useColMoney(dataTotalOthers.data.data));
@@ -111,7 +147,10 @@ export function Sales() {
     } catch (error) {
       setShowSalesTable("false");
       setShowSalesMessage(true);
-      setSalesMessage(error.response.data.message || error.response.data);
+      // setSalesMessage(
+      //   error.response.data.message || error.response.data || error
+      // );
+      console.error(error);
     }
   };
 
@@ -188,13 +227,6 @@ export function Sales() {
   return (
     <div>
       <Navbar />
-      {showCuadreCaja && (
-        <CuadreCaja
-          total={total}
-          salesNequi={salesNequi}
-          salesRappi={salesRappi}
-        />
-      )}
       {showDeleteMessage && (
         <ConfirmationMessage>
           <div className="container-deletesale-message">
@@ -224,114 +256,151 @@ export function Sales() {
       )}
 
       <div className="sales-dates-container">
-        <form className="form-sales-dates">
-          <div>
-            <label>Fecha Inicial</label>
-            <input
-              className="date-selector-sales"
-              value={sdate}
-              type="date"
-              onChange={(e) => setSdate(e.target.value)}
-            ></input>
-          </div>
-          <div>
-            <label>Fecha Final</label>
-            <input
-              className="date-selector-sales"
-              value={edate}
-              type="date"
-              onChange={(e) => setEdate(e.target.value)}
-            ></input>
-          </div>
-          <div>
-            <label className={`display-${showUbicationSelector}`}>
-              Ubicación
-            </label>
-            <select
-              id="ubication"
-              value={ubication}
-              onChange={(e) => setUbication(e.target.value)}
-              className={`display-${showUbicationSelector} ubication-selector-sales`}
-            >
-              <option value="" disabled>
-                Selecciona...
-              </option>
-              <option value="villa colombia">Villa Colombia</option>
-              <option value="unico">Único</option>
-            </select>
-          </div>
-          <div className="button-bills-find">
-            <p>Buscar</p>
-            <FaMagnifyingGlass
-              style={{ fontSize: "1.3rem", cursor: "pointer" }}
-              onClick={handleSubmit}
+        <div className="container-form-sales-dates">
+          <form className={`form-sales-dates ${positionSalesDate}`}>
+            {/* <form className={`form-sales-dates position-left-sales-date`}> */}
+            <div>
+              <label>Fecha Inicial</label>
+              <input
+                className="date-selector-sales"
+                value={sdate}
+                type="date"
+                onChange={(e) => setSdate(e.target.value)}
+              ></input>
+            </div>
+            <div>
+              <label>Fecha Final</label>
+              <input
+                className="date-selector-sales"
+                value={edate}
+                type="date"
+                onChange={(e) => setEdate(e.target.value)}
+              ></input>
+            </div>
+            <div>
+              <label className={`display-${showUbicationSelector}`}>
+                Ubicación
+              </label>
+              <select
+                id="ubication"
+                value={ubication}
+                onChange={(e) => setUbication(e.target.value)}
+                className={`display-${showUbicationSelector} ubication-selector-sales`}
+              >
+                <option value="" disabled>
+                  Selecciona...
+                </option>
+                <option value="villa colombia">Villa Colombia</option>
+                <option value="unico">Único</option>
+              </select>
+            </div>
+            <div className="button-bills-find">
+              <p>Buscar</p>
+              <FaMagnifyingGlass
+                style={{ fontSize: "1.3rem", cursor: "pointer" }}
+                onClick={handleSubmit}
+              />
+            </div>
+          </form>
+          {showCuadreCaja && (
+            <CuadreCaja
+              total={total}
+              salesNequi={salesNequi}
+              salesRappi={salesRappi}
             />
-          </div>
-        </form>
+          )}
+        </div>
         {showSalesMessage && <p className="sales-message">{salesMessage}</p>}
-        <section className={`totals-sales-messages display-${showSalesTable}`}>
-          <table>
+        <section className={`totals-sales-table display-${showSalesTable}`}>
+          <table className="resume-sales-table">
             <tbody>
               <tr>
-                <td>Total</td>
-                <td>{total}</td>
-              </tr>
-              <tr>
-                <td>Jugos</td>
+                <td>Venta solo Jugos</td>
                 <td>{totalJugos}</td>
+                <td>
+                  {`${
+                    parseInt(
+                      totalJugos.replace("$", "").replace(".", "").trim()
+                    ) / 6000
+                  } jugos`}
+                </td>
               </tr>
+
               <tr>
-                <td>Otros</td>
-                <td>{totalOthers}</td>
-              </tr>
-              <tr>
-                <td>Nequi</td>
+                <td>Venta por Nequi</td>
                 <td>{salesNequi}</td>
+                <td>{`${numberNequiSold} jugos`}</td>
               </tr>
               <tr>
-                <td>Rappi</td>
+                <td>Venta por Rappi</td>
                 <td>{salesRappi}</td>
+                <td>{`${numberRappiSold} jugos`}</td>
+              </tr>
+              <tr>
+                <td>Venta de Otros</td>
+                <td>{totalOthers}</td>
+                <td>N/A</td>
+              </tr>
+              <tr>
+                <td>Interno</td>
+                <td>N/A</td>
+                <td>{zeroSales}</td>
+              </tr>
+              <tr style={{ backgroundColor: "rgba(159, 241, 177, 0.603)" }}>
+                <td>Venta Total</td>
+                <td>{total}</td>
+                <td>N/A</td>
               </tr>
             </tbody>
           </table>
         </section>
 
         <main className={`sales-table-container display-${showSalesTable}`}>
-          <table className="sales-table">
-            <thead>
-              <tr>
-                <th>Id Venta</th>
-                <th>Fecha</th>
-                <th>Total</th>
-                <th>Rappi</th>
-                <th>Nequi</th>
-                <th>Usuario</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sales.map((sale) => (
-                <tr key={sale.id}>
-                  <td>
-                    <div className="td-delete-container">
-                      {showDeleteSale && (
-                        <FaRegTrashAlt
-                          style={{ position: "absolute", left: "5px" }}
-                          className="delete-sale-button"
-                          onClick={() => openConfirmationDeleteSale(sale)}
-                        />
-                      )}
-                      {sale.id}
-                    </div>
-                  </td>
-                  <td>{sale.date}</td>
-                  <td>{useColMoney(sale.amount)}</td>
-                  <td>{sale.rappi === true ? "Si" : "No"}</td>
-                  <td>{sale.nequi === true ? "Si" : "No"}</td>
-                  <td>{sale.user}</td>
+          <div className="table-responsive">
+            <table className="sales-table">
+              <thead>
+                <tr>
+                  <th>Id Venta</th>
+                  <th>Fecha</th>
+                  <th>Total</th>
+                  <th>Rappi</th>
+                  <th>Nequi</th>
+                  <th>Usuario</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {sales.length === 0 ? (
+                  <tr>
+                    <td className="no-match" colSpan="11">
+                      No hay ventas reportadas en las fechas establecidas
+                    </td>
+                  </tr>
+                ) : (
+                  sales.map((sale) => (
+                    <tr key={sale.id}>
+                      <td>
+                        <div className="td-delete-container">
+                          {showDeleteSale && (
+                            <FaRegTrashAlt
+                              style={{ position: "absolute", left: "5px" }}
+                              className="delete-sale-button"
+                              onClick={() => openConfirmationDeleteSale(sale)}
+                            />
+                          )}
+                          {sale.id}
+                        </div>
+                      </td>
+                      <td>{sale.date}</td>
+                      <td>{useColMoney(sale.amount)}</td>
+                      <td>{sale.rappi === true ? "Si" : "No"}</td>
+                      <td>{sale.nequi === true ? "Si" : "No"}</td>
+                      <td>{sale.user}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </main>
       </div>
     </div>

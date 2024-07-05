@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { BASE_API_URL } from "../../../utils/api/bigjuice";
 import { useGetUserData } from "../../../hooks/useGetUserData";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import { useCurrentDate } from "../../../hooks/useCurrentDate";
 import axios from "axios";
 import "./ProductionHistoric.css";
 
@@ -26,6 +27,9 @@ export function ProductionHistoric({ setShowHistoric }) {
     } else if (userData) {
       setUserRol(userData.rol);
       setUserUbication(userData.ubication);
+      const currentDate = useCurrentDate();
+      setSdate(currentDate);
+      setEdate(currentDate);
     }
   }, [userData, error]);
 

@@ -11,6 +11,8 @@ import { NewBill } from "./NewBill/NewBill";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { ConfirmationMessage } from "../ConfirmationMessage/ConfirmationMessage";
+import { useCurrentDate } from "../../hooks/useCurrentDate";
+import { IoMdAddCircleOutline } from "react-icons/io";
 import "./Bills.css";
 
 export function Bills() {
@@ -61,15 +63,9 @@ export function Bills() {
     setUbication(userUbication);
     getData();
 
-    const fechaActual = new Date();
-    const dia = fechaActual.getDate();
-    const mes = fechaActual.getMonth() + 1; // Los meses en JavaScript van de 0 a 11, por lo que sumamos 1
-    const ano = fechaActual.getFullYear();
-    const fechaFormateada = `${ano}-${mes < 10 ? "0" + mes : mes}-${
-      dia < 10 ? "0" + dia : dia
-    }`;
-    setSdate(fechaFormateada);
-    setEdate(fechaFormateada);
+    const currentDate = useCurrentDate();
+    setSdate(currentDate);
+    setEdate(currentDate);
   }, []);
 
   useEffect(() => {
@@ -97,7 +93,6 @@ export function Bills() {
           },
         }
       );
-
       const totalAmount = await axios.post(
         `${BASE_API_URL}/bills/total`,
         {
@@ -215,10 +210,15 @@ export function Bills() {
           </div>
         </ConfirmationMessage>
       )}
-      <div className="form-bills-container">
+      <div className="container-form-sales-dates">
         <form className="form-sales-dates">
-          <button onClick={showNewBillForm} type="button" className="new-bill">
-            Crear Compra
+          <button
+            title="Crear Compra / Gasto"
+            onClick={showNewBillForm}
+            type="button"
+            className="new-bill"
+          >
+            <IoMdAddCircleOutline size={"3rem"} />
           </button>
           <div>
             <label>Fecha Inicial</label>
@@ -254,9 +254,6 @@ export function Bills() {
             </select>
           </div>
           <div className="button-bills-find">
-            {/* <button type="button" onClick={handleSubmit}>
-              Buscar
-            </button> */}
             <p>Buscar</p>
             <FaMagnifyingGlass
               style={{ fontSize: "1.3rem", cursor: "pointer" }}
@@ -265,9 +262,6 @@ export function Bills() {
           </div>
         </form>
         {showBillsMessage && <p className="error-message">{billsMessage}</p>}
-        {/* <p className={`bills-message display-${showBillsMessage}`}>
-          {billsMessage}
-        </p> */}
       </div>
 
       <section className={`totals-bills-messages display-${showBillsTotals}`}>

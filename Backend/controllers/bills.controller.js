@@ -18,6 +18,9 @@ class BillsController {
           ubication: ubication,
         },
       });
+      bills.forEach((bill) => {
+        bill.dataValues.elements = JSON.parse(bill.dataValues.elements);
+      });
       return bills;
     } catch (error) {
       return {
@@ -135,16 +138,17 @@ class BillsController {
         where: {
           date: {
             [Op.between]: [
-              new Date(`${initialDate} 00:00`),
-              new Date(`${finalDate} 23:59`),
+              `${initialDate} 00:00:00`,
+              `${finalDate} 23:59:59`,
             ],
           },
           ubication: ubication,
         },
       });
 
-      bills.forEach((sale) => {
-        totalBills += sale.amount;
+      bills.forEach((bill) => {
+        totalBills += bill.dataValues.amount;
+        bill.dataValues.elements = JSON.parse(bill.dataValues.elements);
       });
 
       return {
@@ -152,6 +156,7 @@ class BillsController {
         data: totalBills,
       };
     } catch (error) {
+      console.error(error)
       return {
         status: 500,
         message: `Error en el cálculo de la venta total: ${error}`,

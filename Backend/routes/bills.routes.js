@@ -60,6 +60,7 @@ router.post(
         data: bills.data,
       });
     } catch (error) {
+      console.error(error)
       next(error);
     }
   }

@@ -12,6 +12,7 @@ router.get(
   checkRoles("admin"),
   async (req, res, next) => {
     try {
+      // const { initialDate, finalDate, ubication } = req.body;
       const sales = await SalesController.getSales();
       res.json(sales);
     } catch (error) {

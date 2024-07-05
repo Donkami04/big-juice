@@ -84,4 +84,11 @@
       right: 10px;
     }
   }
+
+  @media (min-width: 500px) {
+    .open-side-menu {
+      display: none;
+    }
+  }
+  
   

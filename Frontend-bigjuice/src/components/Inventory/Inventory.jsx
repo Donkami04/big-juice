@@ -175,7 +175,13 @@ export function Inventory() {
         <div className="tables-inventory-container">
           <div className="table-container">
             <h2 style={{ textAlign: "center" }}>
-              Productos - <span>{totalJugos} Jugos</span>
+              Productos -{" "}
+              <span
+                style={{ fontSize: "2rem", backgroundColor: "greenyellow" }}
+              >
+                {totalJugos}
+              </span>{" "}
+              Jugos
             </h2>
             <table className="inventory-table">
               <thead>

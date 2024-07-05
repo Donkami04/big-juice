@@ -3,7 +3,7 @@ import { useColMoney } from "../../../hooks/useColMoney";
 import React from "react";
 import "./CuadreCaja.css";
 
-export function CuadreCaja({ total, salesNequi, salesRappi }) {
+export function CuadreCaja({ total, salesNequi, salesRappi, isMobile }) {
   const [initialMoneyBox, setInitialMoneyBox] = useState("");
   const [showTotal, setShowTotal] = useState(false);
   const [totalMoney, setTotalMoney] = useState("");
@@ -28,7 +28,7 @@ export function CuadreCaja({ total, salesNequi, salesRappi }) {
 
   return (
     <div className="cuadre-container">
-      <h3>Cuadre Caja $:</h3>
+      <h3>Cuadre Caja</h3>
       <label>Caja Inicial:</label>
       <input
         value={initialMoneyBox}
@@ -38,10 +38,12 @@ export function CuadreCaja({ total, salesNequi, salesRappi }) {
       <button onClick={calculateTotal}>Calcular</button>
       {showError && <p className="error-message">{message}</p>}
       {showTotal && (
-        <p className="total-moneybox">
-          Dinero que debe haber en la caja:{" "}
+        <>
+          <p className="total-moneybox">
+            Dinero en efectivo que debe haber en la caja:{" "}
+          </p>
           <span>{useColMoney(totalMoney)}</span>
-        </p>
+        </>
       )}
     </div>
   );

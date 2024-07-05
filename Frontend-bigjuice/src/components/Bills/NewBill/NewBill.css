@@ -21,7 +21,12 @@
   cursor: pointer;
   font-size: 1rem;
   border: solid 2px black;
-  width: 10rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .form-newbill-container {

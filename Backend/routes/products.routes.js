@@ -6,17 +6,20 @@ const { validateData } = require("../middlewares/validator.handler");
 const { createProductSchema } = require("../db/schemas/products.schema");
 const { ProductsController } = require("../controllers/products.controller");
 
-const multer = require('multer');
-const path = require('path');
+const multer = require("multer");
+const path = require("path");
 
 // Define la carpeta de destino para almacenar las imágenes
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../uploads/images')); // Ruta relativa a la base del proyecto
+    cb(null, path.join(__dirname, "../uploads/images")); // Ruta relativa a la base del proyecto
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-  }
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
 });
 
 const upload = multer({ storage: storage });
@@ -34,21 +37,19 @@ router.get(
   }
 );
 
-router.get('/images/:imageName', (req, res) => {
+router.get("/images/:imageName", (req, res) => {
   const imageName = req.params.imageName;
-  const imagePath = path.join(__dirname, '../uploads/images', imageName);
+  const imagePath = path.join(__dirname, "../uploads/images", imageName);
 
   // Envía el archivo de imagen al cliente
-  res.sendFile(imagePath, { root: '/' }, (err) => {
-      if (err) {
-          console.error("Error al enviar el archivo:", err);
-          res.status(404).send("La imagen solicitada no se encontró.");
-      } else {
-          console.log("Archivo enviado correctamente.");
-      }
+  res.sendFile(imagePath, { root: "/" }, (err) => {
+    if (err) {
+      console.error("Error al enviar el archivo:", err);
+      res.status(404).send("La imagen solicitada no se encontró.");
+    } else {
+    }
   });
-});;
-
+});
 
 router.put(
   "/edit/:id",
@@ -60,7 +61,11 @@ router.put(
       const id = req.params.id;
       const changes = req.body;
       const image = req.file || null;
-      const productEdit = await ProductsController.editOneProduct(id, changes, image);
+      const productEdit = await ProductsController.editOneProduct(
+        id,
+        changes,
+        image
+      );
       res.status(productEdit.status).json({
         status: productEdit.status,
         message: productEdit.message,
@@ -79,7 +84,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   checkRoles("admin"),
   // validateData(createProductSchema),
-  upload.single("image"), 
+  upload.single("image"),
   async (req, res, next) => {
     try {
       const data = req.body;

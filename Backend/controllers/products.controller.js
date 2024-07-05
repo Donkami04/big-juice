@@ -124,7 +124,6 @@ class ProductsController {
         message: "El Producto ha sido modificado exitosamente.",
       };
     } catch (error) {
-      console.log(error)
       return {
         status: 500,
         message: 'Error del servidor al editar el producto.',
@@ -306,7 +305,6 @@ class ProductsController {
   static async increaseProducts(data) {
     try {
       const ubication = data.ubication;
-      data.products = JSON.parse(data.products);
       data.products.forEach((e) => {
         Products.update(
           { quantity: Sequelize.literal(`quantity + ${e.quantity}`) },
