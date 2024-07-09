@@ -74,3 +74,13 @@
     font-weight: bolder;
     font-size: 1.3rem;
 }
+
+.number-products-vender {
+    background-color: var(--lila-oscuro);
+    color: greenyellow;
+    position: absolute;
+    top: 0px;
+    border-right: solid 1px black;
+    width: 2rem;
+    cursor: help;
+}

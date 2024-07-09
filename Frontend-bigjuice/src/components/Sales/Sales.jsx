@@ -35,6 +35,7 @@ export function Sales() {
   const [numberNequiSold, setNumberNequiSold] = useState([]);
   const [numberRappiSold, setNumberRappiSold] = useState([]);
   const [positionSalesDate, setPositionSalesDate] = useState("");
+  const [totalNumberJugosSold, setTotalNumberJugosSold] = useState(99999);
 
   // Consumos internos
   const [zeroSales, setZeroSales] = useState([]);
@@ -115,7 +116,6 @@ export function Sales() {
       const salesList = dataTotal.data.data.sales;
       salesList.forEach((s) => {
         if (s.nequi === true) {
-          console.log(s.products);
           s.products.forEach((p) => {
             if (p.category === "jugos") dataNumberNequiJugosSold += p.quantity;
           });
@@ -141,6 +141,7 @@ export function Sales() {
       setSales(salesList);
       setTotal(useColMoney(dataTotal.data.data.totalSales));
       setTotalJugos(useColMoney(dataTotalJugos.data.data));
+      setTotalNumberJugosSold(dataTotalJugos.data.data / 6000);
       setTotalOthers(useColMoney(dataTotalOthers.data.data));
       setShowSalesTable("");
       setShowSalesMessage("false");
@@ -317,13 +318,7 @@ export function Sales() {
               <tr>
                 <td>Venta solo Jugos</td>
                 <td>{totalJugos}</td>
-                <td>
-                  {`${
-                    parseInt(
-                      totalJugos.replace("$", "").replace(".", "").trim()
-                    ) / 6000
-                  } jugos`}
-                </td>
+                <td>{`${totalNumberJugosSold} jugos`}</td>
               </tr>
 
               <tr>

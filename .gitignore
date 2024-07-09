@@ -2,6 +2,7 @@ node_modules/
 database/
 
 ### VisualStudioCode ###
+.vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
