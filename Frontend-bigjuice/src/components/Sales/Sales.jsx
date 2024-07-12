@@ -59,7 +59,7 @@ export function Sales() {
       return;
     }
     if (sdate > edate) {
-      setShowSalesMessage("");
+      setShowSalesMessage(true);
       setSalesMessage(
         "La fecha de inicio no puede ser mayor que la fecha de fin."
       );
@@ -146,11 +146,11 @@ export function Sales() {
       setShowSalesTable("");
       setShowSalesMessage("false");
     } catch (error) {
-      setShowSalesTable("false");
+      setShowSalesTable(false);
       setShowSalesMessage(true);
-      // setSalesMessage(
-      //   error.response.data.message || error.response.data || error
-      // );
+      setSalesMessage(
+        error.response.data.message || error.response.data || error
+      );
       console.error(error);
     }
   };

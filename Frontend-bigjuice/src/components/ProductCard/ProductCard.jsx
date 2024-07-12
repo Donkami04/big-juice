@@ -13,12 +13,12 @@ export const ProductCard = ({ data, addToShopcar, removeFromShopcar }) => {
   });
   return (
     <div className="product-card">
-      {/* <div
+      <div
         title={`Cantidad de ${name} en el inventario`}
         className="number-products-vender"
       >
         <p>{data.quantity}</p>
-      </div> */}
+      </div>
       <div className="name-product-container">
         <p>{name}</p>
       </div>
