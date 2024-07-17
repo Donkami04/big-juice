@@ -15,6 +15,7 @@ export function Sales() {
   const [salesNequi, setSalesNequi] = useState("$ 0");
   const [salesRappi, setSalesRappi] = useState("$ 0");
   const [total, setTotal] = useState("$ 0");
+  const [totalInteger, setTotalInteger] = useState(0);
   const [totalJugos, setTotalJugos] = useState("$ 0");
   const [totalOthers, setTotalOthers] = useState("$ 0");
   const [sdate, setSdate] = useState("");
@@ -140,6 +141,7 @@ export function Sales() {
       setShowCuadreCaja(true);
       setSales(salesList);
       setTotal(useColMoney(dataTotal.data.data.totalSales));
+      setTotalInteger(dataTotal.data.data.totalSales);
       setTotalJugos(useColMoney(dataTotalJugos.data.data));
       setTotalNumberJugosSold(dataTotalJugos.data.data / 6000);
       setTotalOthers(useColMoney(dataTotalOthers.data.data));
@@ -305,7 +307,7 @@ export function Sales() {
           </form>
           {showCuadreCaja && (
             <CuadreCaja
-              total={total}
+              total={totalInteger}
               salesNequi={salesNequi}
               salesRappi={salesRappi}
             />

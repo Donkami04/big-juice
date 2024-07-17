@@ -9,7 +9,7 @@ export function CuadreCaja({ total, salesNequi, salesRappi, isMobile }) {
   const [totalMoney, setTotalMoney] = useState("");
   const [showError, setShowError] = useState(false);
   const [message, setMessage] = useState("");
-  total = parseInt(total.replace("$", "").replace(".", ""));
+  // total = parseInt(total.replace("$", "").replace(".", ""));
   salesNequi = parseInt(salesNequi.replace("$", "").replace(".", ""));
   salesRappi = parseInt(salesRappi.replace("$", "").replace(".", ""));
 
