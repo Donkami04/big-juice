@@ -269,8 +269,9 @@ class ProductsController {
     try {
       for (const product of productsToIncrease) {
         const productName = product.name;
-        const quantityProduced = product.quantity;
         const ubication = product.ubication;
+        const quantityProduced = product.quantity;
+
         Products.update(
           { quantity: Sequelize.literal(`quantity + ${quantityProduced}`) },
           { where: { name: productName, ubication: ubication } }

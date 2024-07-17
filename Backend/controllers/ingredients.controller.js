@@ -155,6 +155,9 @@ class IngredientsController {
     ubication
   ) {
     try {
+      if (quantityProduced > 16) {
+        quantityProduced = 16;
+      }
       const ingredientUpdates = [
         { name: "hielo", quantity: dataProduct.hielo * quantityProduced },
         { name: "azucar", quantity: dataProduct.azucar * quantityProduced },
