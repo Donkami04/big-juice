@@ -151,4 +151,45 @@ router.delete(
   }
 );
 
+router.post(
+  "/products",
+  // passport.authenticate("jwt", { session: false }),
+  // checkRoles("admin"),
+  async (req, res, next) => {
+    try {
+
+      // const { rol } = req.user;
+      const { initialDate, finalDate, ubication } = req.body;
+      
+      // Verificar si el rol es diferente de "admin"
+      // if (rol !== "admin") {
+      //   // Verificar si la diferencia de fechas es más de 3 días
+      //   const currentDate = moment();
+      //   const providedInitialDate = moment(initialDate);
+      //   const daysDifference = currentDate.diff(providedInitialDate, "days");
+
+      //   if (daysDifference > 3) {
+      //     return res.status(403).json({
+      //       status: 403,
+      //       message: "No tienes permiso para acceder a fechas mayores a 3 días atras.",
+      //     });
+      //   }
+      // }
+      const sales = await SalesController.totalSalesEachProduct(
+        initialDate,
+        finalDate,
+        ubication
+      );
+      res.status(sales.status).json({
+        status: sales.status,
+        message: sales.message,
+        error: sales.error,
+        data: sales.data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 module.exports = router;

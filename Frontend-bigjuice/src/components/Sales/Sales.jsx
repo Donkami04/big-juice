@@ -8,6 +8,9 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { ConfirmationMessage } from "../ConfirmationMessage/ConfirmationMessage";
 import { CuadreCaja } from "./CuadreCaja/CuadreCaja";
 import { useCurrentDate } from "../../hooks/useCurrentDate";
+import { ProductSales } from "./ProductSales/ProductSales";
+import { RiNumbersFill } from "react-icons/ri";
+import { Spinner } from "../Spinner/Spinner";
 import "./Sales.css";
 
 export function Sales() {
@@ -37,6 +40,10 @@ export function Sales() {
   const [numberRappiSold, setNumberRappiSold] = useState([]);
   const [positionSalesDate, setPositionSalesDate] = useState("");
   const [totalNumberJugosSold, setTotalNumberJugosSold] = useState(99999);
+  const [salesEachProduct, setSalesEachProduct] = useState([]);
+  const [showAsideSalesButton, setShowAsideSalesButton] = useState(false);
+  const [showAsideSales, setShowAsideSales] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
 
   // Consumos internos
   const [zeroSales, setZeroSales] = useState([]);
@@ -67,6 +74,7 @@ export function Sales() {
       return;
     }
     try {
+      setShowSpinner(true); // Mostramos spinner de carga
       const dataTotal = await axios.post(
         `${BASE_API_URL}/sales/total`,
         {
@@ -102,6 +110,20 @@ export function Sales() {
           initialDate: sdate,
           finalDate: edate,
           category: "otros",
+          ubication: ubication || userUbication,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+
+      const salesProductsData = await axios.post(
+        `${BASE_API_URL}/sales/products`,
+        {
+          initialDate: sdate,
+          finalDate: edate,
           ubication: ubication || userUbication,
         },
         {
@@ -147,7 +169,14 @@ export function Sales() {
       setTotalOthers(useColMoney(dataTotalOthers.data.data));
       setShowSalesTable("");
       setShowSalesMessage("false");
+      setSalesEachProduct(salesProductsData);
+      setShowSpinner(false); // ocultamos spinner de carga
+      if (showAsideSales === true && showAsideSalesButton === false) {
+      } else {
+        setShowAsideSalesButton(true);
+      }
     } catch (error) {
+      setShowSpinner(false); // ocultamos spinner de carga
       setShowSalesTable(false);
       setShowSalesMessage(true);
       setSalesMessage(
@@ -227,8 +256,14 @@ export function Sales() {
     setShowDeleteMessage(false);
   };
 
+  const openAsideSales = () => {
+    setShowAsideSales(true);
+    setShowAsideSalesButton(false);
+  };
+
   return (
     <div>
+      {showSpinner && <Spinner />}
       <Navbar />
       {showDeleteMessage && (
         <ConfirmationMessage>
@@ -256,6 +291,31 @@ export function Sales() {
             </div>
           </div>
         </ConfirmationMessage>
+      )}
+      {showAsideSalesButton && (
+        <RiNumbersFill
+          onClick={() => openAsideSales()}
+          title="Numero de ventas por cada producto"
+          style={{
+            position: "absolute",
+            zIndex: 9999,
+            top: "calc(6rem + 12px)",
+            left: "10px",
+            color: "var(--lila-oscuro)",
+            cursor: "pointer",
+          }}
+          size={"2rem"}
+        />
+      )}
+
+      {showAsideSales && (
+        <ProductSales
+          sdate={sdate}
+          edate={edate}
+          salesEachProduct={salesEachProduct}
+          setShowAsideSalesButton={setShowAsideSalesButton}
+          setShowAsideSales={setShowAsideSales}
+        />
       )}
 
       <div className="sales-dates-container">
