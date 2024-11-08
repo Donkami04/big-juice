@@ -1,0 +1,18 @@
+{
+  "local": {
+    "username": "bjadmin",
+    "password": "280429",
+    "database": "bigjuice",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "port": 33061
+
+  },
+  "production": {
+    "username": "donkami",
+    "password": "camilo123",
+    "database": "bigjuice",
+    "host": "34.225.55.33",
+    "dialect": "mysql"
+  }
+}
